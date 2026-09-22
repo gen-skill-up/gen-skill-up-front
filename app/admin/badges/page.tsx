@@ -52,7 +52,7 @@ function BadgeIcon({ iconUrl, size = 28 }: { iconUrl: string; size?: number }) {
   return <span style={{ fontSize: `${size}px`, lineHeight: 1 }}>{iconUrl || '🏅'}</span>;
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 function getAuthHeaders() {
   const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : '';
   return { Authorization: `Bearer ${token}` };

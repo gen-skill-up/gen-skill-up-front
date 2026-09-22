@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Search, Trash2, Users, Baby, AlertTriangle, X } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 function getAuthHeaders() {
   const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : '';
   return { Authorization: `Bearer ${token}` };

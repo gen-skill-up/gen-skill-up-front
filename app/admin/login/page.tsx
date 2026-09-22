@@ -17,7 +17,7 @@ export default function AdminLoginPage() {
     setError('');
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/login`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/auth/login`,
         form,
       );
       const { user, token } = res.data;
