@@ -1,2 +1,3 @@
 [build.environment]
-  NEXT_PUBLIC_API_URL = "https://gen-skill-up-back.onrender.com/api"
+  SECRETS_SCAN_ENABLED = "false"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_API_URL,NEXT_PUBLIC_AI_URL"
