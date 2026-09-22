@@ -10,6 +10,10 @@ export const en: TranslationType = {
     startFree: "Start Free",
     dashboardBtn: "Dashboard",
     logoutBtn: "Logout",
+    features: "Features",
+    demo: "Overview",
+    pricing: "Pricing",
+    contact: "Contact",
   },
   hero: {
     badgeText: "AI Powering Your Children's Education",
@@ -19,6 +23,7 @@ export const en: TranslationType = {
     subtitle: "An educational platform that automatically adapts content to your child's level. Math, French, Logic — all in a playful and motivational style.",
     startJourney: "Start Learning Journey Free",
     discoverFeatures: "Discover Features",
+    seePricing: "View Pricing",
   },
   mockDashboard: {
     levelLabel: "Level:",

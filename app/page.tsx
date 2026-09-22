@@ -28,7 +28,10 @@ import {
   Globe,
   Microscope,
   Play,
-  CheckCircle2
+  CheckCircle2,
+  Menu,
+  X,
+  ChevronUp
 } from 'lucide-react';
 
 
@@ -79,11 +82,34 @@ export default function HomePage() {
   const { t, dir } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
     setMounted(true);
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+
+      const sectionIds = ['hero', 'demo', 'features', 'pricing', 'contact'];
+      for (const sec of sectionIds) {
+        const el = document.getElementById(sec);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 140 && rect.bottom >= 140) {
+            setActiveSection(sec);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -177,67 +203,230 @@ export default function HomePage() {
         />
       ))}
 
-      {/* Navbar */}
-      <nav className="relative z-50 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, x: dir === 'rtl' ? 20 : -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3"
-        >
-          <motion.div
-            animate={{ rotate: [0, 5, -5, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <OwlLogo size={46} />
-          </motion.div>
-          <span className="text-2xl font-black" style={{ fontFamily: 'Fredoka One, sans-serif', color: 'var(--color-primary)' }}>
-            {t.common.brand}
-          </span>
-        </motion.div>
+      {/* Fixed Sticky Header / Navbar */}
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled
+            ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-md shadow-md border-b border-purple-100/60 dark:border-slate-800/80 py-2.5'
+            : 'bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm py-4 border-b border-transparent'
+        }`}
+      >
+        <nav className="flex items-center justify-between px-4 sm:px-6 max-w-7xl mx-auto">
+          {/* Logo & Brand */}
+          <Link href="#hero" className="flex items-center gap-3 group focus:outline-none">
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <OwlLogo size={42} />
+            </motion.div>
+            <span
+              className="text-2xl font-black group-hover:opacity-90 transition-opacity"
+              style={{ fontFamily: 'Fredoka One, sans-serif', color: 'var(--color-primary)' }}
+            >
+              {t.common.brand}
+            </span>
+          </Link>
 
-        <motion.div
-          initial={{ opacity: 0, x: dir === 'rtl' ? -20 : 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3"
-        >
-          <LanguageSwitcher />
-          {/* Auth buttons - only render after mount to avoid hydration mismatch */}
-          {mounted ? (
-            isLoggedIn ? (
-              <>
-                <Link href="/dashboard" id="nav-dashboard-btn">
-                  <button className="btn-primary text-sm px-5 py-2 cursor-pointer">{t.navbar.dashboardBtn}</button>
-                </Link>
-                <button
-                  id="nav-logout-btn"
-                  onClick={handleLogout}
-                  className="btn-secondary text-sm px-5 py-2 cursor-pointer"
-                >
-                  {t.navbar.logoutBtn}
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/auth/login" id="nav-login-btn">
-                  <button className="btn-secondary text-sm px-5 py-2 cursor-pointer">{t.navbar.loginBtn}</button>
-                </Link>
-                <Link href="/auth/register" id="nav-register-btn">
-                  <button className="btn-primary text-sm px-5 py-2 cursor-pointer">{t.navbar.startFree}</button>
-                </Link>
-              </>
-            )
-          ) : (
-            // SSR placeholder — same DOM structure as guest buttons, invisible
-            <div className="flex items-center gap-3 opacity-0 pointer-events-none" aria-hidden="true">
-              <button className="btn-secondary text-sm px-5 py-2">{t.navbar.loginBtn}</button>
-              <button className="btn-primary text-sm px-5 py-2">{t.navbar.startFree}</button>
+          {/* Desktop Section Navigation Buttons */}
+          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-sm shadow-inner">
+            <Link
+              href="#demo"
+              id="nav-sec-demo"
+              className={`text-xs md:text-sm font-extrabold px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                activeSection === 'demo'
+                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-[var(--color-primary)] hover:bg-white/70 dark:hover:bg-slate-700/70'
+              }`}
+            >
+              {t.navbar.demo}
+            </Link>
+            <Link
+              href="#features"
+              id="nav-sec-features"
+              className={`text-xs md:text-sm font-extrabold px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                activeSection === 'features'
+                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-[var(--color-primary)] hover:bg-white/70 dark:hover:bg-slate-700/70'
+              }`}
+            >
+              {t.navbar.features}
+            </Link>
+            <Link
+              href="#pricing"
+              id="nav-sec-pricing"
+              className={`text-xs md:text-sm font-extrabold px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                activeSection === 'pricing'
+                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-[var(--color-primary)] hover:bg-white/70 dark:hover:bg-slate-700/70'
+              }`}
+            >
+              {t.navbar.pricing}
+            </Link>
+            <Link
+              href="#contact"
+              id="nav-sec-contact"
+              className={`text-xs md:text-sm font-extrabold px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                activeSection === 'contact'
+                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-[var(--color-primary)] hover:bg-white/70 dark:hover:bg-slate-700/70'
+              }`}
+            >
+              {t.navbar.contact}
+            </Link>
+          </div>
+
+          {/* Right: Controls & Auth */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LanguageSwitcher />
+
+            {/* Auth buttons - desktop / tablet */}
+            <div className="hidden sm:flex items-center gap-2">
+              {mounted ? (
+                isLoggedIn ? (
+                  <>
+                    <Link href="/dashboard" id="nav-dashboard-btn">
+                      <button className="btn-primary text-xs sm:text-sm px-4 sm:px-5 py-2 cursor-pointer shadow-sm">
+                        {t.navbar.dashboardBtn}
+                      </button>
+                    </Link>
+                    <button
+                      id="nav-logout-btn"
+                      onClick={handleLogout}
+                      className="btn-secondary text-xs sm:text-sm px-4 sm:px-5 py-2 cursor-pointer"
+                    >
+                      {t.navbar.logoutBtn}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/auth/login" id="nav-login-btn">
+                      <button className="btn-secondary text-xs sm:text-sm px-4 sm:px-5 py-2 cursor-pointer">
+                        {t.navbar.loginBtn}
+                      </button>
+                    </Link>
+                    <Link href="/auth/register" id="nav-register-btn">
+                      <button className="btn-primary text-xs sm:text-sm px-4 sm:px-5 py-2 cursor-pointer shadow-sm">
+                        {t.navbar.startFree}
+                      </button>
+                    </Link>
+                  </>
+                )
+              ) : (
+                <div className="flex items-center gap-2 opacity-0 pointer-events-none" aria-hidden="true">
+                  <button className="btn-secondary text-xs sm:text-sm px-4 sm:px-5 py-2">{t.navbar.loginBtn}</button>
+                  <button className="btn-primary text-xs sm:text-sm px-4 sm:px-5 py-2">{t.navbar.startFree}</button>
+                </div>
+              )}
             </div>
-          )}
-        </motion.div>
-      </nav>
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              id="nav-mobile-toggle"
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </nav>
+
+        {/* Mobile Dropdown Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden px-6 pt-2 pb-6 border-t border-slate-200/60 dark:border-slate-800/60 bg-white/95 dark:bg-slate-950/95 backdrop-blur-lg shadow-xl"
+          >
+            <div className="flex flex-col gap-2 py-3">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3">
+                {t.navbar.features} & {t.navbar.demo}
+              </span>
+              <Link
+                href="#demo"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2.5 rounded-xl font-bold transition-colors ${
+                  activeSection === 'demo'
+                    ? 'bg-[var(--color-primary)] text-white'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-[var(--color-primary)]'
+                }`}
+              >
+                {t.navbar.demo}
+              </Link>
+              <Link
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2.5 rounded-xl font-bold transition-colors ${
+                  activeSection === 'features'
+                    ? 'bg-[var(--color-primary)] text-white'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-[var(--color-primary)]'
+                }`}
+              >
+                {t.navbar.features}
+              </Link>
+              <Link
+                href="#pricing"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2.5 rounded-xl font-bold transition-colors ${
+                  activeSection === 'pricing'
+                    ? 'bg-[var(--color-primary)] text-white'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-[var(--color-primary)]'
+                }`}
+              >
+                {t.navbar.pricing}
+              </Link>
+              <Link
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2.5 rounded-xl font-bold transition-colors ${
+                  activeSection === 'contact'
+                    ? 'bg-[var(--color-primary)] text-white'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-[var(--color-primary)]'
+                }`}
+              >
+                {t.navbar.contact}
+              </Link>
+            </div>
+
+            {/* Mobile Auth Buttons */}
+            <div className="pt-3 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col gap-2.5 sm:hidden">
+              {mounted && (
+                isLoggedIn ? (
+                  <>
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="w-full">
+                      <button className="btn-primary w-full text-sm py-2.5">{t.navbar.dashboardBtn}</button>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="btn-secondary w-full text-sm py-2.5 cursor-pointer"
+                    >
+                      {t.navbar.logoutBtn}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)} className="w-full">
+                      <button className="btn-secondary w-full text-sm py-2.5 cursor-pointer">{t.navbar.loginBtn}</button>
+                    </Link>
+                    <Link href="/auth/register" onClick={() => setMobileMenuOpen(false)} className="w-full">
+                      <button className="btn-primary w-full text-sm py-2.5 cursor-pointer">{t.navbar.startFree}</button>
+                    </Link>
+                  </>
+                )
+              )}
+            </div>
+          </motion.div>
+        )}
+      </header>
 
       {/* Hero Section */}
-      <section className="relative z-10 text-center px-6 pt-12 pb-20 max-w-5xl mx-auto">
+      <section id="hero" className="relative z-10 text-center px-6 pt-12 pb-20 max-w-5xl mx-auto scroll-mt-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -286,15 +475,22 @@ export default function HomePage() {
                 {t.hero.discoverFeatures}
               </button>
             </Link>
+            <Link href="#pricing" id="hero-pricing-btn">
+              <button className="text-slate-600 dark:text-slate-300 hover:text-[var(--color-primary)] font-bold text-base px-5 py-4 transition-colors flex items-center gap-1.5 cursor-pointer">
+                <span>{t.hero.seePricing}</span>
+                {dir === 'rtl' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </button>
+            </Link>
           </div>
         </motion.div>
 
-        {/* Video Showcase & App Introduction */}
+        {/* Video Showcase & App Introduction (Demo) */}
         <motion.div
+          id="demo"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-16 max-w-5xl mx-auto px-4"
+          className="scroll-mt-24 mt-16 max-w-5xl mx-auto px-4"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
@@ -360,6 +556,25 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
+
+              {/* Section Action Buttons */}
+              <div className="pt-2 flex flex-wrap gap-3">
+                <Link href={isLoggedIn ? '/dashboard' : '/auth/register'} id="demo-cta-btn">
+                  <motion.button
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="btn-primary text-sm px-6 py-3 flex items-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <span>{isLoggedIn ? t.navbar.dashboardBtn : t.hero.startJourney}</span>
+                    {dir === 'rtl' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+                  </motion.button>
+                </Link>
+                <Link href="#pricing" id="demo-pricing-btn">
+                  <button className="btn-secondary text-sm px-5 py-3 cursor-pointer">
+                    {t.hero.seePricing}
+                  </button>
+                </Link>
+              </div>
             </div>
             
           </div>
@@ -368,7 +583,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="relative z-10 py-12 px-6">
+      <section id="stats" className="relative z-10 py-12 px-6 scroll-mt-24">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-5">
           {stats.map((stat, i) => (
             <motion.div
@@ -390,7 +605,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="relative z-10 py-16 px-6">
+      <section id="features" className="relative z-10 py-16 px-6 scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -432,11 +647,30 @@ export default function HomePage() {
               );
             })}
           </div>
+
+          {/* Features Section CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <Link href="#pricing" id="features-to-pricing-btn">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
+                className="btn-primary text-base px-10 py-3.5 inline-flex items-center gap-2 cursor-pointer shadow-lg"
+              >
+                <span>{t.hero.seePricing}</span>
+                {dir === 'rtl' ? <ArrowLeft className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="relative z-10 py-16 px-6">
+      <section id="pricing" className="relative z-10 py-16 px-6 scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           
           <motion.div
@@ -589,8 +823,8 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 pt-16 pb-8 px-6 bg-white/40 backdrop-blur-sm dark:bg-slate-900/40"
+      {/* Footer / Contact Section */}
+      <footer id="contact" className="relative z-10 pt-16 pb-8 px-6 bg-white/40 backdrop-blur-sm dark:bg-slate-900/40 scroll-mt-24"
         style={{ borderTop: '2px solid rgba(255,140,66,0.12)' }}>
         <div className="max-w-7xl mx-auto">
           
@@ -616,7 +850,7 @@ export default function HomePage() {
               </h4>
               <ul className="space-y-2.5">
                 <li>
-                  <Link href="/" className="text-sm text-slate-500 hover:text-[var(--color-primary)] font-semibold transition-colors">
+                  <Link href="#hero" className="text-sm text-slate-500 hover:text-[var(--color-primary)] font-semibold transition-colors">
                     {t.footer.home}
                   </Link>
                 </li>
@@ -698,6 +932,22 @@ export default function HomePage() {
 
         </div>
       </footer>
+
+      {/* Floating Back to Top Button */}
+      {scrolled && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className={`fixed bottom-6 ${
+            dir === 'rtl' ? 'left-6' : 'right-6'
+          } z-40 p-3.5 rounded-full bg-[var(--color-primary)] text-white shadow-xl hover:shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center border-2 border-white/40`}
+          aria-label="Back to top"
+        >
+          <ChevronUp className="w-5 h-5" />
+        </motion.button>
+      )}
     </main>
   );
 }

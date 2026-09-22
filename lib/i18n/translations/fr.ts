@@ -10,6 +10,10 @@ export const fr: TranslationType = {
     startFree: "Essai Gratuit",
     dashboardBtn: "Tableau de bord",
     logoutBtn: "Déconnexion",
+    features: "Fonctionnalités",
+    demo: "Présentation",
+    pricing: "Tarifs",
+    contact: "Contact",
   },
   hero: {
     badgeText: "L'IA au Service de l'Éducation de vos Enfants",
@@ -19,6 +23,7 @@ export const fr: TranslationType = {
     subtitle: "Une plateforme éducative qui adapte automatiquement le contenu au niveau de votre enfant. Maths, Français, Logique — le tout dans un style ludique et motivant.",
     startJourney: "Commencer Gratuitement",
     discoverFeatures: "Découvrir les Fonctions",
+    seePricing: "Voir les Tarifs",
   },
   mockDashboard: {
     levelLabel: "Niveau :",

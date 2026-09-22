@@ -204,9 +204,9 @@ html[lang="fr"] textarea {
   text-decoration: none;
 }
 .btn-secondary:hover {
-  background: rgba(255, 140, 66, 0.08);
+  background: rgba(124, 58, 237, 0.08);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 140, 66, 0.2);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.2);
 }
 
 /* ========================

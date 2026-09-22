@@ -8,6 +8,10 @@ export const ar = {
     startFree: "ابدأ مجاناً",
     dashboardBtn: "لوحة التحكم",
     logoutBtn: "خروج",
+    features: "المميزات",
+    demo: "العرض التوضيحي",
+    pricing: "الأسعار",
+    contact: "تواصل معنا",
   },
   hero: {
     badgeText: "الذكاء الاصطناعي في خدمة تعليم أطفالك",
@@ -17,6 +21,7 @@ export const ar = {
     subtitle: "منصة تعليمية تكيّف المحتوى تلقائياً حسب مستوى طفلك. رياضيات، فرنسي، منطق — كل ذلك بأسلوب مرح وتحفيزي.",
     startJourney: "ابدأ رحلة التعلم مجاناً",
     discoverFeatures: "اكتشف المزايا",
+    seePricing: "عرض الأسعار",
   },
   mockDashboard: {
     levelLabel: "مستوى:",
