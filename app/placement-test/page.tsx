@@ -378,17 +378,17 @@ function TestContent() {
                 {t.placementTest.resultSubtitle}
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-3">
-                <div className="inline-flex items-center gap-2 px-5 py-2 rounded-2xl bg-[rgba(96,165,250,0.12)] text-[#2563EB] border border-[rgba(96,165,250,0.2)] text-lg font-black">
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#EEF6F3] text-[#2D6A53] border border-[#D5EAE1] text-lg font-black">
                   <Award className="w-5 h-5" />
                   <span>{getLevelLabel(examResult.level)}</span>
                 </div>
-                <div className="inline-flex items-center gap-2 px-5 py-2 rounded-2xl bg-[rgba(234,179,8,0.12)] text-amber-600 border border-[rgba(234,179,8,0.2)] text-lg font-black">
-                  <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#FEF8EC] text-[#8A601B] border border-[#F6E3B8] text-lg font-black">
+                  <Star className="w-5 h-5 fill-[#D4A75E] text-[#D4A75E]" />
                   <span>{t.placementTest.examScore} {examResult.score}</span>
                 </div>
               </div>
 
-              <div className="mt-4 text-xs font-black text-emerald-500 bg-emerald-500/10 inline-block px-4 py-1.5 rounded-full border border-emerald-500/20">
+              <div className="mt-4 text-xs font-black text-[#2D6A53] bg-[#EEF6F3] inline-block px-4 py-2 rounded-full border border-[#D5EAE1]">
                 {t.placementTest.scorePoints.replace('{points}', String(examResult.points)).replace('{stars}', String(examResult.stars))}
               </div>
             </div>
@@ -396,14 +396,14 @@ function TestContent() {
             <div className="space-y-6 mb-8 text-right" style={{ direction: dir }}>
               {examResult.strengths && examResult.strengths.length > 0 && (
                 <div>
-                  <h3 className="font-black text-[var(--color-text)] mb-2 flex items-center gap-2 text-base justify-start">
-                    <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                  <h3 className="font-black text-[#3D364A] mb-2.5 flex items-center gap-2 text-base justify-start">
+                    <Star className="w-5 h-5 text-[#D4A75E] fill-[#D4A75E]" />
                     <span>{t.placementTest.strengths}</span>
                   </h3>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-[var(--color-text)]">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm text-[#3D364A]">
                     {examResult.strengths.map((s: string, idx: number) => (
-                      <li key={idx} className="flex items-center gap-2 bg-[rgba(124,58,237,0.04)] p-2 rounded-xl border border-[rgba(124,58,237,0.12)]">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                      <li key={idx} className="flex items-center gap-2.5 bg-[#EEF6F3] p-3 rounded-2xl border border-[#D5EAE1]">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#95C5B2] shrink-0" />
                         <span className="font-bold">{s}</span>
                       </li>
                     ))}
@@ -413,14 +413,14 @@ function TestContent() {
 
               {examResult.weaknesses && examResult.weaknesses.length > 0 && (
                 <div>
-                  <h3 className="font-black text-[var(--color-text)] mb-2 flex items-center gap-2 text-base justify-start">
-                    <BookOpen className="w-5 h-5 text-[var(--color-primary)]" />
+                  <h3 className="font-black text-[#3D364A] mb-2.5 flex items-center gap-2 text-base justify-start">
+                    <BookOpen className="w-5 h-5 text-[#E8927C]" />
                     <span>{t.placementTest.weaknesses}</span>
                   </h3>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-[var(--color-text)]">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm text-[#3D364A]">
                     {examResult.weaknesses.map((w: string, idx: number) => (
-                      <li key={idx} className="flex items-center gap-2 bg-[rgba(124,58,237,0.04)] p-2 rounded-xl border border-[rgba(124,58,237,0.12)]">
-                        <span className="w-2 h-2 rounded-full bg-[var(--color-primary)] shrink-0" />
+                      <li key={idx} className="flex items-center gap-2.5 bg-[#FDF0EB] p-3 rounded-2xl border border-[#F2DDD0]">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#E8927C] shrink-0" />
                         <span className="font-bold">{w}</span>
                       </li>
                     ))}
@@ -430,14 +430,14 @@ function TestContent() {
 
               {examResult.recommendations && examResult.recommendations.length > 0 && (
                 <div>
-                  <h3 className="font-black text-[var(--color-text)] mb-2 flex items-center gap-2 text-base justify-start">
-                    <TrendingUp className="w-5 h-5 text-[var(--color-secondary)]" />
+                  <h3 className="font-black text-[#3D364A] mb-2.5 flex items-center gap-2 text-base justify-start">
+                    <TrendingUp className="w-5 h-5 text-[#95C5B2]" />
                     <span>{t.placementTest.recommendations}</span>
                   </h3>
-                  <ul className="space-y-2 text-sm text-[var(--color-text)]">
+                  <ul className="space-y-2.5 text-sm text-[#3D364A]">
                     {examResult.recommendations.map((r: string, idx: number) => (
-                      <li key={idx} className="flex items-center gap-2 bg-[rgba(124,58,237,0.04)] p-3 rounded-xl border border-[rgba(124,58,237,0.12)]">
-                        <ThumbsUp className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <li key={idx} className="flex items-center gap-2.5 bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#F2DDD0]">
+                        <ThumbsUp className="w-5 h-5 text-[#95C5B2] shrink-0" />
                         <span className="font-bold">{r}</span>
                       </li>
                     ))}
@@ -448,7 +448,7 @@ function TestContent() {
 
             <button
               onClick={handleCloseExamResult}
-              className="btn-primary w-full py-3.5 text-base font-black cursor-pointer flex items-center justify-center gap-2"
+              className="btn-primary w-full py-4 text-base font-black cursor-pointer flex items-center justify-center gap-2"
             >
               <span>{t.placementTest.goToDashboard}</span>
               {dir === 'rtl' ? <ArrowLeft className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
@@ -464,42 +464,42 @@ function TestContent() {
     const allAnswered = Object.keys(selectedAnswers).length === totalQCount;
 
     return (
-      <main className="min-h-screen py-12 px-6 flex items-center justify-center relative overflow-hidden stars-bg">
-        <div className="absolute top-[-20%] right-[-10%] w-96 h-96 rounded-full opacity-5"
-          style={{ background: 'radial-gradient(circle, var(--color-primary), transparent)' }} />
+      <main className="min-h-screen py-12 px-6 flex items-center justify-center relative overflow-hidden bg-[#FDF8F3]">
+        <div className="absolute top-[-20%] right-[-10%] w-96 h-96 rounded-full opacity-10"
+          style={{ background: 'radial-gradient(circle, #E8927C, transparent)' }} />
 
         <div className="w-full max-w-xl relative z-10">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <OwlLogo size={36} />
-              <span className="text-xl font-black text-[var(--color-primary)]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+              <OwlLogo size={40} />
+              <span className="text-2xl font-black text-[#E8927C]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
                 {t.common.brand}
               </span>
             </div>
-            <h1 className="text-3xl font-black mb-1" style={{ color: 'var(--color-text)' }}>
+            <h1 className="text-2xl sm:text-3xl font-black mb-1.5 text-[#3D364A]">
               {activeExam.type === 'PLACEMENT' ? t.placementTest.title : t.placementTest.examTypeSubject.replace('{subject}', getSubjectLabel(activeExam.subject || ''))}
             </h1>
-            <p className="text-[var(--color-muted)] text-sm font-semibold">
+            <p className="text-[#6E637C] text-sm sm:text-base font-bold">
               {activeExam.type === 'PLACEMENT' ? t.placementTest.subtitle : t.placementTest.subjectExamsDesc}
             </p>
           </div>
 
           {totalQCount > 0 && currentQ && (
-            <div className="glass rounded-3xl p-8 border-2 border-[rgba(124,58,237,0.15)] shadow-2xl space-y-6">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#F2DDD0] shadow-sm space-y-6">
               {/* Header progress info */}
-              <div className="flex justify-between items-center text-xs font-bold text-[var(--color-muted)]">
+              <div className="flex justify-between items-center text-xs font-black text-[#6E637C]">
                 <span>
                   {t.placementTest.questionLabel} {currentIdx + 1} {t.placementTest.of} {totalQCount}
                 </span>
-                <span className="text-[var(--color-primary)]">
+                <span className="text-[#E8927C]">
                   {Math.round(((currentIdx + 1) / totalQCount) * 100)}%
                 </span>
               </div>
 
               {/* Progress Bar */}
-              <div className="h-2 w-full rounded-full bg-[rgba(124,58,237,0.1)] overflow-hidden">
+              <div className="h-2.5 w-full rounded-full bg-[#FAF8F5] border border-[#F2DDD0] overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]"
+                  className="h-full bg-gradient-to-r from-[#E8927C] to-[#F5C26B]"
                   initial={{ width: '0%' }}
                   animate={{ width: `${((currentIdx + 1) / totalQCount) * 100}%` }}
                   transition={{ duration: 0.3 }}
@@ -508,7 +508,7 @@ function TestContent() {
 
               {/* Question Text */}
               <div className={`py-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-                <h2 className="text-xl font-black text-[var(--color-text)] leading-relaxed">
+                <h2 className="text-xl sm:text-2xl font-black text-[#3D364A] leading-relaxed">
                   {currentQ.text}
                 </h2>
               </div>
@@ -521,10 +521,10 @@ function TestContent() {
                     <button
                       key={optIdx}
                       onClick={() => handleOptionSelect(currentQ.id, optIdx)}
-                      className={`w-full p-4 rounded-xl border-2 text-sm transition-all cursor-pointer ${
+                      className={`w-full p-4 rounded-2xl border text-sm sm:text-base transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-[var(--color-primary)] bg-[rgba(124,58,237,0.15)] text-[var(--color-primary)] font-black'
-                          : 'border-[rgba(124,58,237,0.12)] bg-[rgba(124,58,237,0.02)] text-[var(--color-text)] hover:bg-[rgba(124,58,237,0.06)]'
+                          ? 'border-2 border-[#E8927C] bg-[#FDF0EB] text-[#A44C36] font-black shadow-xs'
+                          : 'border-[#F2DDD0] bg-[#FAF8F5] text-[#3D364A] hover:border-[#E8927C] hover:bg-[#FDF0EB]/40 font-bold'
                       } ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
                     >
                       <span className="inline-block">{option}</span>
@@ -534,7 +534,7 @@ function TestContent() {
               </div>
 
               {/* Footer Stepper Controls */}
-              <div className="flex justify-between gap-3 pt-4 border-t-2 border-[rgba(124,58,237,0.12)]">
+              <div className="flex justify-between gap-3 pt-4 border-t border-[#F2DDD0]">
                 <button
                   onClick={handleBack}
                   disabled={currentIdx === 0}
@@ -573,11 +573,11 @@ function TestContent() {
 
   // Dashboard Hub View
   return (
-    <div className="flex-1 p-6 md:p-10 stars-bg" style={{ direction: dir }}>
+    <div className="flex-1 p-6 md:p-10 bg-[#FDF8F3]" style={{ direction: dir }}>
       {/* Top Welcome Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-[var(--color-text)] flex items-center gap-3">
+          <h1 className="text-3xl font-black text-[#3D364A] flex items-center gap-3">
             <span>{t.placementTest.hubTitle}</span>
             <span className="text-xl">🏆</span>
           </h1>

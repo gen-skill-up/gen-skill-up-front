@@ -13,12 +13,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+let isRedirecting = false;
+
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('token');
-      window.location.href = '/auth/login';
+      const currentPath = window.location.pathname;
+      if (!currentPath.startsWith('/auth') && !isRedirecting) {
+        isRedirecting = true;
+        window.location.href = '/auth/login';
+      }
     }
     return Promise.reject(err);
   }

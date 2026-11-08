@@ -39,7 +39,9 @@ import {
   Book,
   Users,
   Sparkles,
-  Gamepad2
+  Gamepad2,
+  Flame,
+  CheckCircle2
 } from 'lucide-react';
 
 const avatarMap: Record<string, any> = {
@@ -53,7 +55,7 @@ const avatarMap: Record<string, any> = {
   crown: Crown,
 };
 
-const avatarBgColors = ['#FF8C42', '#4ECDC4', '#A855F7', '#4ADE80', '#F472B6', '#60A5FA'];
+const avatarBgColors = ['#E8927C', '#95C5B2', '#C4A6D7', '#F0C987', '#F2B5C8', '#7EB5D6'];
 
 interface Child {
   id: string;
@@ -91,8 +93,12 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
     }
     const userStr = localStorage.getItem('user');
     if (userStr) {
-      const user = JSON.parse(userStr);
-      setUserRole(user.role || 'CHILD');
+      try {
+        const user = JSON.parse(userStr);
+        setUserRole(user.role || 'CHILD');
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, []);
 
@@ -133,10 +139,8 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
     setActiveChildId(id);
     setIsChildDropdownOpen(false);
 
-    // Redirect to apply child context change
-    if (pathname === '/dashboard') {
-      window.location.reload();
-    } else {
+    window.dispatchEvent(new CustomEvent('activeChildChanged', { detail: { id } }));
+    if (pathname !== '/dashboard') {
       router.push(`${pathname}?childId=${id}`);
     }
   };
@@ -148,17 +152,17 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
     router.push('/');
   };
 
-  const renderAvatar = (avatar: string | undefined, index: number, size = 10) => {
+  const renderAvatar = (avatar: string | undefined, index: number, size = 11) => {
     const bgColor = avatarBgColors[index % avatarBgColors.length];
     const IconComponent = avatar ? avatarMap[avatar] : Smile;
     return (
       <div 
-        className="rounded-full flex items-center justify-center overflow-hidden shrink-0" 
+        className="rounded-full flex items-center justify-center overflow-hidden shrink-0 shadow-sm" 
         style={{ 
           width: `${size * 4}px`, 
           height: `${size * 4}px`, 
-          background: bgColor + '20',
-          border: `2px solid ${bgColor}40`
+          background: bgColor + '25',
+          border: `2.5px solid ${bgColor}`
         }}
       >
         <IconComponent className="stroke-[2.5]" style={{ width: `${size * 2.2}px`, height: `${size * 2.2}px`, color: bgColor }} />
@@ -183,17 +187,17 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       comingSoon: false,
     },
     {
-      id: 'learn-with-ai',
-      label: t.sidebar.learnWithAi || 'تعلم مع الذكاء الاصطناعي',
-      icon: Sparkles,
-      href: activeChildId ? `/learn-with-ai?childId=${activeChildId}` : '/dashboard',
-      comingSoon: false,
-    },
-    {
       id: 'exercises',
       label: t.sidebar.exercices,
       icon: Pencil,
       href: activeChildId ? `/exercises?childId=${activeChildId}` : '/dashboard',
+      comingSoon: false,
+    },
+    {
+      id: 'learn-with-ai',
+      label: t.sidebar.learnWithAi || 'تعلم مع الذكاء الاصطناعي',
+      icon: Sparkles,
+      href: activeChildId ? `/learn-with-ai?childId=${activeChildId}` : '/dashboard',
       comingSoon: false,
     },
     {
@@ -255,95 +259,104 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
   ];
 
   const renderSidebarContent = (isCollapsedMode: boolean) => (
-    <div className={`flex flex-col h-full justify-between transition-all duration-200 ${isCollapsedMode ? 'px-2 py-5' : 'p-5'}`}>
+    <div className={`flex flex-col h-full justify-between transition-all duration-200 ${isCollapsedMode ? 'px-2 py-4' : 'px-4 py-5'}`}>
       {/* Top Part */}
-      <div className="space-y-6">
-        {/* Brand Logo — clicking goes to landing page */}
+      <div className="space-y-4">
+        {/* Brand Logo & Name */}
         <Link 
           href="/" 
-          className={`flex items-center group ${isCollapsedMode ? 'justify-center py-1 w-10 h-10 mx-auto' : 'gap-3 px-2 py-1'}`}
+          className={`flex items-center group transition-transform ${isCollapsedMode ? 'justify-center py-1 w-11 h-11 mx-auto' : 'gap-3 px-2 py-1'}`}
         >
-          <OwlLogo size={isCollapsedMode ? 36 : 42} />
+          <OwlLogo size={isCollapsedMode ? 38 : 44} />
           {!isCollapsedMode && (
-            <span className="text-xl font-black text-white transition-opacity group-hover:opacity-75" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
-              {t.common.brand}
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xl font-black text-[#31463D] tracking-tight group-hover:text-[#E8927C] transition-colors" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+                {t.common.brand}
+              </span>
+              <span className="text-[11px] font-bold text-[#627D72] -mt-1">
+                {dir === 'rtl' ? 'التعلم الذكي للأطفال' : 'Smart Learning for Kids'}
+              </span>
+            </div>
           )}
         </Link>
 
-        {children.length > 0 && (
+        {/* Profile / Child Header (Pastel Neumorphic style like reference) */}
+        {activeChild && !isCollapsedMode && (
+          <div className="p-3 rounded-2xl bg-white/70 border border-[#D5E3DB] shadow-sm flex items-center gap-3">
+            {renderAvatar(activeChild.avatarUrl, children.indexOf(activeChild), 10)}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <h4 className="font-black text-sm text-[#273B32] truncate">
+                  {dir === 'rtl' ? `مرحباً، ${activeChild.name}! 👋` : `Hi, ${activeChild.name}! 👋`}
+                </h4>
+              </div>
+              <div className="flex items-center gap-2 mt-0.5 text-xs font-bold text-[#557165]">
+                <span className="flex items-center gap-0.5 text-[#E8927C]">
+                  <Award className="w-3.5 h-3.5" />
+                  {activeChild.points}
+                </span>
+                <span className="flex items-center gap-0.5 text-[#E5A83B]">
+                  <Star className="w-3.5 h-3.5 fill-[#E5A83B]" />
+                  {activeChild.stars}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Child Switcher Dropdown (for multi-children / parent) */}
+        {children.length > 0 && userRole !== 'CHILD' && (
           <div className="relative" ref={childDropdownRef}>
             <button
-              onClick={() => userRole !== 'CHILD' && setIsChildDropdownOpen(!isChildDropdownOpen)}
-              className={`w-full flex items-center transition-all border border-slate-800 text-white ${
-                isCollapsedMode ? 'justify-center p-0 rounded-2xl w-10 h-10 mx-auto' : 'justify-between p-3 rounded-2xl'
-              } ${userRole === 'CHILD' ? 'cursor-default' : 'cursor-pointer'}`}
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-              }}
-              title={activeChild ? activeChild.name : 'اختر ملف طفل'}
+              onClick={() => setIsChildDropdownOpen(!isChildDropdownOpen)}
+              className={`w-full flex items-center justify-between p-2.5 rounded-xl bg-white/80 border border-[#D5E3DB] text-[#2F443A] text-xs font-black shadow-xs hover:bg-white transition-all cursor-pointer ${
+                isCollapsedMode ? 'justify-center p-2' : ''
+              }`}
+              title={activeChild ? activeChild.name : 'اختر طفلاً'}
             >
-              {activeChild ? (
-                isCollapsedMode ? (
-                  renderAvatar(activeChild.avatarUrl, children.indexOf(activeChild), 7)
-                ) : (
-                  <div className={`flex items-center gap-2.5 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-                    {renderAvatar(activeChild.avatarUrl, children.indexOf(activeChild), 9)}
-                    <div>
-                      <h4 className="font-extrabold text-xs text-white leading-tight">{activeChild.name}</h4>
-                      <div className="flex items-center gap-1.5 mt-0.5 text-[10px] font-bold text-slate-300">
-                        <span className="flex items-center gap-0.5 text-cyan-400">
-                          <Award className="w-3.5 h-3.5" />
-                          {activeChild.points}
-                        </span>
-                        <span className="flex items-center gap-0.5 text-amber-400">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                          {activeChild.stars}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )
+              {isCollapsedMode ? (
+                activeChild && renderAvatar(activeChild.avatarUrl, children.indexOf(activeChild), 6)
               ) : (
-                !isCollapsedMode && <span className="text-xs font-bold text-slate-400">اختر ملف طفل</span>
+                <>
+                  <span className="truncate">{activeChild ? activeChild.name : 'اختر طفلاً'}</span>
+                  <ChevronDown className="w-4 h-4 text-[#557165]" />
+                </>
               )}
-              {userRole !== 'CHILD' && !isCollapsedMode && <ChevronDown className="w-4 h-4 text-slate-400 transition-transform duration-200" />}
             </button>
 
-            {/* Child Switcher Dropdown */}
             <AnimatePresence>
               {isChildDropdownOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: -6, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  className={`absolute mt-2 bg-[#161456] rounded-2xl shadow-xl border border-slate-800 z-50 overflow-hidden max-h-60 overflow-y-auto ${
+                  exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                  className={`absolute mt-1.5 bg-white rounded-2xl shadow-xl border border-[#D5E3DB] z-50 overflow-hidden max-h-60 overflow-y-auto ${
                     isCollapsedMode 
-                      ? (dir === 'rtl' ? 'right-full mr-2 top-0 mt-0 w-48' : 'left-full ml-2 top-0 mt-0 w-48') 
+                      ? (dir === 'rtl' ? 'right-full mr-2 top-0 w-48' : 'left-full ml-2 top-0 w-48') 
                       : 'left-0 right-0'
                   }`}
                 >
-                  <div className="p-1 space-y-1">
+                  <div className="p-1.5 space-y-1">
                     {children.map((child, index) => (
                       <button
                         key={child.id}
                         onClick={() => handleChildSwitch(child.id)}
-                        className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-right transition-all cursor-pointer ${
-                          activeChildId === child.id ? 'bg-indigo-600/30 text-white' : 'hover:bg-white/5 text-slate-300'
+                        className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-start transition-all cursor-pointer ${
+                          activeChildId === child.id ? 'bg-[#E2ECE7] text-[#22352C] font-black' : 'hover:bg-[#F2F7F4] text-[#455D52]'
                         }`}
                       >
-                        {renderAvatar(child.avatarUrl, index, 7)}
-                        <div className="flex-1 min-w-0">
-                          <p className="font-black text-xs truncate leading-tight">{child.name}</p>
-                          <p className="text-[9px] font-semibold text-slate-400">{child.age} {t.dashboard.ageLabel}</p>
+                        {renderAvatar(child.avatarUrl, index, 6)}
+                        <div className="flex-1 min-w-0 text-start">
+                          <p className="font-extrabold text-xs truncate leading-tight">{child.name}</p>
+                          <p className="text-[10px] text-[#698478]">{child.age} {t.dashboard.ageLabel}</p>
                         </div>
                       </button>
                     ))}
                     
-                    <div className="h-[1px] bg-slate-800 my-1" />
+                    <div className="h-[1px] bg-[#E5EFE9] my-1" />
                     
                     <Link href="/age-select" className="block">
-                      <button className="w-full flex items-center justify-center gap-2 p-2 rounded-xl text-xs font-black text-cyan-400 hover:bg-cyan-400/5 transition-all cursor-pointer">
+                      <button className="w-full flex items-center justify-center gap-2 p-2 rounded-xl text-xs font-black text-[#E8927C] hover:bg-[#FDF0EC] transition-all cursor-pointer">
                         <Plus className="w-4 h-4" />
                         <span>{t.dashboard.addChildBtn}</span>
                       </button>
@@ -354,8 +367,9 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
             </AnimatePresence>
           </div>
         )}
+
         {/* Menu Navigation Links */}
-        <nav className="space-y-1.5">
+        <nav className="space-y-1 overflow-y-auto max-h-[calc(100vh-380px)] pr-1 pl-1">
           {menuItems.filter(item => !(item.id === 'parent' && userRole === 'CHILD')).map((item) => {
             const isSelected = activeTab 
               ? activeTab === item.id 
@@ -384,24 +398,31 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
             return (
               <Link key={item.id} href={item.href} className="block" onClick={handleClick}>
                 <motion.div
-                  className={`flex items-center rounded-2xl font-black text-xs cursor-pointer transition-all border border-transparent ${
-                    isCollapsedMode ? 'justify-center w-10 h-10 mx-auto p-0' : 'gap-3 px-3.5 py-3'
+                  className={`flex items-center font-black cursor-pointer transition-all duration-200 ${
+                    isCollapsedMode 
+                      ? 'justify-center w-11 h-11 mx-auto p-0 rounded-2xl' 
+                      : 'gap-3 px-3.5 py-2.5 rounded-2xl'
+                  } ${
+                    isSelected
+                      ? 'bg-white text-[#223B30] shadow-[0_4px_14px_rgba(40,70,55,0.08)] border border-[#D5E3DB]'
+                      : 'text-[#486357] hover:text-[#1F332A] hover:bg-white/50'
                   }`}
                   title={item.label}
-                  style={{
-                    color: isSelected ? 'white' : '#94A3B8',
-                    background: isSelected ? 'linear-gradient(90deg, #A855F7 0%, #7C3AED 100%)' : 'transparent',
-                    boxShadow: isSelected ? '0 4px 12px rgba(124, 58, 237, 0.25)' : 'none'
-                  }}
-                  whileHover={{ 
-                    scale: 1.05, 
-                    x: isCollapsedMode ? 0 : (dir === 'rtl' ? -3 : 3),
-                    background: isSelected ? 'linear-gradient(90deg, #A855F7 0%, #7C3AED 100%)' : 'rgba(255, 255, 255, 0.04)'
-                  }}
+                  whileHover={{ scale: 1.02, x: isCollapsedMode ? 0 : (dir === 'rtl' ? -3 : 3) }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <IconComponent className="w-5 h-5 shrink-0" style={{ color: isSelected ? 'white' : '#64748B' }} />
-                  {!isCollapsedMode && <span>{item.label}</span>}
+                  <div 
+                    className={`flex items-center justify-center shrink-0 rounded-xl ${
+                      isSelected ? 'w-8 h-8 bg-[#E6F0EB] text-[#244537]' : 'w-7 h-7 text-[#567568]'
+                    }`}
+                  >
+                    <IconComponent className="w-4.5 h-4.5" />
+                  </div>
+                  {!isCollapsedMode && (
+                    <span className="text-[14.5px] font-black tracking-tight leading-none">
+                      {item.label}
+                    </span>
+                  )}
                 </motion.div>
               </Link>
             );
@@ -409,22 +430,48 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
         </nav>
       </div>
 
-      {/* Bottom Part */}
-      <div className="space-y-4 pt-4 border-t border-slate-800">
+      {/* Bottom Part (Pastel CTA card & actions) */}
+      <div className="space-y-3 pt-3 border-t border-[#D5E3DB]">
+        {/* Cute Motivational / Star Club Card (Inspired by reference "Go Premium" card) */}
+        {!isCollapsedMode && (
+          <div 
+            className="p-3.5 rounded-2xl relative overflow-hidden text-center shadow-xs"
+            style={{
+              background: 'linear-gradient(135deg, #FDDECF 0%, #FBEBE1 100%)',
+              border: '1.5px solid rgba(232, 146, 124, 0.35)',
+            }}
+          >
+            <div className="w-10 h-10 rounded-xl bg-white shadow-xs mx-auto mb-2 flex items-center justify-center">
+              <Crown className="w-5 h-5 text-[#E8927C] fill-[#E8927C]" />
+            </div>
+            <h5 className="font-black text-xs text-[#4A3830]">
+              {dir === 'rtl' ? 'نادي النجوم 🌟' : 'Club des Étoiles 🌟'}
+            </h5>
+            <p className="text-[11px] font-bold text-[#7E655C] mt-0.5 mb-2.5">
+              {dir === 'rtl' ? 'أكمل التمارين لتفتح شارات جديدة!' : 'Termine les exercices et gagne des badges !'}
+            </p>
+            <Link href={activeChildId ? `/challenges?childId=${activeChildId}` : '/challenges'}>
+              <button className="w-full py-1.5 px-3 rounded-xl bg-[#E8927C] hover:bg-[#D4785F] text-white text-xs font-black shadow-sm transition-all cursor-pointer">
+                {dir === 'rtl' ? 'اكتشف التحديات 🚀' : 'Voir les Défis 🚀'}
+              </button>
+            </Link>
+          </div>
+        )}
+
         {/* Language Switcher */}
         <div className="flex justify-center">
           <LanguageSwitcher isCollapsed={isCollapsedMode} />
         </div>
 
-        {/* Logout */}
+        {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className={`flex items-center justify-center transition-all border border-rose-950/30 hover:bg-rose-950/10 cursor-pointer ${
-            isCollapsedMode ? 'w-10 h-10 rounded-2xl mx-auto p-0' : 'w-full gap-2 py-3 px-4 rounded-2xl text-xs font-black text-rose-400'
+          className={`flex items-center justify-center transition-all bg-white/60 hover:bg-[#FDF0EC] border border-[#E8927C]/30 text-[#D46B55] hover:text-[#B94E38] cursor-pointer shadow-xs ${
+            isCollapsedMode ? 'w-10 h-10 rounded-xl mx-auto p-0' : 'w-full gap-2 py-2.5 px-3 rounded-xl text-xs font-black'
           }`}
           title={t.dashboard.logoutBtn}
         >
-          <LogOut className="w-4.5 h-4.5 text-rose-400" />
+          <LogOut className="w-4 h-4" />
           {!isCollapsedMode && <span>{t.dashboard.logoutBtn}</span>}
         </button>
       </div>
@@ -435,14 +482,14 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
     <>
       {/* Desktop Sidebar (visible on md screens and up) */}
       <motion.aside 
-        animate={{ width: isCollapsed ? 80 : 256 }}
+        animate={{ width: isCollapsed ? 82 : 260 }}
         transition={{ type: 'spring', damping: 25, stiffness: 220 }}
         className="hidden md:block h-screen sticky top-0 shrink-0 z-30 relative"
         style={{
-          background: '#110F4C',
-          borderRight: dir === 'ltr' ? '1px solid rgba(255,255,255,0.06)' : 'none',
-          borderLeft: dir === 'rtl' ? '1px solid rgba(255,255,255,0.06)' : 'none',
-          boxShadow: '0 0 40px rgba(0,0,0,0.15)',
+          background: '#E6EFEA', // Soft Pastel Sage/Mint matching reference design
+          borderRight: dir === 'ltr' ? '1.5px solid #D2E2D8' : 'none',
+          borderLeft: dir === 'rtl' ? '1.5px solid #D2E2D8' : 'none',
+          boxShadow: '4px 0 24px rgba(45, 75, 60, 0.04)',
           overflow: 'visible'
         }}
       >
@@ -453,7 +500,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
             setIsCollapsed(nextState);
             localStorage.setItem('sidebar-collapsed', String(nextState));
           }}
-          className={`hidden md:flex items-center justify-center absolute top-6 z-50 w-6 h-6 rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white border border-white/10 shadow-md cursor-pointer transition-all duration-200 ${
+          className={`hidden md:flex items-center justify-center absolute top-6 z-50 w-6 h-6 rounded-full bg-white hover:bg-[#F0F6F2] text-[#345344] border border-[#CBDDD2] shadow-sm cursor-pointer transition-all duration-200 ${
             dir === 'rtl' 
               ? 'left-0 -translate-x-1/2' 
               : 'right-0 translate-x-1/2'
@@ -471,22 +518,31 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
 
       {/* Mobile Top Header (only visible on mobile to toggle drawer) */}
       <header 
-        className="md:hidden flex items-center justify-between px-5 py-3.5 sticky top-0 z-40 bg-[#110F4C] backdrop-blur-md"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-40 bg-[#E6EFEA]/95 backdrop-blur-md shadow-xs"
+        style={{ borderBottom: '1.5px solid #D2E2D8' }}
       >
         <Link href="/" className="flex items-center gap-2">
-          <OwlLogo size={32} />
-          <span className="text-lg font-black text-white" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+          <OwlLogo size={34} />
+          <span className="text-lg font-black text-[#263D33]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
             {t.common.brand}
           </span>
         </Link>
 
-        <button 
-          onClick={() => setIsOpen(true)}
-          className="p-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer text-white"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          {activeChild && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-[#D2E2D8] text-xs font-bold text-[#355244]">
+              {renderAvatar(activeChild.avatarUrl, children.indexOf(activeChild), 5)}
+              <span className="truncate max-w-[90px]">{activeChild.name}</span>
+            </div>
+          )}
+          <button 
+            onClick={() => setIsOpen(true)}
+            className="p-2.5 rounded-xl bg-white border border-[#D2E2D8] text-[#263D33] shadow-xs cursor-pointer hover:bg-[#F2F7F4] transition-all"
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
       </header>
 
       {/* Mobile Drawer (visible on mobile when open) */}
@@ -496,10 +552,10 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black z-50 md:hidden"
+              className="fixed inset-0 bg-[#1A2E25] z-50 md:hidden backdrop-blur-xs"
             />
 
             {/* Sidebar drawer content */}
@@ -508,7 +564,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
               animate={{ x: 0 }}
               exit={{ x: dir === 'rtl' ? '100%' : '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-              className="fixed top-0 bottom-0 w-72 bg-[#110F4C] z-50 md:hidden shadow-2xl flex flex-col"
+              className="fixed top-0 bottom-0 w-76 bg-[#E6EFEA] z-50 md:hidden shadow-2xl flex flex-col"
               style={{
                 right: dir === 'rtl' ? 0 : 'auto',
                 left: dir === 'ltr' ? 0 : 'auto',
@@ -518,9 +574,10 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
               <div className={`absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} z-50`}>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-full hover:bg-white/5 transition-all text-slate-400"
+                  className="p-2 rounded-full bg-white/80 border border-[#D2E2D8] hover:bg-white transition-all text-[#263D33] shadow-xs cursor-pointer"
+                  aria-label="Close menu"
                 >
-                  <X className="w-5 h-5 text-slate-300" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
@@ -539,28 +596,28 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs"
             onClick={() => setComingSoonTab(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 max-w-xs w-full mx-4 text-center relative"
+              className="bg-white rounded-3xl p-7 shadow-2xl border border-[#F0D5CB] max-w-xs w-full mx-4 text-center relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="text-5xl mb-4">🚀</div>
-              <h3 className="text-lg font-black text-slate-800 mb-2">
+              <div className="text-5xl mb-3">🚀</div>
+              <h3 className="text-lg font-black text-[#3D364A] mb-2">
                 {comingSoonTab}
               </h3>
-              <p className="text-slate-500 text-xs font-bold mb-6">
+              <p className="text-[#6E647D] text-xs font-bold mb-6">
                 {dir === 'rtl' 
                   ? 'هذا القسم قيد التطوير والبرمجة حالياً وسيكون متاحاً قريباً جداً! انتظرونا 🎉' 
                   : 'Ce module est en cours de développement et sera disponible très bientôt ! 🎉'}
               </p>
               <button
                 onClick={() => setComingSoonTab(null)}
-                className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-xs font-black py-3 rounded-2xl shadow border-b-4 border-indigo-900 cursor-pointer transition-all"
+                className="w-full bg-[#E8927C] hover:bg-[#D4785F] text-white text-xs font-black py-3 rounded-2xl shadow-md cursor-pointer transition-all"
               >
                 {dir === 'rtl' ? 'حسناً 👍' : 'D\'accord 👍'}
               </button>

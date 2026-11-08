@@ -31,6 +31,9 @@ import {
   Layers,
   ChevronDown,
   ChevronUp,
+  Play,
+  Video,
+  X
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -73,31 +76,43 @@ interface Child {
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-const subjectIcons: Record<string, any> = {
-  MATHS: Brain,
-  FRANCAIS: MessageCircle,
-  LOGIQUE: HelpCircle,
-  CULTURE: Globe,
-  ARABIC: BookOpen,
-  SCIENCE: Compass,
-  ISLAMIC_CIVIC: Star,
-  ENGLISH: Globe,
-  SOCIALS: BookmarkCheck,
-};
-
 const subjectStyles: Record<string, { color: string; bg: string; border: string; gradient: string }> = {
-  MATHS:        { color: '#3B82F6', bg: 'rgba(59,130,246,0.1)',   border: 'rgba(59,130,246,0.25)',   gradient: 'linear-gradient(135deg,#3B82F6,#1D4ED8)' },
-  FRANCAIS:     { color: '#FF8C42', bg: 'rgba(255,140,66,0.1)',   border: 'rgba(255,140,66,0.25)',   gradient: 'linear-gradient(135deg,#FF8C42,#EA580C)' },
-  LOGIQUE:      { color: '#60A5FA', bg: 'rgba(96,165,250,0.1)',   border: 'rgba(96,165,250,0.25)',   gradient: 'linear-gradient(135deg,#60A5FA,#2563EB)' },
-  CULTURE:      { color: '#4ADE80', bg: 'rgba(74,222,128,0.1)',   border: 'rgba(74,222,128,0.25)',   gradient: 'linear-gradient(135deg,#4ADE80,#16A34A)' },
-  ARABIC:       { color: '#7C3AED', bg: 'rgba(124,58,237,0.1)',   border: 'rgba(124,58,237,0.25)',   gradient: 'linear-gradient(135deg,#7C3AED,#5B21B6)' },
-  SCIENCE:      { color: '#10B981', bg: 'rgba(16,185,129,0.1)',   border: 'rgba(16,185,129,0.25)',   gradient: 'linear-gradient(135deg,#10B981,#047857)' },
-  ISLAMIC_CIVIC:{ color: '#F59E0B', bg: 'rgba(245,158,11,0.1)',   border: 'rgba(245,158,11,0.25)',   gradient: 'linear-gradient(135deg,#F59E0B,#D97706)' },
-  ENGLISH:      { color: '#EC4899', bg: 'rgba(236,72,153,0.1)',   border: 'rgba(236,72,153,0.25)',   gradient: 'linear-gradient(135deg,#EC4899,#BE185D)' },
-  SOCIALS:      { color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)',   border: 'rgba(139,92,246,0.25)',   gradient: 'linear-gradient(135deg,#8B5CF6,#6D28D9)' },
+  MATHS:        { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)',  border: 'rgba(59,130,246,0.3)',   gradient: 'linear-gradient(135deg,#60A5FA,#3B82F6)' },
+  FRANCAIS:     { color: '#E8927C', bg: 'rgba(232,146,124,0.15)', border: 'rgba(232,146,124,0.3)', gradient: 'linear-gradient(135deg,#E8927C,#D4785F)' },
+  LOGIQUE:      { color: '#7EB5D6', bg: 'rgba(126,181,214,0.15)', border: 'rgba(126,181,214,0.3)', gradient: 'linear-gradient(135deg,#7EB5D6,#5B9CC2)' },
+  CULTURE:      { color: '#95C5B2', bg: 'rgba(149,197,178,0.15)', border: 'rgba(149,197,178,0.3)', gradient: 'linear-gradient(135deg,#95C5B2,#7BAEA0)' },
+  ARABIC:       { color: '#C4A6D7', bg: 'rgba(196,166,215,0.18)', border: 'rgba(196,166,215,0.3)', gradient: 'linear-gradient(135deg,#C4A6D7,#B08EC7)' },
+  SCIENCE:      { color: '#10B981', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.3)',  gradient: 'linear-gradient(135deg,#34D399,#10B981)' },
+  ISLAMIC_CIVIC:{ color: '#F0C987', bg: 'rgba(240,201,135,0.2)',  border: 'rgba(240,201,135,0.4)', gradient: 'linear-gradient(135deg,#F0C987,#E5B365)' },
+  ENGLISH:      { color: '#F2B5C8', bg: 'rgba(242,181,200,0.2)',  border: 'rgba(242,181,200,0.4)', gradient: 'linear-gradient(135deg,#F2B5C8,#E89CB3)' },
+  SOCIALS:      { color: '#95C5B2', bg: 'rgba(149,197,178,0.15)', border: 'rgba(149,197,178,0.3)', gradient: 'linear-gradient(135deg,#95C5B2,#76A798)' },
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// Video exercises list
+const videoExercisesList = [
+  {
+    id: 'vid-math-1',
+    title: 'تمرين الجمع الحسابي والعد السريع',
+    titleFr: 'Exercice Vidéo : Calcul Mental & Addition',
+    subject: 'MATHS',
+    duration: '3:45',
+    thumbnail: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=500&auto=format&fit=crop&q=80',
+    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLb0zKSynM2PAeEecVf3-oKjV640ePz3hW',
+    xpReward: 35,
+    difficulty: 'FACILE'
+  },
+  {
+    id: 'vid-science-1',
+    title: 'تمرين دورة الماء وتبخر السحب',
+    titleFr: 'Exercice Vidéo : Le Cycle de l\'Eau',
+    subject: 'SCIENCE',
+    duration: '4:15',
+    thumbnail: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=500&auto=format&fit=crop&q=80',
+    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLb0zKSynM2PAeEecVf3-oKjV640ePz3hW',
+    xpReward: 40,
+    difficulty: 'MOYEN'
+  }
+];
 
 function getSubjectLabel(subj: string, t: any): string {
   if (subj === 'MATHS') return t.lessons.math;
@@ -111,8 +126,6 @@ function getSubjectLabel(subj: string, t: any): string {
   if (subj === 'SOCIALS') return t.lessons.socials;
   return subj;
 }
-
-// ─── Main component ──────────────────────────────────────────────────────────
 
 function ExercisesContent() {
   const router = useRouter();
@@ -128,8 +141,8 @@ function ExercisesContent() {
   const [generating, setGenerating] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<string>('MATHS');
   const [expandedAxes, setExpandedAxes] = useState<Set<string>>(new Set());
+  const [activeVideoModal, setActiveVideoModal] = useState<any | null>(null);
 
-  // ── Load childId ────────────────────────────────────────────────────────────
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
@@ -138,7 +151,6 @@ function ExercisesContent() {
     }
   }, [searchParams]);
 
-  // ── Load data ───────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!childId) return;
 
@@ -151,7 +163,6 @@ function ExercisesContent() {
         setChild(childRes.data);
         setLessons(lessonsRes.data);
 
-        // Build a map of exercise details (id → full detail)
         const map: Record<string, ExerciseDetail> = {};
         const ai: ExerciseDetail[] = [];
         (exercisesRes.data as ExerciseDetail[]).forEach((ex) => {
@@ -161,7 +172,6 @@ function ExercisesContent() {
         setExerciseDetailsMap(map);
         setAiExercises(ai);
 
-        // Determine which subjects have lessons
         const firstSubject = lessonsRes.data[0]?.subject;
         if (firstSubject) setSelectedSubject(firstSubject);
       })
@@ -171,7 +181,7 @@ function ExercisesContent() {
         router.push('/dashboard');
       })
       .finally(() => setLoading(false));
-  }, [childId]);
+  }, [childId, router]);
 
   const handleGenerateCustom = async () => {
     if (!childId) return;
@@ -194,23 +204,21 @@ function ExercisesContent() {
     });
   };
 
-  // ── Guard states ────────────────────────────────────────────────────────────
   if (!childId) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-gradient-to-b from-[var(--color-bg)] to-[var(--color-bg2)]">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[#FDF8F3]">
         <motion.div
-          className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
-          style={{ background: 'rgba(239,68,68,0.1)', border: '2px solid rgba(239,68,68,0.2)' }}
+          className="w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-[#FDE1D6] border-2 border-[#E8927C]"
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <HelpCircle className="w-10 h-10 text-red-400" />
+          <HelpCircle className="w-10 h-10 text-[#D4785F]" />
         </motion.div>
-        <h2 className="text-2xl font-black mb-2 text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
-          الرجاء اختيار طفل أولاً / Please Select a Child
+        <h2 className="text-2xl sm:text-3xl font-black mb-2 text-[#3D364A]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+          {dir === 'rtl' ? 'الرجاء اختيار طفل أولاً' : 'Veuillez sélectionner un enfant'}
         </h2>
-        <p className="text-slate-500 text-sm mb-8 max-w-sm font-semibold">
-          يجب اختيار ملف الطفل من لوحة التحكم لعرض التمارين.
+        <p className="text-[#6E647D] text-sm sm:text-base mb-8 max-w-sm font-semibold">
+          {dir === 'rtl' ? 'يجب اختيار ملف الطفل من لوحة التحكم لعرض التمارين.' : 'Veuillez choisir un profil pour voir les exercices.'}
         </p>
         <Link href="/dashboard">
           <button className="btn-primary flex items-center gap-2 cursor-pointer">
@@ -224,37 +232,33 @@ function ExercisesContent() {
 
   if (loading || generating) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[var(--color-bg)] to-[var(--color-bg2)]">
-        <Loader2 className="w-8 h-8 animate-spin mb-4 text-[var(--color-primary)]" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FDF8F3]">
+        <Loader2 className="w-10 h-10 animate-spin mb-4 text-[#E8927C]" />
         {generating && (
-          <p className="text-slate-500 text-sm font-semibold animate-pulse">{t.exercises.generating}</p>
+          <p className="text-[#6E647D] text-base font-bold animate-pulse">{t.exercises.generating}</p>
         )}
       </div>
     );
   }
 
-  // ── Derived data: subjects that have lessons ──────────────────────────────
   const availableSubjects = Array.from(new Set(lessons.map((l) => l.subject)));
 
   const subjectsList = [
-    { id: 'MATHS',         label: t.lessons.math,        icon: Brain,         color: '#3B82F6', bg: 'rgba(59,130,246,0.1)' },
-    { id: 'FRANCAIS',      label: t.lessons.french,      icon: MessageCircle, color: '#FF8C42', bg: 'rgba(255,140,66,0.1)' },
-    { id: 'ARABIC',        label: t.lessons.arabic,      icon: BookOpen,      color: '#7C3AED', bg: 'rgba(124,58,237,0.1)' },
-    { id: 'SCIENCE',       label: t.lessons.science,     icon: Compass,       color: '#10B981', bg: 'rgba(16,185,129,0.1)' },
-    { id: 'ENGLISH',       label: t.lessons.english,     icon: Globe,         color: '#EC4899', bg: 'rgba(236,72,153,0.1)' },
-    { id: 'SOCIALS',       label: t.lessons.socials,     icon: BookmarkCheck, color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)' },
-    { id: 'LOGIQUE',       label: t.lessons.logic,       icon: HelpCircle,    color: '#60A5FA', bg: 'rgba(96,165,250,0.1)' },
-    { id: 'CULTURE',       label: t.lessons.culture,     icon: Globe,         color: '#4ADE80', bg: 'rgba(74,222,128,0.1)' },
-    { id: 'ISLAMIC_CIVIC', label: t.lessons.islamicCivic,icon: Star,          color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
+    { id: 'MATHS',         label: t.lessons.math,        icon: Brain,         color: '#3B82F6', bg: 'rgba(59,130,246,0.12)' },
+    { id: 'FRANCAIS',      label: t.lessons.french,      icon: MessageCircle, color: '#E8927C', bg: 'rgba(232,146,124,0.15)' },
+    { id: 'ARABIC',        label: t.lessons.arabic,      icon: BookOpen,      color: '#C4A6D7', bg: 'rgba(196,166,215,0.18)' },
+    { id: 'SCIENCE',       label: t.lessons.science,     icon: Compass,       color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
+    { id: 'ENGLISH',       label: t.lessons.english,     icon: Globe,         color: '#F2B5C8', bg: 'rgba(242,181,200,0.2)' },
+    { id: 'SOCIALS',       label: t.lessons.socials,     icon: BookmarkCheck, color: '#95C5B2', bg: 'rgba(149,197,178,0.15)' },
+    { id: 'LOGIQUE',       label: t.lessons.logic,       icon: HelpCircle,    color: '#7EB5D6', bg: 'rgba(126,181,214,0.15)' },
+    { id: 'CULTURE',       label: t.lessons.culture,     icon: Globe,         color: '#95C5B2', bg: 'rgba(149,197,178,0.15)' },
+    { id: 'ISLAMIC_CIVIC', label: t.lessons.islamicCivic,icon: Star,          color: '#F0C987', bg: 'rgba(240,201,135,0.2)' },
   ].filter((s) => availableSubjects.includes(s.id));
 
-  // ── Build axis groups for the selected subject ───────────────────────────
-  // Only lessons of selected subject, sorted by order
   const subjectLessons = lessons
     .filter((l) => l.subject === selectedSubject)
     .sort((a, b) => a.order - b.order);
 
-  // Group by axis, preserving lesson order within each axis
   const axisGroupMap: Record<string, { axisName: string; lessons: Lesson[] }> = {};
   subjectLessons.forEach((lesson) => {
     const axisKey = lesson.axis || 'general';
@@ -265,10 +269,8 @@ function ExercisesContent() {
   });
   const axisGroups = Object.entries(axisGroupMap);
 
-  // AI exercises for selected subject
   const subjectAiExercises = aiExercises.filter((ex) => ex.subject === selectedSubject);
 
-  // Count for badge on subject button
   const countExercisesForSubject = (subjectId: string) => {
     return lessons
       .filter((l) => l.subject === subjectId)
@@ -278,476 +280,563 @@ function ExercisesContent() {
   const activeStyles = subjectStyles[selectedSubject] || subjectStyles.MATHS;
 
   return (
-    <div className="flex-grow max-w-6xl w-full mx-auto px-4 md:px-6 py-8">
+    <div className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 py-6 space-y-6">
 
-          {/* ── Page Header ── */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`mb-8 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
+      {/* ── Page Header ── */}
+      <motion.div
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
+      >
+        <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs"
+            style={{ background: 'linear-gradient(135deg, #FDDECF, #F2B5C8)' }}
           >
-            <div className={`flex items-center gap-3 mb-1 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md"
-                style={{ background: 'linear-gradient(135deg, #A855F7, #60A5FA)' }}
-              >
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <h1
-                className="text-3xl font-black text-slate-800"
-                style={{ fontFamily: 'Fredoka One, sans-serif' }}
-              >
-                {t.exercises.title}
-              </h1>
+            <Zap className="w-6 h-6 text-[#D4785F]" />
+          </div>
+          <div>
+            <h1
+              className="text-2xl sm:text-3xl font-black text-[#3D364A]"
+              style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}
+            >
+              {t.exercises.title}
+            </h1>
+            <p className="text-[#6E647D] text-sm sm:text-base font-bold">{t.exercises.subtitle}</p>
+          </div>
+        </div>
+
+        {child && (
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E8927C]/25 text-xs font-black text-[#3D364A] shadow-xs">
+            <span>{dir === 'rtl' ? 'ملف التلميذ:' : 'Profil :'}</span>
+            <span className="text-[#E8927C]">{child.name}</span>
+          </div>
+        )}
+      </motion.div>
+
+      {/* ── Featured Video Exercises Section (Contenu: تمرين أو اثنين مع فيديوهات) ── */}
+      <div className="rounded-[2.2rem] bg-white p-6 border border-[#E8927C]/20 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl bg-[#E8927C]/15 text-[#E8927C] flex items-center justify-center">
+              <Video className="w-5 h-5" />
             </div>
-            <p className="text-[var(--color-muted)] text-sm font-semibold">{t.exercises.subtitle}</p>
-          </motion.div>
-
-          {/* ── Two-column layout: Subject sidebar + Main content ── */}
-          <div className={`flex flex-col lg:flex-row gap-6 ${dir === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
-
-            {/* ── Subject Sidebar ── */}
-            <div className="w-full lg:w-60 shrink-0">
-              <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-md sticky top-8">
-                <h2
-                  className={`text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ${
-                    dir === 'rtl' ? 'text-right' : 'text-left'
-                  }`}
-                >
-                  {dir === 'rtl' ? 'المواد الدراسية' : 'MATIÈRES'}
-                </h2>
-                <div className="flex flex-col gap-1.5">
-                  {subjectsList.map((sub) => {
-                    const isSelected = selectedSubject === sub.id;
-                    const SubIcon = sub.icon;
-                    const count = countExercisesForSubject(sub.id);
-                    return (
-                      <motion.button
-                        key={sub.id}
-                        onClick={() => setSelectedSubject(sub.id)}
-                        whileTap={{ scale: 0.97 }}
-                        className={`w-full px-3 py-2.5 rounded-xl flex items-center justify-between text-xs font-black cursor-pointer transition-all ${
-                          isSelected
-                            ? 'text-white shadow-md'
-                            : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                        } ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}
-                        style={isSelected ? { background: activeStyles.gradient } : {}}
-                      >
-                        <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                          <div
-                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                            style={{ background: isSelected ? 'rgba(255,255,255,0.2)' : sub.bg }}
-                          >
-                            <SubIcon className="w-4 h-4" style={{ color: isSelected ? 'white' : sub.color }} />
-                          </div>
-                          <span className="leading-tight">{sub.label}</span>
-                        </div>
-                        <span
-                          className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                            isSelected ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-500'
-                          }`}
-                        >
-                          {count}
-                        </span>
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* ── Right: Main Exercises Content ── */}
-            <div className="flex-1 min-w-0 space-y-6">
-
-              {/* ── AI Generator Card ── */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-3xl p-5 relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(168,85,247,0.08) 0%, rgba(96,165,250,0.08) 100%)',
-                  border: '2px solid rgba(168,85,247,0.2)',
-                  boxShadow: '0 4px 24px rgba(168,85,247,0.08)',
-                }}
-              >
-                <div
-                  className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${
-                    dir === 'rtl' ? 'sm:flex-row-reverse text-right' : 'sm:flex-row text-left'
-                  }`}
-                >
-                  <div className="space-y-1 flex-1">
-                    <span
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold"
-                      style={{ background: 'rgba(168,85,247,0.12)', color: '#7E22CE', border: '1.5px solid rgba(168,85,247,0.3)' }}
-                    >
-                      <Sparkles className="w-3 h-3" />
-                      <span>{dir === 'rtl' ? 'ذكاء اصطناعي تكيفي' : 'Adaptive AI'}</span>
-                    </span>
-                    <h2 className="text-base font-black text-slate-800">{t.exercises.generateCustom}</h2>
-                    <p className="text-slate-500 text-xs font-semibold">{t.exercises.customDesc}</p>
-                  </div>
-                  <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                    <span className="text-xs font-black text-slate-600 bg-white border border-slate-200 px-3 py-2 rounded-xl">
-                      {getSubjectLabel(selectedSubject, t)}
-                    </span>
-                    <button
-                      onClick={handleGenerateCustom}
-                      className="btn-primary py-2 px-5 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-                      style={{ background: 'linear-gradient(135deg, #A855F7, #7C3AED)' }}
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>{t.exercises.startBtn}</span>
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* ── Axis Groups ── */}
-              {axisGroups.length === 0 ? (
-                <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-slate-200">
-                  <h3 className="text-sm font-black text-slate-700">
-                    {dir === 'rtl' ? 'لا توجد تمارين في هذه المادة' : 'Aucun exercice disponible dans cette matière'}
-                  </h3>
-                </div>
-              ) : (
-                axisGroups.map(([axisKey, axisGroup], axisIdx) => {
-                  // Axis-level unlock: open if any lesson in it is unlocked
-                  const axisHasUnlocked = axisGroup.lessons.some((l) => l.unlocked);
-                  const isExpanded = expandedAxes.has(axisKey);
-                  const totalExercises = axisGroup.lessons.reduce((s, l) => s + l.exercises.length, 0);
-                  const completedExercises = axisGroup.lessons.reduce(
-                    (s, l) => s + l.exercises.filter((e) => e.completed).length,
-                    0
-                  );
-                  const axisLabel = axisGroup.axisName || (dir === 'rtl' ? `المحور ${axisIdx + 1}` : `Axe ${axisIdx + 1}`);
-
-                  return (
-                    <motion.div
-                      key={axisKey}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: axisIdx * 0.07 }}
-                      className="rounded-3xl overflow-hidden border border-slate-100 shadow-sm bg-white"
-                    >
-                      {/* Axis Header – clickable to expand/collapse */}
-                      <button
-                        onClick={() => toggleAxis(axisKey)}
-                        className={`w-full px-6 py-4 flex items-center justify-between cursor-pointer transition-colors hover:bg-slate-50 ${
-                          dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
-                        }`}
-                      >
-                        <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                          {/* Axis icon */}
-                          <div
-                            className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0"
-                            style={{ background: axisHasUnlocked ? activeStyles.bg : '#F1F5F9' }}
-                          >
-                            <Layers className="w-5 h-5" style={{ color: axisHasUnlocked ? activeStyles.color : '#94A3B8' }} />
-                          </div>
-                          <div>
-                            <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                              <span className="text-sm font-black text-slate-800 leading-tight">{axisLabel}</span>
-                              {!axisHasUnlocked && (
-                                <span className="inline-flex items-center gap-1 text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                                  <Lock className="w-2.5 h-2.5" />
-                                  {dir === 'rtl' ? 'مقفل' : 'Verrouillé'}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
-                              {axisGroup.lessons.length} {dir === 'rtl' ? 'دروس' : 'leçons'} · {totalExercises} {dir === 'rtl' ? 'تمارين' : 'exercices'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                          {/* Progress */}
-                          <div className="hidden sm:flex items-center gap-2">
-                            <div className="w-20 h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                              <div
-                                className="h-full rounded-full transition-all duration-500"
-                                style={{
-                                  width: `${totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0}%`,
-                                  background: activeStyles.gradient,
-                                }}
-                              />
-                            </div>
-                            <span className="text-[9px] font-black text-slate-400">
-                              {completedExercises}/{totalExercises}
-                            </span>
-                          </div>
-                          <div
-                            className="w-7 h-7 rounded-full flex items-center justify-center transition-colors"
-                            style={{ background: isExpanded ? activeStyles.bg : '#F1F5F9' }}
-                          >
-                            {isExpanded
-                              ? <ChevronUp className="w-4 h-4" style={{ color: activeStyles.color }} />
-                              : <ChevronDown className="w-4 h-4 text-slate-400" />}
-                          </div>
-                        </div>
-                      </button>
-
-                      {/* Axis Content: lessons & exercises */}
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="px-6 pb-6 space-y-6 border-t border-slate-100 pt-4">
-                              {axisGroup.lessons.map((lesson, lessonIdx) => {
-                                const lessonStyles = subjectStyles[lesson.subject] || activeStyles;
-                                const lessonCompleted = lesson.completed;
-
-                                return (
-                                  <div key={lesson.id} className="space-y-3">
-                                    {/* Lesson sub-header */}
-                                    <div
-                                      className={`flex items-center gap-2.5 ${
-                                        dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
-                                      }`}
-                                    >
-                                      {/* order circle */}
-                                      <div
-                                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-black"
-                                        style={{
-                                          background: lesson.unlocked ? lessonStyles.gradient : '#E2E8F0',
-                                          color: lesson.unlocked ? 'white' : '#94A3B8',
-                                        }}
-                                      >
-                                        {lesson.order}
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                        <span
-                                          className={`text-xs font-black truncate ${
-                                            lesson.unlocked ? 'text-slate-700' : 'text-slate-400'
-                                          }`}
-                                        >
-                                          {lesson.title}
-                                        </span>
-                                      </div>
-                                      {lessonCompleted && (
-                                        <span
-                                          className="shrink-0 inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full"
-                                          style={{ background: 'rgba(74,222,128,0.12)', color: '#16A34A', border: '1px solid rgba(74,222,128,0.3)' }}
-                                        >
-                                          <CheckCircle className="w-2.5 h-2.5" />
-                                          {t.lessons.completed}
-                                        </span>
-                                      )}
-                                      {!lesson.unlocked && (
-                                        <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                                          <Lock className="w-2.5 h-2.5" />
-                                          {dir === 'rtl' ? 'مقفل' : 'Verrouillé'}
-                                        </span>
-                                      )}
-                                    </div>
-
-                                    {/* Exercise cards grid */}
-                                    {lesson.exercises.length === 0 ? (
-                                      <p className={`text-[10px] text-slate-400 font-semibold italic ${dir === 'rtl' ? 'text-right' : 'text-left'} px-2`}>
-                                        {dir === 'rtl' ? 'لا توجد تمارين لهذا الدرس' : 'Aucun exercice pour cette leçon'}
-                                      </p>
-                                    ) : (
-                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-9">
-                                        {lesson.exercises.map((ex, exIdx) => {
-                                          // Merge with full exercise details
-                                          const detail = exerciseDetailsMap[ex.id];
-                                          const isUnlocked = lesson.unlocked;
-
-                                          const cardContent = (
-                                            <motion.div
-                                              initial={{ opacity: 0, y: 6 }}
-                                              animate={{ opacity: 1, y: 0 }}
-                                              transition={{ delay: exIdx * 0.04 }}
-                                              className={`rounded-2xl p-4 flex items-center gap-3 transition-all ${
-                                                isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
-                                              } ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}
-                                              style={{
-                                                background: ex.completed
-                                                  ? lessonStyles.bg.replace('0.1)', '0.06)')
-                                                  : isUnlocked
-                                                    ? 'white'
-                                                    : '#F8FAFC',
-                                                border: `1.5px solid ${
-                                                  ex.completed
-                                                    ? lessonStyles.border
-                                                    : isUnlocked
-                                                      ? 'rgba(0,0,0,0.06)'
-                                                      : '#E2E8F0'
-                                                }`,
-                                                boxShadow: isUnlocked ? '0 2px 8px rgba(0,0,0,0.04)' : 'none',
-                                              }}
-                                              whileHover={
-                                                isUnlocked
-                                                  ? { y: -2, borderColor: lessonStyles.border, boxShadow: `0 6px 20px ${lessonStyles.bg}` }
-                                                  : {}
-                                              }
-                                            >
-                                              {/* Icon */}
-                                              <div
-                                                className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                                                style={{ background: isUnlocked ? lessonStyles.bg : '#E2E8F0' }}
-                                              >
-                                                {isUnlocked ? (
-                                                  ex.isMandatory
-                                                    ? <Target className="w-4.5 h-4.5" style={{ color: lessonStyles.color }} />
-                                                    : <Zap className="w-4.5 h-4.5" style={{ color: lessonStyles.color }} />
-                                                ) : (
-                                                  <Lock className="w-4 h-4 text-slate-400" />
-                                                )}
-                                              </div>
-
-                                              {/* Text */}
-                                              <div className="flex-1 min-w-0">
-                                                <div className={`flex items-center gap-1.5 flex-wrap ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                                                  <h3 className={`font-black text-xs truncate ${isUnlocked ? 'text-slate-800' : 'text-slate-400'}`}>
-                                                    {ex.title}
-                                                  </h3>
-                                                  {ex.isMandatory && (
-                                                    <span
-                                                      className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded-full"
-                                                      style={{ background: lessonStyles.bg, color: lessonStyles.color, border: `1px solid ${lessonStyles.border}` }}
-                                                    >
-                                                      {dir === 'rtl' ? 'إلزامي' : 'Obligatoire'}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                                {detail?.description && (
-                                                  <p className={`text-[10px] truncate font-semibold mt-0.5 ${isUnlocked ? 'text-slate-500' : 'text-slate-400'}`}>
-                                                    {detail.description}
-                                                  </p>
-                                                )}
-                                                {detail?.difficulty && (
-                                                  <span
-                                                    className="text-[8px] font-bold uppercase"
-                                                    style={{ color: isUnlocked ? lessonStyles.color : '#94A3B8' }}
-                                                  >
-                                                    {(t.dashboard.levels as any)[detail.difficulty] || detail.difficulty}
-                                                  </span>
-                                                )}
-                                              </div>
-
-                                              {/* Right badge */}
-                                              {ex.completed ? (
-                                                <div
-                                                  className="shrink-0 flex items-center gap-1 text-[9px] font-black px-2 py-1 rounded-full"
-                                                  style={{ background: 'rgba(74,222,128,0.12)', color: '#16A34A', border: '1.5px solid rgba(74,222,128,0.3)' }}
-                                                >
-                                                  <CheckCircle className="w-3 h-3" />
-                                                  <span>{t.lessons.completed}</span>
-                                                </div>
-                                              ) : isUnlocked ? (
-                                                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center border border-slate-100 bg-slate-50 text-slate-500">
-                                                  {dir === 'rtl'
-                                                    ? <ChevronLeft className="w-3.5 h-3.5" />
-                                                    : <ChevronRight className="w-3.5 h-3.5" />}
-                                                </div>
-                                              ) : (
-                                                <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-slate-100 text-slate-400">
-                                                  <Lock className="w-3 h-3" />
-                                                </div>
-                                              )}
-                                            </motion.div>
-                                          );
-
-                                          return isUnlocked ? (
-                                            <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}`}>
-                                              {cardContent}
-                                            </Link>
-                                          ) : (
-                                            <div key={ex.id}>{cardContent}</div>
-                                          );
-                                        })}
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                })
-              )}
-
-              {/* ── AI / Adapted Exercises ── */}
-              {subjectAiExercises.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-3xl overflow-hidden border border-purple-100 shadow-sm bg-white"
-                >
-                  <div
-                    className={`px-6 py-4 flex items-center gap-3 border-b border-purple-50 ${
-                      dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
-                    }`}
-                    style={{ background: 'rgba(168,85,247,0.04)' }}
-                  >
-                    <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'rgba(168,85,247,0.12)' }}>
-                      <Sparkles className="w-5 h-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <span className="text-sm font-black text-slate-800">
-                        {dir === 'rtl' ? 'تمارين الذكاء الاصطناعي المخصصة' : 'Exercices IA Personnalisés'}
-                      </span>
-                      <p className="text-[10px] text-slate-400 font-semibold">
-                        {subjectAiExercises.length} {dir === 'rtl' ? 'تمارين متاحة' : 'exercices disponibles'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {subjectAiExercises.map((ex, idx) => (
-                      <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}`}>
-                        <motion.div
-                          initial={{ opacity: 0, y: 6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.05 }}
-                          className={`rounded-2xl p-4 flex items-center gap-3 cursor-pointer ${
-                            dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
-                          }`}
-                          style={{
-                            background: ex.completed ? 'rgba(168,85,247,0.06)' : 'white',
-                            border: `1.5px solid ${ex.completed ? 'rgba(168,85,247,0.3)' : 'rgba(0,0,0,0.06)'}`,
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                          }}
-                          whileHover={{ y: -2, borderColor: 'rgba(168,85,247,0.4)', boxShadow: '0 6px 20px rgba(168,85,247,0.1)' }}
-                        >
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(168,85,247,0.12)' }}>
-                            <Sparkles className="w-4.5 h-4.5 text-purple-600" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-black text-xs text-slate-800 truncate">{ex.title}</h3>
-                            {ex.description && (
-                              <p className="text-[10px] text-slate-500 font-semibold truncate mt-0.5">{ex.description}</p>
-                            )}
-                            <span className="text-[8px] font-bold text-purple-600 uppercase">
-                              {(t.dashboard.levels as any)[ex.difficulty] || ex.difficulty}
-                            </span>
-                          </div>
-                          {ex.completed ? (
-                            <div className="shrink-0 flex items-center gap-1 text-[9px] font-black px-2 py-1 rounded-full"
-                              style={{ background: 'rgba(74,222,128,0.12)', color: '#16A34A', border: '1.5px solid rgba(74,222,128,0.3)' }}>
-                              <CheckCircle className="w-3 h-3" />
-                              <span>{t.lessons.completed}</span>
-                            </div>
-                          ) : (
-                            <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center border border-slate-100 bg-slate-50 text-slate-500">
-                              {dir === 'rtl' ? <ChevronLeft className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                            </div>
-                          )}
-                        </motion.div>
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+            <div>
+              <h2 className="text-lg sm:text-xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
+                {dir === 'rtl' ? 'تمارين تفاعلية بالفيديو 🎬' : 'Exercices Vidéo Interactifs 🎬'}
+              </h2>
+              <p className="text-xs font-bold text-[#6E647D]">
+                {dir === 'rtl' ? 'شاهد الشرح بالفيديو ثم حل التمارين التفاعلية لتربح نقاطاً مضاعفة' : 'Regardez la vidéo puis répondez au quiz pour gagner des points !'}
+              </p>
             </div>
           </div>
+          <span className="px-2.5 py-1 rounded-full text-xs font-black bg-[#E8927C]/15 text-[#D4785F]">
+            {dir === 'rtl' ? 'جديد 🌟' : 'Nouveau 🌟'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          {videoExercisesList.map(vid => (
+            <div 
+              key={vid.id}
+              className="rounded-3xl p-4 border border-[#F2ECE5] bg-[#FFFBF7] shadow-xs flex flex-col sm:flex-row items-center gap-4"
+            >
+              <div 
+                onClick={() => setActiveVideoModal(vid)}
+                className="w-full sm:w-44 h-32 rounded-2xl overflow-hidden relative group cursor-pointer shrink-0 shadow-xs"
+              >
+                <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/35 transition-colors">
+                  <div className="w-11 h-11 rounded-full bg-white text-[#E8927C] flex items-center justify-center shadow-md">
+                    <Play className="w-5 h-5 fill-[#E8927C] ml-0.5" />
+                  </div>
+                </div>
+                <span className="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+                  {vid.duration}
+                </span>
+              </div>
+
+              <div className="flex-1 min-w-0 space-y-2 text-center sm:text-start">
+                <div className="flex items-center justify-center sm:justify-start gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#E8927C]/15 text-[#D4785F]">
+                    +{vid.xpReward} XP
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#F5EDE4] text-[#6E647D]">
+                    {vid.difficulty}
+                  </span>
+                </div>
+                <h3 className="font-black text-sm text-[#3D364A] leading-snug line-clamp-2">
+                  {dir === 'rtl' ? vid.title : vid.titleFr}
+                </h3>
+                <button
+                  onClick={() => setActiveVideoModal(vid)}
+                  className="btn-primary text-xs py-2 px-4 rounded-xl cursor-pointer"
+                >
+                  <Play className="w-3.5 h-3.5 fill-white" />
+                  <span className="mx-1">{dir === 'rtl' ? 'مشاهدة وبدء التمرين' : 'Regarder & Jouer'}</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Two-column layout: Subject sidebar + Main content ── */}
+      <div className={`flex flex-col lg:flex-row gap-6 ${dir === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'}`}>
+
+        {/* ── Subject Sidebar ── */}
+        <div className="w-full lg:w-64 shrink-0">
+          <div className="bg-white rounded-3xl p-4 sm:p-5 border border-[#E8927C]/20 shadow-xs sticky top-8 space-y-3">
+            <h2
+              className={`text-xs font-black text-[#8B7E9B] uppercase tracking-wider ${
+                dir === 'rtl' ? 'text-right' : 'text-left'
+              }`}
+            >
+              {dir === 'rtl' ? 'المواد الدراسية' : 'Matières scolaires'}
+            </h2>
+            <div className="flex flex-col gap-2">
+              {subjectsList.map((sub) => {
+                const isSelected = selectedSubject === sub.id;
+                const SubIcon = sub.icon;
+                const count = countExercisesForSubject(sub.id);
+                return (
+                  <motion.button
+                    key={sub.id}
+                    onClick={() => setSelectedSubject(sub.id)}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full px-3.5 py-3 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-black cursor-pointer transition-all ${
+                      isSelected
+                        ? 'text-white shadow-md'
+                        : 'bg-[#FDF8F3] text-[#4A4458] hover:bg-[#F7EFE7]'
+                    } ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}
+                    style={isSelected ? { background: activeStyles.gradient } : {}}
+                  >
+                    <div className={`flex items-center gap-2.5 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div
+                        className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: isSelected ? 'rgba(255,255,255,0.25)' : sub.bg }}
+                      >
+                        <SubIcon className="w-4.5 h-4.5" style={{ color: isSelected ? 'white' : sub.color }} />
+                      </div>
+                      <span className="leading-tight">{sub.label}</span>
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full font-extrabold shrink-0 ${
+                        isSelected ? 'bg-white/30 text-white' : 'bg-[#EFE5DB] text-[#6E647D]'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Right: Main Exercises Content ── */}
+        <div className="flex-1 min-w-0 space-y-6">
+
+          {/* ── AI Generator Card ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-[2.2rem] p-6 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #FDDECF 0%, #F5ECE3 100%)',
+              border: '2px solid rgba(232, 146, 124, 0.25)',
+              boxShadow: '0 8px 24px rgba(232, 146, 124, 0.1)',
+            }}
+          >
+            <div
+              className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${
+                dir === 'rtl' ? 'sm:flex-row-reverse text-right' : 'sm:flex-row text-left'
+              }`}
+            >
+              <div className="space-y-1.5 flex-1">
+                <span
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-white/80 text-[#D4785F] border border-[#E8927C]/30"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#E8927C]" />
+                  <span>{dir === 'rtl' ? 'ذكاء اصطناعي تكيفي' : 'IA Adaptative'}</span>
+                </span>
+                <h2 className="text-lg sm:text-xl font-black text-[#3D364A]">{t.exercises.generateCustom}</h2>
+                <p className="text-[#6E647D] text-xs sm:text-sm font-bold">{t.exercises.customDesc}</p>
+              </div>
+              <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                <span className="text-xs sm:text-sm font-black text-[#4A4458] bg-white border border-[#E8927C]/20 px-3.5 py-2 rounded-xl shadow-xs">
+                  {getSubjectLabel(selectedSubject, t)}
+                </span>
+                <button
+                  onClick={handleGenerateCustom}
+                  className="btn-primary py-2.5 px-5 text-xs sm:text-sm font-black flex items-center gap-2 cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>{t.exercises.startBtn}</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── Axis Groups ── */}
+          {axisGroups.length === 0 ? (
+            <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-[#E8927C]/30">
+              <h3 className="text-base font-black text-[#6E647D]">
+                {dir === 'rtl' ? 'لا توجد تمارين متاحة في هذه المادة حالياً' : 'Aucun exercice disponible dans cette matière'}
+              </h3>
+            </div>
+          ) : (
+            axisGroups.map(([axisKey, axisGroup], axisIdx) => {
+              const axisHasUnlocked = axisGroup.lessons.some((l) => l.unlocked);
+              const isExpanded = expandedAxes.has(axisKey);
+              const totalExercises = axisGroup.lessons.reduce((s, l) => s + l.exercises.length, 0);
+              const completedExercises = axisGroup.lessons.reduce(
+                (s, l) => s + l.exercises.filter((e) => e.completed).length,
+                0
+              );
+              const axisLabel = axisGroup.axisName || (dir === 'rtl' ? `المحور ${axisIdx + 1}` : `Axe ${axisIdx + 1}`);
+
+              return (
+                <motion.div
+                  key={axisKey}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: axisIdx * 0.05 }}
+                  className="rounded-[2rem] overflow-hidden border border-[#E8927C]/20 shadow-xs bg-white"
+                >
+                  {/* Axis Header */}
+                  <button
+                    onClick={() => toggleAxis(axisKey)}
+                    className={`w-full px-6 py-4 flex items-center justify-between cursor-pointer transition-colors hover:bg-[#FDF8F3] ${
+                      dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
+                    }`}
+                  >
+                    <div className={`flex items-center gap-3.5 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+                        style={{ background: axisHasUnlocked ? activeStyles.bg : '#F5EDE4' }}
+                      >
+                        <Layers className="w-5 h-5" style={{ color: axisHasUnlocked ? activeStyles.color : '#A396B5' }} />
+                      </div>
+                      <div>
+                        <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                          <span className="text-base font-black text-[#3D364A] leading-tight">{axisLabel}</span>
+                          {!axisHasUnlocked && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-black text-[#6E647D] bg-[#F5EDE4] px-2 py-0.5 rounded-full">
+                              <Lock className="w-3 h-3" />
+                              {dir === 'rtl' ? 'مقفل' : 'Verrouillé'}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-[#6E647D] font-bold mt-0.5">
+                          {axisGroup.lessons.length} {dir === 'rtl' ? 'دروس' : 'leçons'} · {totalExercises} {dir === 'rtl' ? 'تمارين' : 'exercices'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className="hidden sm:flex items-center gap-2">
+                        <div className="w-24 h-2 rounded-full bg-[#F5EDE4] overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0}%`,
+                              background: activeStyles.gradient,
+                            }}
+                          />
+                        </div>
+                        <span className="text-xs font-black text-[#6E647D]">
+                          {completedExercises}/{totalExercises}
+                        </span>
+                      </div>
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                        style={{ background: isExpanded ? activeStyles.bg : '#F5EDE4' }}
+                      >
+                        {isExpanded
+                          ? <ChevronUp className="w-4 h-4" style={{ color: activeStyles.color }} />
+                          : <ChevronDown className="w-4 h-4 text-[#6E647D]" />}
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Axis Content */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-6 space-y-6 border-t border-[#F2ECE5] pt-4">
+                          {axisGroup.lessons.map((lesson) => {
+                            const lessonStyles = subjectStyles[lesson.subject] || activeStyles;
+                            const lessonCompleted = lesson.completed;
+
+                            return (
+                              <div key={lesson.id} className="space-y-3">
+                                <div
+                                  className={`flex items-center gap-2.5 ${
+                                    dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
+                                  }`}
+                                >
+                                  <div
+                                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-black"
+                                    style={{
+                                      background: lesson.unlocked ? lessonStyles.gradient : '#E0D7CD',
+                                      color: lesson.unlocked ? 'white' : '#8E8378',
+                                    }}
+                                  >
+                                    {lesson.order}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <span
+                                      className={`text-sm font-black truncate ${
+                                        lesson.unlocked ? 'text-[#3D364A]' : 'text-[#A396B5]'
+                                      }`}
+                                    >
+                                      {lesson.title}
+                                    </span>
+                                  </div>
+                                  {lessonCompleted && (
+                                    <span className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full bg-[#D9EFE6] text-[#2D6652]">
+                                      <CheckCircle className="w-3 h-3" />
+                                      {t.lessons.completed}
+                                    </span>
+                                  )}
+                                  {!lesson.unlocked && (
+                                    <span className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black text-[#6E647D] bg-[#F5EDE4] px-2.5 py-0.5 rounded-full">
+                                      <Lock className="w-3 h-3" />
+                                      {dir === 'rtl' ? 'مقفل' : 'Verrouillé'}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {lesson.exercises.length === 0 ? (
+                                  <p className={`text-xs text-[#6E647D] font-bold italic ${dir === 'rtl' ? 'text-right' : 'text-left'} px-2`}>
+                                    {dir === 'rtl' ? 'لا توجد تمارين لهذا الدرس' : 'Aucun exercice pour cette leçon'}
+                                  </p>
+                                ) : (
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pl-9 pr-9">
+                                    {lesson.exercises.map((ex, exIdx) => {
+                                      const detail = exerciseDetailsMap[ex.id];
+                                      const isUnlocked = lesson.unlocked;
+
+                                      const cardContent = (
+                                        <motion.div
+                                          initial={{ opacity: 0, y: 6 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                          transition={{ delay: exIdx * 0.04 }}
+                                          className={`rounded-2xl p-4 flex items-center gap-3 transition-all ${
+                                            isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
+                                          } ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}
+                                          style={{
+                                            background: ex.completed ? '#F5FBF8' : isUnlocked ? 'white' : '#F8F4F0',
+                                            border: `1.5px solid ${ex.completed ? '#95C5B2' : isUnlocked ? '#E8927C30' : '#E0D7CD'}`,
+                                            boxShadow: isUnlocked ? '0 2px 10px rgba(0,0,0,0.03)' : 'none',
+                                          }}
+                                          whileHover={
+                                            isUnlocked
+                                              ? { y: -2, borderColor: lessonStyles.color, boxShadow: `0 6px 20px ${lessonStyles.bg}` }
+                                              : {}
+                                          }
+                                        >
+                                          <div
+                                            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                            style={{ background: isUnlocked ? lessonStyles.bg : '#E0D7CD' }}
+                                          >
+                                            {isUnlocked ? (
+                                              ex.isMandatory
+                                                ? <Target className="w-5 h-5" style={{ color: lessonStyles.color }} />
+                                                : <Zap className="w-5 h-5" style={{ color: lessonStyles.color }} />
+                                            ) : (
+                                              <Lock className="w-4 h-4 text-[#A396B5]" />
+                                            )}
+                                          </div>
+
+                                          <div className="flex-1 min-w-0">
+                                            <div className={`flex items-center gap-1.5 flex-wrap ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                              <h3 className={`font-black text-sm truncate ${isUnlocked ? 'text-[#3D364A]' : 'text-[#A396B5]'}`}>
+                                                {ex.title}
+                                              </h3>
+                                              {ex.isMandatory && (
+                                                <span
+                                                  className="shrink-0 text-[9px] font-black px-2 py-0.5 rounded-full"
+                                                  style={{ background: lessonStyles.bg, color: lessonStyles.color, border: `1px solid ${lessonStyles.border}` }}
+                                                >
+                                                  {dir === 'rtl' ? 'إلزامي' : 'Obligatoire'}
+                                                </span>
+                                              )}
+                                            </div>
+                                            {detail?.description && (
+                                              <p className={`text-xs truncate font-bold mt-0.5 ${isUnlocked ? 'text-[#6E647D]' : 'text-[#A396B5]'}`}>
+                                                {detail.description}
+                                              </p>
+                                            )}
+                                          </div>
+
+                                          {ex.completed ? (
+                                            <div className="shrink-0 flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full bg-[#D9EFE6] text-[#2D6652]">
+                                              <CheckCircle className="w-3.5 h-3.5" />
+                                              <span>{t.lessons.completed}</span>
+                                            </div>
+                                          ) : isUnlocked ? (
+                                            <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center border border-[#F2ECE5] bg-[#FDF8F3] text-[#6E647D]">
+                                              {dir === 'rtl' ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                            </div>
+                                          ) : (
+                                            <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-[#E0D7CD] text-[#8E8378]">
+                                              <Lock className="w-3.5 h-3.5" />
+                                            </div>
+                                          )}
+                                        </motion.div>
+                                      );
+
+                                      return isUnlocked ? (
+                                        <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}`}>
+                                          {cardContent}
+                                        </Link>
+                                      ) : (
+                                        <div key={ex.id}>{cardContent}</div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })
+          )}
+
+          {/* ── AI Adapted Exercises ── */}
+          {subjectAiExercises.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-[2rem] overflow-hidden border border-[#C4A6D7]/30 shadow-xs bg-white"
+            >
+              <div
+                className={`px-6 py-4 flex items-center gap-3 border-b border-[#F5F0FA] ${
+                  dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
+                }`}
+                style={{ background: 'rgba(196,166,215,0.1)' }}
+              >
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 bg-[#C4A6D7]/20 text-[#8B6DA4]">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[#3D364A]">
+                    {dir === 'rtl' ? 'تمارين الذكاء الاصطناعي التكيفية' : 'Exercices IA Adaptatifs'}
+                  </h3>
+                  <p className="text-xs text-[#6E647D] font-bold">
+                    {subjectAiExercises.length} {dir === 'rtl' ? 'تمارين مخصصة لمستواك' : 'exercices adaptés'}
+                  </p>
+                </div>
+              </div>
+              <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {subjectAiExercises.map((ex, idx) => (
+                  <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}`}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className={`rounded-2xl p-4 flex items-center gap-3 cursor-pointer bg-white border border-[#C4A6D7]/30 shadow-xs hover:shadow-md transition-all ${
+                        dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
+                      }`}
+                      whileHover={{ y: -2 }}
+                    >
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-[#C4A6D7]/20 text-[#8B6DA4]">
+                        <Sparkles className="w-4.5 h-4.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-black text-sm text-[#3D364A] truncate">{ex.title}</h4>
+                        {ex.description && (
+                          <p className="text-xs text-[#6E647D] font-bold truncate mt-0.5">{ex.description}</p>
+                        )}
+                      </div>
+                      {ex.completed ? (
+                        <div className="shrink-0 flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full bg-[#D9EFE6] text-[#2D6652]">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>{t.lessons.completed}</span>
+                        </div>
+                      ) : (
+                        <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center border border-[#F2ECE5] bg-[#FDF8F3] text-[#6E647D]">
+                          {dir === 'rtl' ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                        </div>
+                      )}
+                    </motion.div>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+        </div>
+      </div>
+
+      {/* ── Video Player Modal ── */}
+      <AnimatePresence>
+        {activeVideoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4"
+            onClick={() => setActiveVideoModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-3xl overflow-hidden max-w-2xl w-full shadow-2xl border border-[#F2ECE5]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-4 bg-[#FDF8F3] border-b border-[#F2ECE5] flex items-center justify-between">
+                <h4 className="font-black text-sm sm:text-base text-[#3D364A]">
+                  {dir === 'rtl' ? activeVideoModal.title : activeVideoModal.titleFr}
+                </h4>
+                <button
+                  onClick={() => setActiveVideoModal(null)}
+                  className="p-1.5 rounded-full bg-white border border-[#E8DDD2] text-[#6E647D] hover:bg-[#F2ECE5] cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="aspect-video bg-black relative">
+                <iframe
+                  className="w-full h-full"
+                  src={activeVideoModal.videoUrl}
+                  title={activeVideoModal.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+
+              <div className="p-4 flex items-center justify-between bg-white">
+                <span className="text-xs font-black text-[#E8927C] bg-[#FDE1D6] px-3 py-1 rounded-full">
+                  +{activeVideoModal.xpReward} XP
+                </span>
+                <button 
+                  onClick={() => setActiveVideoModal(null)}
+                  className="btn-primary text-xs sm:text-sm py-2 px-5 rounded-xl cursor-pointer"
+                >
+                  {dir === 'rtl' ? 'بدء الأسئلة التطبيقية ✍️' : 'Commencer le quiz ✍️'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
@@ -755,8 +844,8 @@ function ExercisesContent() {
 export default function ExercisesPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[var(--color-bg)] to-[var(--color-bg2)]">
-        <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
+      <div className="min-h-screen flex items-center justify-center bg-[#FDF8F3]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#E8927C]" />
       </div>
     }>
       <ExercisesContent />

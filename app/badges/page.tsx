@@ -133,104 +133,96 @@ function BadgesContent() {
       {/* Header */}
       <div className="text-center space-y-3">
         <motion.div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #F59E0B, #7C3AED)' }}
-          animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+          className="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto shadow-md bg-gradient-to-br from-[#E8927C] to-[#E58066]"
+          animate={{ y: [0, -8, 0], rotate: [0, 4, -4, 0] }}
           transition={{ duration: 3, repeat: Infinity }}
         >
           <Award className="w-10 h-10 text-white" />
         </motion.div>
         <h1
-          className="text-3xl font-black text-slate-800"
-          style={{ fontFamily: 'Fredoka One, sans-serif', color: 'var(--color-primary)' }}
+          className="text-3xl sm:text-4xl font-black text-[#3D364A]"
+          style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}
         >
           {t.challenges.badgesTitle}
         </h1>
-        <p className="text-[var(--color-muted)] text-sm font-semibold">{t.challenges.badgesDesc}</p>
+        <p className="text-[#6E637C] text-base font-bold">{t.challenges.badgesDesc}</p>
       </div>
 
       {/* Premium Gamified Progress Card */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-[2rem] p-6 text-white shadow-2xl border border-[#3b82f630] flex flex-col sm:flex-row items-center gap-6"
+        className="relative overflow-hidden rounded-3xl p-6 sm:p-7 text-white shadow-lg border border-[#F2B5C8]/40 flex flex-col sm:flex-row items-center gap-6"
         style={{
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #1e1a78 100%)',
+          background: 'linear-gradient(135deg, #E8927C 0%, #E58066 100%)',
         }}
       >
         {/* Glow effects */}
-        <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full opacity-15 bg-amber-400 blur-xl pointer-events-none" />
-        <div className="absolute -left-8 -top-8 w-32 h-32 rounded-full opacity-15 bg-violet-400 blur-xl pointer-events-none" />
+        <div className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full opacity-20 bg-white blur-xl pointer-events-none" />
+        <div className="absolute -left-8 -top-8 w-36 h-36 rounded-full opacity-15 bg-amber-200 blur-xl pointer-events-none" />
 
-        {/* Circular progress with neon style */}
+        {/* Circular progress with neon/pastel style */}
         <div className="relative w-28 h-28 shrink-0 z-10">
           <svg className="w-full h-full -rotate-90" viewBox="0 0 80 80">
-            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8" />
             <circle
               cx="40"
               cy="40"
               r="34"
               fill="none"
-              stroke="url(#premiumBadgeGrad)"
+              stroke="#FFF"
               strokeWidth="8"
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * 34}`}
               strokeDashoffset={`${2 * Math.PI * 34 * (1 - progressPercent / 100)}`}
               style={{
                 transition: 'stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1)',
-                filter: 'drop-shadow(0 0 5px rgba(168, 85, 247, 0.5))'
+                filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.6))'
               }}
             />
-            <defs>
-              <linearGradient id="premiumBadgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#38BDF8" />
-                <stop offset="50%" stopColor="#A855F7" />
-                <stop offset="100%" stopColor="#F59E0B" />
-              </linearGradient>
-            </defs>
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-2xl font-black text-white" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
               {earnedCount}
             </span>
-            <span className="text-[10px] font-bold text-slate-300">/ {totalCount}</span>
+            <span className="text-xs font-bold text-white/80">/ {totalCount}</span>
           </div>
         </div>
 
         {/* Text and progress info */}
         <div className={`flex-1 z-10 w-full ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-black text-white text-lg">
+          <div className="flex items-center gap-2 mb-1.5">
+            <h3 className="font-black text-white text-xl">
               {child?.name} —{' '}
-              <span className="text-cyan-400 font-extrabold">
+              <span className="text-amber-200 font-extrabold">
                 {earnedCount} {dir === 'rtl' ? 'شارة مكتسبة' : 'badge(s) obtenu(s)'}
               </span>
             </h3>
           </div>
-          <p className="text-xs text-indigo-200 font-bold mb-4 leading-relaxed">
+          <p className="text-sm text-white/90 font-bold mb-4 leading-relaxed">
             {dir === 'rtl'
               ? `رائع! لقد أنجزت ${progressPercent}% من رحلة جمع الشارات. تابع الدروس والتمارين لتكسب الباقي!`
               : `Super ! Tu as accompli ${progressPercent}% de ta collection de badges. Continue à apprendre pour tous les débloquer !`}
           </p>
           
-          <div className="w-full h-3 bg-slate-950/60 rounded-full overflow-hidden border border-white/5 p-[1px]">
+          <div className="w-full h-3 bg-black/20 rounded-full overflow-hidden border border-white/10 p-[1px]">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressPercent}%` }}
               transition={{ duration: 1, ease: 'easeOut' }}
-              className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-violet-400 to-amber-400 relative"
+              className="h-full rounded-full bg-gradient-to-r from-amber-200 to-white relative shadow-xs"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
             </motion.div>
           </div>
         </div>
 
         {child && (
-          <div className="flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-3 rounded-2xl shrink-0 z-10 backdrop-blur-sm self-stretch justify-center sm:self-center">
-            <Star className="w-5 h-5 text-amber-400 fill-amber-300 animate-pulse" />
+          <div className="flex items-center gap-2.5 bg-white/20 border border-white/30 px-5 py-3 rounded-2xl shrink-0 z-10 backdrop-blur-sm self-stretch justify-center sm:self-center shadow-inner">
+            <Star className="w-6 h-6 text-amber-300 fill-amber-300 animate-pulse" />
             <div className="text-center">
-              <span className="text-sm font-black text-white block leading-none">{child.stars}</span>
-              <span className="text-[9px] font-bold text-indigo-300 mt-1 block">
+              <span className="text-base font-black text-white block leading-none">{child.stars}</span>
+              <span className="text-xs font-bold text-white/80 mt-1 block">
                 {dir === 'rtl' ? 'نجوم' : 'Étoiles'}
               </span>
             </div>
@@ -240,11 +232,11 @@ function BadgesContent() {
 
       {/* Badges Grid */}
       {totalCount === 0 ? (
-        <div className="text-center py-16 space-y-3 bg-white rounded-3xl border border-slate-100 shadow-sm">
-          <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto border border-slate-100">
-            <Award className="w-8 h-8 text-slate-300" />
+        <div className="text-center py-16 space-y-3 bg-white rounded-3xl border border-[#F2DDD0] shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-[#FAF8F5] flex items-center justify-center mx-auto border border-[#F2DDD0]">
+            <Award className="w-8 h-8 text-[#A49AA7]" />
           </div>
-          <p className="text-slate-400 font-bold text-sm">
+          <p className="text-[#6E637C] font-bold text-base">
             {dir === 'rtl' ? 'لا توجد شارات بعد' : 'Aucun badge disponible'}
           </p>
         </div>
@@ -256,49 +248,47 @@ function BadgesContent() {
               <motion.div
                 key={b.id}
                 initial={{ opacity: 0, scale: 0.88, y: 16 }}
-                animate={{ opacity: b.earned ? 1 : 0.6, scale: 1, y: 0 }}
+                animate={{ opacity: b.earned ? 1 : 0.65, scale: 1, y: 0 }}
                 transition={{ delay: idx * 0.06, type: 'spring', stiffness: 260 }}
                 whileHover={{ y: -6, scale: 1.03 }}
                 className="rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden transition-all duration-300"
                 style={{
-                  background: b.earned
-                    ? 'linear-gradient(135deg, #ffffff 0%, #fefce8 100%)'
-                    : 'white',
-                  border: `2px solid ${b.earned ? 'rgba(124, 58, 237, 0.2)' : '#e2e8f0'}`,
-                  boxShadow: b.earned ? '0 10px 30px rgba(124, 58, 237, 0.08)' : '0 4px 12px rgba(0,0,0,0.02)',
+                  background: b.earned ? '#EEF6F3' : 'white',
+                  border: `2px solid ${b.earned ? '#95C5B2' : '#F2DDD0'}`,
+                  boxShadow: b.earned ? '0 10px 24px rgba(149, 197, 178, 0.15)' : '0 4px 16px rgba(0,0,0,0.02)',
                 }}
               >
                 {/* Lock icon for unearned */}
                 {!b.earned && (
-                  <div className={`absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} text-slate-300 bg-slate-50 border border-slate-100 p-1.5 rounded-xl`}>
-                    <Lock className="w-3.5 h-3.5" />
+                  <div className={`absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} text-[#A49AA7] bg-[#FAF8F5] border border-[#F2DDD0] p-1.5 rounded-xl`}>
+                    <Lock className="w-4 h-4" />
                   </div>
                 )}
 
                 {/* Earned sparkle effect */}
                 {b.earned && (
-                  <div className={`absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} bg-amber-500/10 p-1 rounded-xl`}>
-                    <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
+                  <div className={`absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} bg-[#FEF8EC] p-1.5 rounded-xl border border-[#F6E3B8]`}>
+                    <Sparkles className="w-4 h-4 text-[#D4A75E] animate-pulse" />
                   </div>
                 )}
 
                 {/* Badge icon circle */}
                 <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-md transition-transform duration-300"
+                  className="w-18 h-18 rounded-2xl flex items-center justify-center mb-4 shadow-sm transition-transform duration-300"
                   style={{
                     background: b.earned
-                      ? 'linear-gradient(135deg, #38BDF8, #7C3AED, #F59E0B)'
-                      : '#F1F5F9',
+                      ? 'linear-gradient(135deg, #E8927C, #F5C26B)'
+                      : '#F5F0EB',
                   }}
                 >
                   <BadgeIcon
-                    className="w-7 h-7"
-                    style={{ color: b.earned ? 'white' : '#94A3B8' }}
+                    className="w-8 h-8"
+                    style={{ color: b.earned ? 'white' : '#A49AA7' }}
                   />
                 </div>
 
-                <h3 className="font-black text-slate-800 text-sm mb-1 leading-tight">{b.name}</h3>
-                <p className="text-[11px] text-slate-500 max-w-[200px] leading-relaxed mb-4 font-semibold">
+                <h3 className="font-black text-[#3D364A] text-base mb-1 leading-tight">{b.name}</h3>
+                <p className="text-xs text-[#6E637C] max-w-[220px] leading-relaxed mb-4 font-semibold">
                   {b.description}
                 </p>
 
@@ -306,31 +296,21 @@ function BadgesContent() {
                   <motion.span
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
-                    className="text-[10px] font-black px-3.5 py-1.5 rounded-2xl flex items-center gap-1 mt-auto"
-                    style={{
-                      background: 'rgba(74,222,128,0.12)',
-                      color: '#16A34A',
-                      border: '1.5px solid rgba(74,222,128,0.3)',
-                    }}
+                    className="text-xs font-black px-4 py-1.5 rounded-2xl flex items-center gap-1.5 mt-auto bg-white border border-[#95C5B2] text-[#2D6A53] shadow-xs"
                   >
-                    <CheckCircle className="w-3 h-3" />
+                    <CheckCircle className="w-4 h-4 text-[#2D6A53]" />
                     {dir === 'rtl' ? 'مكتسبة' : 'Obtenu'}
                   </motion.span>
                 ) : (
                   <span
-                    className="text-[10px] font-black px-3.5 py-1.5 rounded-2xl mt-auto"
-                    style={{
-                      background: '#F1F5F9',
-                      color: '#94A3B8',
-                      border: '1.5px solid #E2E8F0',
-                    }}
+                    className="text-xs font-black px-4 py-1.5 rounded-2xl mt-auto bg-[#FAF8F5] text-[#A49AA7] border border-[#F2DDD0]"
                   >
                     {dir === 'rtl' ? '🔒 مقفلة' : '🔒 Bloqué'}
                   </span>
                 )}
 
                 {b.earnedAt && (
-                  <p className="text-[9px] text-slate-400 mt-2 font-bold uppercase tracking-wider">
+                  <p className="text-[10px] text-[#A49AA7] mt-2 font-bold uppercase tracking-wider">
                     {new Date(b.earnedAt).toLocaleDateString(
                       dir === 'rtl' ? 'ar-TN' : 'fr-FR',
                       { day: 'numeric', month: 'short', year: 'numeric' },

@@ -133,8 +133,8 @@ export default function RegisterPage() {
           style={{
             background: 'rgba(255,255,255,0.92)',
             backdropFilter: 'blur(20px)',
-            border: '2px solid rgba(124, 58, 237, 0.15)',
-            boxShadow: '0 20px 60px rgba(124, 58, 237, 0.08), 0 4px 20px rgba(0,0,0,0.03)'
+            border: '2px solid rgba(232, 146, 124, 0.2)',
+            boxShadow: '0 20px 60px rgba(232, 146, 124, 0.1), 0 4px 20px rgba(0,0,0,0.03)'
           }}>
 
           {error && (

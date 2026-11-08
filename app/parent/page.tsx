@@ -151,23 +151,23 @@ function ParentContent() {
     <div className="w-full px-6 lg:px-8 pt-8 pb-20 max-w-5xl mx-auto space-y-8">
           
           {/* Header Banner */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
-            <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-[0.03]" style={{ background: '#4F46E5' }} />
+          <div className="bg-white rounded-3xl p-6 border border-[#E8927C]/20 shadow-xs flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+            <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-[0.05]" style={{ background: '#E8927C' }} />
             <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
-              <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
+              <div className="w-14 h-14 rounded-2xl bg-[#E8927C]/15 text-[#E8927C] flex items-center justify-center shadow-xs">
                 <Shield className="w-7 h-7" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+                <h1 className="text-xl sm:text-2xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
                   {dir === 'rtl' ? 'بوابة الأولياء والأوصياء 👨‍👩‍👧' : 'Espace Parent / Tuteur 👨‍👩‍👧'}
                 </h1>
-                <p className="text-slate-500 text-xs font-semibold mt-0.5">
+                <p className="text-[#6E647D] text-xs font-bold mt-0.5">
                   {dir === 'rtl' ? 'تحكم في أوقات الشاشة، حدد الأهداف، وتابع التقارير المفصلة لطفلك.' : 'Configure les limites d\'écran, ajuste les classes et supervise le travail.'}</p>
               </div>
             </div>
             
             <Link href="/age-select">
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs px-4 py-2.5 rounded-2xl border-b-4 border-indigo-900 cursor-pointer flex items-center gap-1.5 transition-all shadow">
+              <button className="bg-[#E8927C] hover:bg-[#D4785F] text-white font-black text-xs px-4 py-2.5 rounded-2xl shadow-sm cursor-pointer flex items-center gap-1.5 transition-all">
                 <Plus className="w-4 h-4" />
                 <span>{dir === 'rtl' ? 'إضافة طفل' : 'Ajouter enfant'}</span>
               </button>
@@ -302,7 +302,7 @@ function ParentContent() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs py-3.5 rounded-2xl border-b-4 border-indigo-900 cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    className="btn-primary w-full py-3.5 text-xs sm:text-sm font-black flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     <Save className="w-4.5 h-4.5" />
                     <span>{saving ? (dir === 'rtl' ? 'جاري الحفظ...' : 'Sauvegarde...') : (dir === 'rtl' ? 'حفظ كافة التغييرات' : 'Enregistrer les paramètres')}</span>
@@ -315,31 +315,30 @@ function ParentContent() {
               <div className="space-y-6">
                 
                 {/* Child statistics dashboard */}
-                <div className="bg-[#1D1B84]/95 rounded-3xl p-5 border border-indigo-500/20 relative overflow-hidden flex flex-col gap-3 shadow-lg text-white">
-                  <div className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full opacity-10 bg-indigo-400 animate-pulse" />
+                <div className="rounded-3xl p-5 border border-[#E8927C]/25 bg-gradient-to-br from-[#FDDECF] to-[#F8ECE3] relative overflow-hidden flex flex-col gap-3 shadow-xs text-[#3D364A]">
                   <div className="flex items-center gap-2">
-                    <Award className="w-5 h-5 text-amber-400" />
-                    <h3 className="font-black text-xs text-indigo-300">
+                    <Award className="w-5 h-5 text-[#E8927C]" />
+                    <h3 className="font-black text-xs text-[#C45E45]">
                       {dir === 'rtl' ? 'تقرير التميز الأكاديمي' : 'Rapport Académique'}
                     </h3>
                   </div>
 
                   <div className="space-y-2 text-xs font-bold mt-2">
-                    <div className="flex justify-between bg-white/5 p-2.5 rounded-xl">
+                    <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
                       <span>{dir === 'rtl' ? 'الاسم:' : 'Nom :'}</span>
-                      <span>{selectedChild.name}</span>
+                      <span className="font-black text-[#3D364A]">{selectedChild.name}</span>
                     </div>
-                    <div className="flex justify-between bg-white/5 p-2.5 rounded-xl">
+                    <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
                       <span>{dir === 'rtl' ? 'مجموع النقاط:' : 'XP total :'}</span>
-                      <span className="text-amber-400">{selectedChild.points} XP</span>
+                      <span className="text-[#E8927C] font-black">{selectedChild.points} XP</span>
                     </div>
-                    <div className="flex justify-between bg-white/5 p-2.5 rounded-xl">
+                    <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
                       <span>{dir === 'rtl' ? 'الدروس المكتملة:' : 'Leçons terminées :'}</span>
-                      <span className="text-sky-300">{analytics?.totalLessonsCompleted ?? 0}</span>
+                      <span className="text-[#3B82F6] font-black">{analytics?.totalLessonsCompleted ?? 0}</span>
                     </div>
-                    <div className="flex justify-between bg-white/5 p-2.5 rounded-xl">
+                    <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
                       <span>{dir === 'rtl' ? 'التمارين المنجزة:' : 'Exercices résolus :'}</span>
-                      <span className="text-emerald-300">{analytics?.totalExercisesSolved ?? 0}</span>
+                      <span className="text-[#10B981] font-black">{analytics?.totalExercisesSolved ?? 0}</span>
                     </div>
                   </div>
                 </div>

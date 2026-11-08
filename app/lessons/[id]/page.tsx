@@ -140,17 +140,17 @@ function LessonDetailContent() {
   const mandatoryDone = mandatoryExercise?.completed ?? false;
 
   return (
-    <div className="w-full stars-bg pb-20">
+    <div className="w-full min-h-screen bg-[#FDF8F3] pb-20">
         {/* Navbar */}
-        <nav className="sticky top-0 z-50 glass border-b-2 border-[rgba(124,58,237,0.12)] px-6 py-4">
+        <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#F2DDD0] px-6 py-4 shadow-2xs">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <Link href={`/lessons?childId=${childId}`} className="flex items-center gap-2 text-[var(--color-muted)] hover:text-[var(--color-primary)] transition-colors">
+            <Link href={`/lessons?childId=${childId}`} className="flex items-center gap-2 text-[#6E637C] hover:text-[#E8927C] transition-colors font-bold text-sm">
               {dir === 'rtl' ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
-              <span className="text-sm font-bold">{t.lessons.backToLessons}</span>
+              <span>{t.lessons.backToLessons}</span>
             </Link>
             <div className="flex items-center gap-2 md:hidden">
               <OwlLogo size={32} />
-              <span className="text-lg font-black text-[var(--color-primary)]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+              <span className="text-lg font-black text-[#E8927C]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
                 {t.common.brand}
               </span>
             </div>
@@ -162,12 +162,12 @@ function LessonDetailContent() {
 
         {loading ? (
           <div className="flex-grow flex items-center justify-center py-20">
-            <Loader2 className="w-10 h-10 text-[var(--color-primary)] animate-spin" />
+            <Loader2 className="w-10 h-10 text-[#E8927C] animate-spin" />
           </div>
         ) : !lesson ? (
           <div className="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
             <div className="mb-4"><OwlLogo size={60} /></div>
-            <h2 className="text-2xl font-black mb-4 text-[var(--color-text)]">الدرس غير موجود / Lesson Not Found</h2>
+            <h2 className="text-2xl font-black mb-4 text-[#3D364A]">الدرس غير موجود / Lesson Not Found</h2>
             <Link href={`/lessons?childId=${childId}`}>
               <button className="btn-primary">{t.lessons.backToLessons}</button>
             </Link>
@@ -179,26 +179,26 @@ function LessonDetailContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-3xl p-8 border-2 border-[rgba(124,58,237,0.15)] shadow-2xl space-y-6"
+          className="bg-white rounded-3xl p-6 sm:p-8 border border-[#F2DDD0] shadow-sm space-y-6"
         >
           {/* Metadata */}
-          <div className={`flex flex-wrap items-center gap-2.5 text-xs text-[var(--color-muted)] border-b border-[rgba(124,58,237,0.12)] pb-4 ${
+          <div className={`flex flex-wrap items-center gap-2.5 text-xs text-[#6E637C] border-b border-[#F2DDD0] pb-4 ${
             dir === 'rtl' ? 'flex-row-reverse justify-start' : 'flex-row justify-start'
           }`}>
-            <span className="flex items-center gap-1 font-bold bg-[rgba(124,58,237,0.06)] px-3 py-1 rounded-xl border border-[rgba(124,58,237,0.12)]">
-              <Clock className="w-4 h-4 text-[var(--color-primary)]" />
+            <span className="flex items-center gap-1 font-bold bg-[#FDF0EB] text-[#E8927C] px-3.5 py-1.5 rounded-xl border border-[#F2DDD0]">
+              <Clock className="w-4 h-4 text-[#E8927C]" />
               <span>{lesson.duration} {t.lessons.duration}</span>
             </span>
-            <span className="bg-[rgba(124,58,237,0.1)] px-3 py-1 rounded-xl border border-[rgba(124,58,237,0.2)] font-extrabold text-[var(--color-primary)]">
+            <span className="bg-[#FDF0EB] px-3.5 py-1.5 rounded-xl border border-[#F2DDD0] font-extrabold text-[#E8927C]">
               {(t.dashboard.levels as any)[lesson.difficulty] || lesson.difficulty}
             </span>
             {lesson.axis && (
-              <span className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 px-3 py-1 rounded-xl border border-emerald-100 dark:border-emerald-900/30 font-bold">
+              <span className="bg-[#EEF6F3] text-[#2D6A53] px-3.5 py-1.5 rounded-xl border border-[#D5EAE1] font-bold">
                 {lesson.axis}
               </span>
             )}
             {content?.pages && (
-              <span className="bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 px-3 py-1 rounded-xl border border-blue-100 dark:border-blue-900/30 font-bold flex items-center gap-1">
+              <span className="bg-[#F5F0FB] text-[#6C4E97] px-3.5 py-1.5 rounded-xl border border-[#E7DCF5] font-bold flex items-center gap-1">
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>الصحفات: {content.pages.start} - {content.pages.end}</span>
               </span>
@@ -251,7 +251,7 @@ function LessonDetailContent() {
                   } catch (e) { /* ignore storage errors */ }
                   router.push(`/learn-with-ai?childId=${childId}&lessonId=${lessonId}&subject=${lesson.subject || 'MATHS'}&autoExplain=true`);
                 }}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black text-xs shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#E8927C] to-[#E58066] hover:from-[#D97D67] hover:to-[#D47157] text-white font-black text-sm shadow-sm transition-all transform hover:-translate-y-0.5 cursor-pointer"
                 title="اشرح الدرس بالذكاء الاصطناعي 🦉"
               >
                 <Sparkles className="w-4 h-4 animate-pulse" />
@@ -259,7 +259,7 @@ function LessonDetailContent() {
               </button>
               <button
                 onClick={handleTTS}
-                className="w-10 h-10 rounded-xl bg-[rgba(124,58,237,0.08)] border-2 border-[rgba(124,58,237,0.15)] flex items-center justify-center text-[var(--color-primary)] hover:bg-[rgba(124,58,237,0.15)] transition-all cursor-pointer shrink-0"
+                className="w-11 h-11 rounded-2xl bg-[#FDF0EB] border border-[#F2DDD0] flex items-center justify-center text-[#E8927C] hover:bg-[#FBE5DC] transition-all cursor-pointer shrink-0 shadow-xs"
                 title="Read aloud"
               >
                 <Volume2 className="w-5 h-5" />
@@ -268,24 +268,24 @@ function LessonDetailContent() {
           </div>
 
           {/* Lesson Body Text Card */}
-          <div className="bg-violet-50/10 dark:bg-violet-950/5 rounded-3xl p-6 md:p-8 border-2 border-violet-100/20 dark:border-violet-900/10 shadow-inner">
-            <div className={`text-[var(--color-text)] text-lg leading-relaxed ${dir === 'rtl' ? 'text-right font-arabic' : 'text-left'}`} style={{ fontSize: '1.25rem', lineHeight: '2' }}>
-              <p className="whitespace-pre-wrap font-bold text-slate-800 dark:text-slate-200">{content?.text}</p>
+          <div className="bg-[#FAF8F5] rounded-3xl p-6 md:p-8 border border-[#F2DDD0] shadow-inner">
+            <div className={`text-[#3D364A] text-lg leading-relaxed ${dir === 'rtl' ? 'text-right font-arabic' : 'text-left'}`} style={{ fontSize: '1.25rem', lineHeight: '2' }}>
+              <p className="whitespace-pre-wrap font-bold text-[#3D364A]">{content?.text}</p>
             </div>
           </div>
 
           {/* Dedicated AI Explanation Banner */}
-          <div className="bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border-2 border-purple-500/20 rounded-3xl p-5 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
-            <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'text-right flex-row-reverse' : 'text-left flex-row'}`}>
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-md shrink-0">
+          <div className="bg-[#FDF0EB] border border-[#F2DDD0] rounded-3xl p-5 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+            <div className={`flex items-center gap-3.5 ${dir === 'rtl' ? 'text-right flex-row-reverse' : 'text-left flex-row'}`}>
+              <div className="w-13 h-13 rounded-2xl bg-white border border-[#F2DDD0] flex items-center justify-center text-2xl shadow-xs shrink-0">
                 🦉
               </div>
               <div>
-                <h4 className="font-black text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5 justify-start">
+                <h4 className="font-black text-base text-[#3D364A] flex items-center gap-1.5 justify-start">
                   <span>{lang === 'ar' ? 'هل تحتاج إلى زيادة الشرح والتوضيح؟' : 'Need more explanation?'}</span>
-                  <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                  <Sparkles className="w-4 h-4 text-[#E8927C]" />
                 </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">
+                <p className="text-sm text-[#6E637C] font-semibold mt-1">
                   {lang === 'ar' 
                     ? 'المعلم الذكي أنيس جاهز للإجابة عن تساؤلاتك ومساعدتك على فهم هذا الدرس بسهولة!' 
                     : 'AI Tutor Anis is ready to explain this lesson step by step and answer all your questions!'}
@@ -306,9 +306,9 @@ function LessonDetailContent() {
                 } catch (e) { /* ignore storage errors */ }
                 router.push(`/learn-with-ai?childId=${childId}&lessonId=${lessonId}&subject=${lesson.subject || 'MATHS'}&autoExplain=true`);
               }}
-              className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black text-xs shadow-md hover:shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+              className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-[#E8927C] hover:bg-[#D97D67] text-white font-black text-sm shadow-sm transition-all transform hover:scale-105 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
             >
-              <Brain className="w-4 h-4" />
+              <Brain className="w-5 h-5" />
               <span>{lang === 'ar' ? 'اسأل معلم الذكاء الاصطناعي أنيس 🦉' : 'Ask AI Tutor Anis 🦉'}</span>
             </button>
           </div>
@@ -409,7 +409,7 @@ function LessonDetailContent() {
                 {/* Mandatory Exercise */}
                 {mandatoryExercise && (
                   <div>
-                    <p className="text-xs font-black text-[var(--color-primary)] mb-2 flex items-center gap-1">
+                    <p className="text-sm font-black text-[#E8927C] mb-2.5 flex items-center gap-1.5">
                       <span>🔑</span>
                       <span>التمرين الإلزامي — مطلوب لفتح الدرس التالي</span>
                     </p>
@@ -417,27 +417,25 @@ function LessonDetailContent() {
                       <motion.div
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all"
+                        className="w-full p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all shadow-xs"
                         style={{
-                          background: mandatoryDone
-                            ? 'linear-gradient(135deg, rgba(74,222,128,0.08), rgba(16,185,129,0.06))'
-                            : 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.08))',
-                          borderColor: mandatoryDone ? 'rgba(74,222,128,0.4)' : 'var(--color-primary)',
+                          background: mandatoryDone ? '#EEF6F3' : '#FDF0EB',
+                          borderColor: mandatoryDone ? '#95C5B2' : '#E8927C',
                         }}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg"
-                            style={{ background: mandatoryDone ? '#10B981' : 'var(--color-primary)' }}>
-                            {mandatoryDone ? <CheckCircle className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                          <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-sm"
+                            style={{ background: mandatoryDone ? '#95C5B2' : '#E8927C' }}>
+                            {mandatoryDone ? <CheckCircle className="w-6 h-6" /> : <Zap className="w-6 h-6" />}
                           </div>
                           <div>
-                            <p className="font-black text-slate-800 text-sm">{mandatoryExercise.title}</p>
-                            <p className="text-xs text-slate-500 font-semibold">
+                            <p className="font-black text-[#3D364A] text-base">{mandatoryExercise.title}</p>
+                            <p className="text-xs text-[#6E637C] font-semibold mt-0.5">
                               {mandatoryDone ? '✅ تم الإكمال' : 'أساسي — يفتح الدرس التالي'}
                             </p>
                           </div>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-slate-400" />
+                        <ChevronRight className="w-5 h-5 text-[#6E637C]" />
                       </motion.div>
                     </Link>
                   </div>
@@ -446,35 +444,31 @@ function LessonDetailContent() {
                 {/* Optional Exercises */}
                 {optionalExercises.length > 0 && (
                   <div>
-                    <p className="text-xs font-black text-slate-500 mb-2 flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5 text-amber-400" />
+                    <p className="text-sm font-black text-[#6E637C] mb-2.5 flex items-center gap-1.5">
+                      <Star className="w-4 h-4 text-[#F5C26B]" />
                       <span>تمارين إضافية اختيارية</span>
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       {optionalExercises.map((ex) => (
                         <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}&fromLesson=${lessonId}`}>
                           <motion.div
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className="w-full p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all"
-                            style={{
-                              background: ex.completed ? 'rgba(74,222,128,0.05)' : 'white',
-                              borderColor: ex.completed ? 'rgba(74,222,128,0.3)' : 'rgba(0,0,0,0.06)',
-                            }}
+                            className="w-full p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all bg-white hover:bg-[#FAF8F5] border-[#F2DDD0] shadow-xs"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm"
-                                style={{ background: ex.completed ? '#10B981' : '#A855F7' }}>
-                                {ex.completed ? <CheckCircle className="w-4 h-4" /> : <Trophy className="w-4 h-4" />}
+                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm shadow-xs"
+                                style={{ background: ex.completed ? '#95C5B2' : '#F5C26B' }}>
+                                {ex.completed ? <CheckCircle className="w-5 h-5" /> : <Trophy className="w-5 h-5" />}
                               </div>
                               <div>
-                                <p className="font-bold text-slate-700 text-sm">{ex.title}</p>
-                                <p className="text-[10px] text-slate-400 font-semibold">
+                                <p className="font-bold text-[#3D364A] text-sm sm:text-base">{ex.title}</p>
+                                <p className="text-xs text-[#6E637C] font-semibold mt-0.5">
                                   {ex.completed ? '✅ مكتمل' : 'اختياري — يمنحك نقاطاً إضافية'}
                                 </p>
                               </div>
                             </div>
-                            <ChevronRight className="w-4 h-4 text-slate-400" />
+                            <ChevronRight className="w-5 h-5 text-[#A49AA7]" />
                           </motion.div>
                         </Link>
                       ))}
@@ -484,8 +478,8 @@ function LessonDetailContent() {
 
                 {/* Back to Map */}
                 <Link href={`/lessons?childId=${childId}`}>
-                  <button className="w-full py-3 rounded-2xl text-xs font-black text-slate-500 hover:bg-slate-100 transition-all cursor-pointer border border-slate-200 flex items-center justify-center gap-2">
-                    {dir === 'rtl' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
+                  <button className="w-full py-3.5 rounded-2xl text-sm font-black text-[#6E637C] hover:bg-[#FDF0EB] hover:text-[#E8927C] transition-all cursor-pointer border border-[#F2DDD0] bg-white flex items-center justify-center gap-2">
+                    {dir === 'rtl' ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
                     <span>العودة إلى خريطة الدروس</span>
                   </button>
                 </Link>
@@ -503,30 +497,30 @@ function LessonDetailContent() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="w-full max-w-md glass border-2 border-[rgba(124,58,237,0.15)] rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden"
+                    className="w-full max-w-md bg-white border border-[#F2DDD0] rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden"
                   >
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)]" />
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E8927C] to-[#95C5B2]" />
 
-                    <div className="w-16 h-16 rounded-full bg-[rgba(74,222,128,0.12)] flex items-center justify-center mx-auto mb-6 text-[#16A34A] border border-[rgba(74,222,128,0.3)] animate-wiggle">
+                    <div className="w-16 h-16 rounded-2xl bg-[#EEF6F3] flex items-center justify-center mx-auto mb-6 text-[#2D6A53] border border-[#D5EAE1] animate-wiggle">
                       <Award className="w-8 h-8" />
                     </div>
 
-                    <h2 className="text-2xl font-black mb-3 text-[var(--color-text)]">أحسنت صنعاً! 🎉</h2>
-                    <p className="text-[var(--color-muted)] text-sm mb-2 font-bold">
+                    <h2 className="text-2xl font-black mb-3 text-[#3D364A]">أحسنت صنعاً! 🎉</h2>
+                    <p className="text-[#6E637C] text-sm mb-2 font-bold">
                       قرأت الدرس وحصلت على +{successData.pointsAwarded} نقطة و +{successData.starsAwarded} نجمة!
                     </p>
-                    <p className="text-xs text-[var(--color-primary)] font-black mb-6">
+                    <p className="text-xs text-[#E8927C] font-black mb-6">
                       🔑 أكمل التمرين الإلزامي لفتح الدرس التالي
                     </p>
 
                     <div className="flex gap-3 justify-center items-center mb-6">
-                      <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[rgba(96,165,250,0.12)] border border-[rgba(96,165,250,0.25)]">
-                        <Award className="w-4 h-4 text-[#2563EB]" />
-                        <span className="text-[#2563EB] font-black">+{successData.pointsAwarded} XP</span>
+                      <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FDF0EB] border border-[#F2DDD0]">
+                        <Award className="w-4 h-4 text-[#E8927C]" />
+                        <span className="text-[#E8927C] font-black">+{successData.pointsAwarded} XP</span>
                       </div>
-                      <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[rgba(251,191,36,0.12)] border border-[rgba(251,191,36,0.25)]">
-                        <Star className="w-4 h-4 text-[#D97706] fill-[#D97706]" />
-                        <span className="text-[#D97706] font-black">+{successData.starsAwarded} نجمة</span>
+                      <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FEF8EC] border border-[#F6E3B8]">
+                        <Star className="w-4 h-4 text-[#D4A75E] fill-[#D4A75E]" />
+                        <span className="text-[#8A601B] font-black">+{successData.starsAwarded} نجمة</span>
                       </div>
                     </div>
 

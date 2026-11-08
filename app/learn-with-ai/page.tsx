@@ -735,24 +735,24 @@ function LearnWithAiContent() {
   return (
     <>
       {/* Unified, Streamlined Top Navigation Bar */}
-      <header className="bg-white border-b border-slate-100 px-5 py-3 flex flex-wrap items-center justify-between gap-3 shadow-2xs shrink-0 z-20">
+      <header className="bg-white border-b border-[#F2DDD0] px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 shadow-2xs shrink-0 z-20">
         {/* Left Side: Brand, Subject Dropdown, AI Language Dropdown */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shadow-inner shrink-0">
-              <Sparkles className="w-5 h-5 text-purple-600 animate-pulse" />
+        <div className="flex items-center gap-3.5 flex-wrap">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl bg-[#FDF0EB] text-[#E8927C] flex items-center justify-center shadow-inner shrink-0">
+              <Sparkles className="w-5 h-5 text-[#E8927C] animate-pulse" />
             </div>
             <div>
-              <h1 className="text-sm sm:text-base font-black text-slate-800 flex items-center gap-1.5 leading-tight">
+              <h1 className="text-base sm:text-lg font-black text-[#3D364A] flex items-center gap-1.5 leading-tight">
                 {tl.title || 'تعلم مع الذكاء الاصطناعي 🦉'}
               </h1>
-              <p className="text-slate-400 text-[9px] font-bold hidden sm:block">
+              <p className="text-[#6E637C] text-xs font-bold hidden sm:block">
                 {lang === 'ar' ? 'رفيقك الذكي للدراسة التكيفية' : 'Adaptive Smart Study Companion'}
               </p>
             </div>
           </div>
 
-          <div className="h-6 w-px bg-slate-200 hidden sm:block mx-1" />
+          <div className="h-6 w-px bg-[#F2DDD0] hidden sm:block mx-1" />
 
           {/* Subject Dropdown (Replaces 3 static buttons) */}
           <SubjectDropdown
@@ -772,16 +772,16 @@ function LearnWithAiContent() {
         </div>
 
         {/* Right Side: Mode Switcher, Child Badge, Map Toggle */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           {/* Mode Switcher Segmented Control: Chat vs Editor */}
-          <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200/80 shrink-0">
+          <div className="flex bg-[#FAF8F5] p-1 rounded-2xl border border-[#F2DDD0] shrink-0">
             <button
               type="button"
               onClick={() => setViewMode('chat')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs cursor-pointer transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black text-xs cursor-pointer transition-all ${
                 viewMode === 'chat'
-                  ? 'bg-white text-purple-700 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-[#E8927C] text-white shadow-xs'
+                  : 'text-[#6E637C] hover:text-[#3D364A]'
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -790,10 +790,10 @@ function LearnWithAiContent() {
             <button
               type="button"
               onClick={() => setViewMode('editor')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-xs cursor-pointer transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-black text-xs cursor-pointer transition-all ${
                 viewMode === 'editor'
-                  ? 'bg-white text-purple-700 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-[#E8927C] text-white shadow-xs'
+                  : 'text-[#6E637C] hover:text-[#3D364A]'
               }`}
             >
               <FileEdit className="w-3.5 h-3.5" />
@@ -803,9 +803,9 @@ function LearnWithAiContent() {
 
           {/* Child XP / Stars Pill */}
           {child && (
-            <div className="flex items-center gap-2 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-2xl">
-              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-              <span className="text-[10px] font-black text-indigo-900">
+            <div className="flex items-center gap-2 bg-[#FEF8EC] border border-[#F6E3B8] px-3.5 py-1.5 rounded-2xl">
+              <Star className="w-4 h-4 text-[#D4A75E] fill-[#D4A75E]" />
+              <span className="text-xs font-black text-[#8A601B]">
                 {child.points} XP | {child.stars} ⭐
               </span>
             </div>

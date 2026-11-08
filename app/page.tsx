@@ -83,6 +83,7 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
@@ -92,7 +93,13 @@ export default function HomePage() {
     setIsLoggedIn(!!token);
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 20);
+
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress(Math.min(100, Math.max(0, (scrollY / totalHeight) * 100)));
+      }
 
       const sectionIds = ['hero', 'demo', 'features', 'pricing', 'contact'];
       for (const sec of sectionIds) {
@@ -177,7 +184,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen relative overflow-hidden stars-bg">
+    <main className="min-h-screen relative overflow-x-hidden bg-[#FDF8F3]">
       {/* Decorative background bubbles */}
       <div className="fixed inset-0 pointer-events-none">
         {mounted && bubbles.map((b, i) => (
@@ -205,10 +212,10 @@ export default function HomePage() {
 
       {/* Fixed Sticky Header / Navbar */}
       <header
-        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           scrolled
-            ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-md shadow-md border-b border-purple-100/60 dark:border-slate-800/80 py-2.5'
-            : 'bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm py-4 border-b border-transparent'
+            ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#F2DDD0] py-2.5'
+            : 'bg-white/85 backdrop-blur-md py-3.5 border-b border-[#F2DDD0] shadow-xs'
         }`}
       >
         <nav className="flex items-center justify-between px-4 sm:px-6 max-w-7xl mx-auto">
@@ -423,10 +430,17 @@ export default function HomePage() {
             </div>
           </motion.div>
         )}
+        {/* Real-time Scroll Progress Bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-slate-200/40 dark:bg-slate-800/40 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-[var(--color-primary)] via-indigo-500 to-cyan-400 transition-all duration-100 ease-out"
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
       </header>
 
       {/* Hero Section */}
-      <section id="hero" className="relative z-10 text-center px-6 pt-12 pb-20 max-w-5xl mx-auto scroll-mt-24">
+      <section id="hero" className="relative z-10 text-center px-6 pt-28 sm:pt-36 pb-20 max-w-5xl mx-auto scroll-mt-28">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

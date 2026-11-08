@@ -132,17 +132,16 @@ function ChallengesContent() {
       {/* Header */}
       <div className="text-center space-y-3">
         <motion.div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #06B6D4, #7C3AED)' }}
-          animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+          className="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-md bg-gradient-to-br from-[#E8927C] to-[#E58066]"
+          animate={{ y: [0, -8, 0], rotate: [0, 4, -4, 0] }}
           transition={{ duration: 3, repeat: Infinity }}
         >
           <Trophy className="w-10 h-10 text-white" />
         </motion.div>
-        <h1 className="text-3xl font-black mb-2 text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif', color: 'var(--color-primary)' }}>
+        <h1 className="text-3xl sm:text-4xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
           {t.challenges.title}
         </h1>
-        <p className="text-[var(--color-muted)] text-sm font-semibold">{t.challenges.subtitle}</p>
+        <p className="text-[#6E637C] text-base font-bold">{t.challenges.subtitle}</p>
       </div>
 
       {/* Premium Stats Bar */}
@@ -150,36 +149,36 @@ function ChallengesContent() {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6"
+          className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F2DDD0] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6"
         >
           <div className={`flex items-center gap-4 w-full sm:w-auto ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
-            <div className="w-12 h-12 rounded-2xl bg-cyan-100/60 text-cyan-600 flex items-center justify-center shrink-0">
-              <Zap className="w-6 h-6 animate-pulse" />
+            <div className="w-14 h-14 rounded-2xl bg-[#FDF0EB] text-[#E8927C] flex items-center justify-center shrink-0 shadow-inner">
+              <Zap className="w-7 h-7 animate-pulse" />
             </div>
             <div>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+              <p className="text-xs text-[#6E637C] font-black uppercase tracking-wider">
                 {dir === 'rtl' ? 'التحديات المكتملة اليوم' : 'Défis complétés aujourd\'hui'}
               </p>
-              <h3 className="font-black text-slate-800 text-lg leading-tight mt-0.5">
+              <h3 className="font-black text-[#3D364A] text-xl leading-tight mt-1">
                 {completedCount} / {challenges.length}
               </h3>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-around sm:justify-end">
-            <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-100 px-4 py-2.5 rounded-2xl">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" />
-              <span className="text-xs font-black text-amber-700">{child.stars} ⭐</span>
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-around sm:justify-end flex-wrap">
+            <div className="flex items-center gap-2 bg-[#FEF8EC] border border-[#F6E3B8] px-4 py-2.5 rounded-2xl">
+              <Star className="w-5 h-5 text-[#D4A75E] fill-[#D4A75E] shrink-0" />
+              <span className="text-sm font-black text-[#8A601B]">{child.stars} ⭐</span>
             </div>
             
-            <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-100 px-4 py-2.5 rounded-2xl">
-              <Flame className="w-4 h-4 text-rose-500 fill-rose-100 shrink-0" />
-              <span className="text-xs font-black text-rose-700">{child.streakDays} {dir === 'rtl' ? 'يوم' : 'j'}</span>
+            <div className="flex items-center gap-2 bg-[#FDF0EB] border border-[#F2DDD0] px-4 py-2.5 rounded-2xl">
+              <Flame className="w-5 h-5 text-[#E8927C] fill-[#E8927C]/30 shrink-0" />
+              <span className="text-sm font-black text-[#A44C36]">{child.streakDays} {dir === 'rtl' ? 'يوم' : 'j'}</span>
             </div>
 
-            <div className="flex items-center gap-1.5 bg-violet-50 border border-violet-100 px-4 py-2.5 rounded-2xl">
-              <Trophy className="w-4 h-4 text-violet-500 shrink-0" />
-              <span className="text-xs font-black text-violet-700">{child.points} XP</span>
+            <div className="flex items-center gap-2 bg-[#EEF6F3] border border-[#D5EAE1] px-4 py-2.5 rounded-2xl">
+              <Trophy className="w-5 h-5 text-[#2D6A53] shrink-0" />
+              <span className="text-sm font-black text-[#2D6A53]">{child.points} XP</span>
             </div>
           </div>
         </motion.div>
@@ -188,21 +187,21 @@ function ChallengesContent() {
       {/* Daily Challenges */}
       <div className="space-y-4">
         <div className={`pb-3 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}
-          style={{ borderBottom: '2px solid rgba(124, 58, 237, 0.2)' }}>
-          <h2 className="text-xl font-black text-slate-800 flex items-center gap-2" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
-            <Sparkles className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
+          style={{ borderBottom: '2px solid #F2DDD0' }}>
+          <h2 className="text-xl sm:text-2xl font-black text-[#3D364A] flex items-center gap-2.5" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
+            <Sparkles className="w-6 h-6 text-[#E8927C]" />
             <span>{t.challenges.dailyTitle}</span>
           </h2>
-          <p className="text-xs text-slate-500 font-semibold mt-1">{t.challenges.dailyDesc}</p>
+          <p className="text-sm text-[#6E637C] font-semibold mt-1">{t.challenges.dailyDesc}</p>
         </div>
 
         <div className="space-y-4">
           {challenges.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-3xl border border-slate-100 shadow-sm space-y-3">
-              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto border border-slate-100">
-                <Zap className="w-7 h-7 text-slate-300" />
+            <div className="text-center py-16 bg-white rounded-3xl border border-[#F2DDD0] shadow-sm space-y-3">
+              <div className="w-16 h-16 rounded-full bg-[#FAF8F5] flex items-center justify-center mx-auto border border-[#F2DDD0]">
+                <Zap className="w-7 h-7 text-[#A49AA7]" />
               </div>
-              <p className="text-slate-400 font-bold text-sm">
+              <p className="text-[#6E637C] font-bold text-base">
                 {dir === 'rtl' ? 'لا توجد تحديات متاحة حالياً' : 'Aucun défi disponible'}
               </p>
             </div>
@@ -218,46 +217,45 @@ function ChallengesContent() {
                   dir === 'rtl' ? 'sm:flex-row-reverse text-right' : 'sm:flex-row text-left'
                 }`}
                 style={{
-                  background: c.completed ? 'linear-gradient(145deg, #f0fdf4 0%, #ffffff 100%)' : 'white',
-                  border: `2px solid ${c.completed ? '#22c55e30' : '#e2e8f0'}`,
-                  boxShadow: c.completed ? '0 8px 24px rgba(34,197,94,0.05)' : '0 4px 12px rgba(0,0,0,0.02)'
+                  background: c.completed ? '#EEF6F3' : 'white',
+                  border: `2px solid ${c.completed ? '#95C5B2' : '#F2DDD0'}`,
+                  boxShadow: c.completed ? '0 6px 20px rgba(149,197,178,0.15)' : '0 4px 16px rgba(0,0,0,0.02)'
                 }}
               >
                 <div className="space-y-2 flex-1">
-                  <span className={`inline-block text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
-                    c.completed ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-50 text-indigo-600'
+                  <span className={`inline-block text-xs font-black uppercase tracking-wider px-3 py-1 rounded-xl ${
+                    c.completed ? 'bg-white text-[#2D6A53] border border-[#D5EAE1]' : 'bg-[#FDF0EB] text-[#E8927C] border border-[#F2DDD0]'
                   }`}>
                     {c.subject || (dir === 'rtl' ? 'تحدي عام' : 'Défi général')}
                   </span>
-                  <h3 className="font-black text-slate-800 text-base">{c.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed font-semibold">{c.description}</p>
+                  <h3 className="font-black text-[#3D364A] text-lg">{c.title}</h3>
+                  <p className="text-sm text-[#6E637C] leading-relaxed font-semibold">{c.description}</p>
                   <div
-                    className={`flex items-center gap-2 text-xs font-black ${
+                    className={`flex items-center gap-2 text-sm font-black ${
                       dir === 'rtl' ? 'flex-row-reverse justify-start' : 'flex-row justify-start'
                     }`}
-                    style={{ color: 'var(--color-primary)' }}
+                    style={{ color: '#E8927C' }}
                   >
                     <span>{t.challenges.reward}</span>
-                    <span className="text-cyan-600 font-extrabold">{c.rewardPoints} {t.challenges.points}</span>
+                    <span className="text-[#2D6A53] font-black">+{c.rewardPoints} {t.challenges.points}</span>
                   </div>
                 </div>
 
                 {c.completed ? (
                   <div
-                    className="shrink-0 flex items-center gap-1.5 text-sm font-black px-4 py-2.5 rounded-2xl"
-                    style={{ background: 'rgba(74,222,128,0.12)', color: '#16A34A', border: '1.5px solid rgba(74,222,128,0.3)' }}
+                    className="shrink-0 flex items-center gap-2 text-sm font-black px-4 py-2.5 rounded-2xl bg-white border border-[#95C5B2] text-[#2D6A53] shadow-xs"
                   >
-                    <CheckCircle className="w-4 h-4" />
+                    <CheckCircle className="w-5 h-5 text-[#2D6A53]" />
                     <span>{t.challenges.completedChallenge}</span>
                   </div>
                 ) : (
                   <button
                     onClick={() => handleCompleteChallenge(c.id)}
                     disabled={completingChallengeId !== null}
-                    className="btn-primary py-3 px-6 text-xs font-black shrink-0 w-full sm:w-auto cursor-pointer"
+                    className="btn-primary py-3 px-6 text-sm font-black shrink-0 w-full sm:w-auto cursor-pointer"
                   >
                     {completingChallengeId === c.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
                       <span>{t.challenges.completeChallengeBtn}</span>
                     )}

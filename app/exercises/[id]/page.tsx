@@ -47,15 +47,15 @@ const subjectIcons: Record<string, any> = {
 };
 
 const subjectStyles: Record<string, { color: string; bg: string; border: string; gradient: string }> = {
-  MATHS:        { color: 'var(--color-accent)', bg: 'rgba(59,130,246,0.1)',   border: 'rgba(59,130,246,0.25)',   gradient: 'linear-gradient(135deg, var(--color-accent), #1D4ED8)' },
-  FRANCAIS:     { color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)',   border: 'rgba(245,158,11,0.25)',   gradient: 'linear-gradient(135deg, var(--color-warning), #EA580C)' },
-  LOGIQUE:      { color: 'var(--color-primary)', bg: 'rgba(124,58,237,0.1)',   border: 'rgba(124,58,237,0.25)',   gradient: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))' },
-  CULTURE:      { color: 'var(--color-secondary)', bg: 'rgba(6,182,212,0.1)',   border: 'rgba(6,182,212,0.25)',   gradient: 'linear-gradient(135deg, var(--color-secondary), #0891B2)' },
-  ARABIC:       { color: 'var(--color-primary)', bg: 'rgba(124,58,237,0.1)',   border: 'rgba(124,58,237,0.25)',   gradient: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))' },
-  SCIENCE:      { color: 'var(--color-green)', bg: 'rgba(16,185,129,0.1)',   border: 'rgba(16,185,129,0.25)',   gradient: 'linear-gradient(135deg, var(--color-green), #047857)' },
-  ISLAMIC_CIVIC:{ color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)',   border: 'rgba(245,158,11,0.25)',   gradient: 'linear-gradient(135deg, var(--color-warning), #D97706)' },
-  ENGLISH:      { color: 'var(--color-pink)', bg: 'rgba(236,72,153,0.1)',   border: 'rgba(236,72,153,0.25)',   gradient: 'linear-gradient(135deg, var(--color-pink), #BE185D)' },
-  SOCIALS:      { color: 'var(--color-purple)', bg: 'rgba(139,92,246,0.1)',   border: 'rgba(139,92,246,0.25)',   gradient: 'linear-gradient(135deg, var(--color-purple), #6D28D9)' },
+  MATHS:        { color: '#A44C36', bg: '#FDF0EB', border: '#F2DDD0', gradient: 'linear-gradient(135deg, #E8927C, #D97D67)' },
+  FRANCAIS:     { color: '#966014', bg: '#FEF8EC', border: '#F6E3B8', gradient: 'linear-gradient(135deg, #F5C26B, #E5B055)' },
+  LOGIQUE:      { color: '#6C4E97', bg: '#F5F0FB', border: '#E7DCF5', gradient: 'linear-gradient(135deg, #B89FD8, #A385C7)' },
+  CULTURE:      { color: '#2D6A53', bg: '#EEF6F3', border: '#D5EAE1', gradient: 'linear-gradient(135deg, #95C5B2, #7EB39E)' },
+  ARABIC:       { color: '#6C4E97', bg: '#F5F0FB', border: '#E7DCF5', gradient: 'linear-gradient(135deg, #B89FD8, #A385C7)' },
+  SCIENCE:      { color: '#2D6A53', bg: '#EEF6F3', border: '#D5EAE1', gradient: 'linear-gradient(135deg, #95C5B2, #7EB39E)' },
+  ISLAMIC_CIVIC:{ color: '#8A601B', bg: '#FBF5EB', border: '#F3E4C7', gradient: 'linear-gradient(135deg, #E6BA75, #D4A75E)' },
+  ENGLISH:      { color: '#9C4763', bg: '#FDF2F5', border: '#FCE0E8', gradient: 'linear-gradient(135deg, #F2B5C8, #E59FB5)' },
+  SOCIALS:      { color: '#5B4C83', bg: '#F3F1F8', border: '#DFDAEC', gradient: 'linear-gradient(135deg, #AFA3CE, #9B8EB8)' },
 };
 
 function ExerciseDetailContent() {
@@ -604,17 +604,17 @@ function ExerciseDetailContent() {
   const borderSideClass = dir === 'rtl' ? 'border-r-4' : 'border-l-4';
 
   return (
-    <div className="w-full stars-bg pb-20">
+    <div className="w-full min-h-screen bg-[#FDF8F3] pb-20">
         {/* Navbar */}
-        <nav className="sticky top-0 z-50 glass border-b-2 border-[rgba(124,58,237,0.12)] px-6 py-4">
+        <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#F2DDD0] px-6 py-4 shadow-2xs">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`} className="flex items-center gap-2 text-[var(--color-muted)] hover:text-[var(--color-primary)] transition-colors">
+            <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`} className="flex items-center gap-2 text-[#6E637C] hover:text-[#E8927C] transition-colors font-bold text-sm">
               {dir === 'rtl' ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
-              <span className="text-sm font-bold">{fromLesson ? t.lessons.backToLessons : t.ageSelect.backBtn}</span>
+              <span>{fromLesson ? t.lessons.backToLessons : t.ageSelect.backBtn}</span>
             </Link>
             <div className="flex items-center gap-2 md:hidden">
               <OwlLogo size={32} />
-              <span className="text-lg font-black text-[var(--color-primary)]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+              <span className="text-lg font-black text-[#E8927C]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
                 {t.common.brand}
               </span>
             </div>
@@ -626,14 +626,14 @@ function ExerciseDetailContent() {
 
         {loading ? (
           <div className="flex-grow flex items-center justify-center py-20">
-            <Loader2 className="w-10 h-10 text-[var(--color-primary)] animate-spin" />
+            <Loader2 className="w-10 h-10 text-[#E8927C] animate-spin" />
           </div>
         ) : !exercise ? (
           <div className="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
             <div className="mb-4">
               <OwlLogo size={60} />
             </div>
-            <h2 className="text-2xl font-black mb-4 text-[var(--color-text)]">التمرين غير موجود / Exercise Not Found</h2>
+            <h2 className="text-2xl font-black mb-4 text-[#3D364A]">التمرين غير موجود / Exercise Not Found</h2>
             <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`}>
               <button className="btn-primary">{fromLesson ? t.lessons.backToLessons : t.exercises.title}</button>
             </Link>
@@ -646,21 +646,21 @@ function ExerciseDetailContent() {
           className="space-y-6"
         >
           {/* Exercise card */}
-          <div className="glass rounded-3xl p-8 border-2 border-[rgba(124,58,237,0.15)] shadow-2xl space-y-6">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#F2DDD0] shadow-sm space-y-6">
             <div className={`flex items-center justify-between gap-3 flex-wrap ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
               <div className={`flex items-center gap-3 ${dir === 'rtl' ? 'flex-row-reverse justify-start' : 'flex-row justify-start'}`}>
                 <div 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm"
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs border border-[#F2DDD0]"
                   style={{ background: activeStyles.bg }}
                 >
-                  <SubjectIcon className="w-5 h-5" style={{ color: activeStyles.color }} />
+                  <SubjectIcon className="w-6 h-6" style={{ color: activeStyles.color }} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[var(--color-muted)] text-[10px] font-black uppercase tracking-wider">
+                  <span className="text-[#6E637C] text-xs font-black uppercase tracking-wider">
                     {(t.lessons as any)[exercise.subject.toLowerCase()] || exercise.subject}
                   </span>
                   <span 
-                    className="font-extrabold text-[10px] uppercase inline-block self-start mt-0.5 px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-100"
+                    className="font-extrabold text-xs uppercase inline-block self-start mt-0.5 px-2.5 py-0.5 rounded-lg bg-[#FDF0EB] text-[#E8927C] border border-[#F2DDD0]"
                   >
                     {(t.dashboard.levels as any)[exercise.difficulty] || exercise.difficulty}
                   </span>
@@ -688,16 +688,16 @@ function ExerciseDetailContent() {
                   } catch (e) { /* ignore storage errors */ }
                   router.push(`/learn-with-ai?childId=${childId}&lessonId=${exercise.lessonId || ''}&subject=${exercise.subject || 'MATHS'}&autoExplain=true`);
                 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black text-xs shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer shrink-0"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#E8927C] to-[#E58066] hover:from-[#D97D67] hover:to-[#D47157] text-white font-black text-sm shadow-sm transition-all transform hover:-translate-y-0.5 cursor-pointer shrink-0"
               >
                 <Sparkles className="w-4 h-4 animate-pulse" />
                 <span>{dir === 'rtl' ? 'اشرح التمرين بالذكاء الاصطناعي 🦉' : 'Explain Exercise with AI 🦉'}</span>
               </button>
             </div>
 
-            <div className={`space-y-1 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-              <h1 className="text-2xl font-black text-[var(--color-text)]">{exercise.title}</h1>
-              <p className="text-sm text-[var(--color-muted)] font-bold">{exercise.description}</p>
+            <div className={`space-y-1.5 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]">{exercise.title}</h1>
+              <p className="text-base text-[#6E637C] font-bold">{exercise.description}</p>
             </div>
           </div>
 
@@ -727,7 +727,7 @@ function ExerciseDetailContent() {
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="h-full rounded-full"
                 style={{
-                  background: activeStyles.gradient || 'linear-gradient(135deg, #7C3AED, #60A5FA)',
+                  background: activeStyles.gradient || 'linear-gradient(135deg, #E8927C, #95C5B2)',
                 }}
               />
             </div>
@@ -919,27 +919,27 @@ function ExerciseDetailContent() {
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass rounded-3xl p-8 border-2 border-[rgba(124,58,237,0.15)] shadow-2xl space-y-6 relative overflow-hidden"
+              className="bg-white rounded-3xl p-6 sm:p-8 border border-[#F2DDD0] shadow-sm space-y-6 relative overflow-hidden"
             >
               {/* Level adjustment notice */}
               {feedback.levelMessage && (
-                <div className="mb-4 p-4 rounded-2xl bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.3)] text-[var(--color-warning)] text-sm font-extrabold flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
+                <div className="mb-4 p-4 rounded-2xl bg-[#FEF8EC] border border-[#F6E3B8] text-[#966014] text-sm font-extrabold flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-[#D4A75E]" />
                   <span>{feedback.levelMessage}</span>
                 </div>
               )}
 
               {/* Title & Score */}
-              <div className={`flex items-center justify-between border-b-2 border-[rgba(124,58,237,0.12)] pb-4 ${
+              <div className={`flex items-center justify-between border-b border-[#F2DDD0] pb-4 ${
                 dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'
               }`}>
-                <h2 className="text-xl font-black text-[var(--color-text)] flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[var(--color-primary)] animate-pulse" />
+                <h2 className="text-xl font-black text-[#3D364A] flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-[#E8927C] animate-pulse" />
                   <span>{t.exercises.feedbackTitle}</span>
                 </h2>
                 <div className="flex items-center gap-2">
-                  <span className="text-[var(--color-muted)] text-sm font-bold">{t.exercises.score}</span>
-                  <span className={`text-2xl font-black ${feedback.score === 100 ? 'text-[var(--color-green)]' : 'text-[var(--color-primary)]'}`}>
+                  <span className="text-[#6E637C] text-sm font-bold">{t.exercises.score}</span>
+                  <span className={`text-2xl font-black ${feedback.score === 100 ? 'text-[#2D6A53]' : 'text-[#E8927C]'}`}>
                     {feedback.score}%
                   </span>
                 </div>
@@ -947,13 +947,13 @@ function ExerciseDetailContent() {
 
               {/* Score Rewards */}
               <div className={`flex items-center gap-4 py-2 justify-center`}>
-                <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[rgba(59,130,246,0.12)] border border-[rgba(59,130,246,0.25)] shadow-sm">
-                  <Award className="w-4 h-4 text-[var(--color-accent)]" />
-                  <span className="text-[var(--color-accent)] font-black">+{feedback.pointsAwarded} XP</span>
+                <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FDF0EB] border border-[#F2DDD0] shadow-xs">
+                  <Award className="w-4 h-4 text-[#E8927C]" />
+                  <span className="text-[#E8927C] font-black">+{feedback.pointsAwarded} XP</span>
                 </div>
-                <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[rgba(245,158,11,0.12)] border border-[rgba(245,158,11,0.25)] shadow-sm">
-                  <Star className="w-4 h-4 text-[var(--color-warning)] fill-[var(--color-warning)]" />
-                  <span className="text-[var(--color-warning)] font-black">+{feedback.starsAwarded} {t.dashboard.stars || "نجوم"}</span>
+                <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FEF8EC] border border-[#F6E3B8] shadow-xs">
+                  <Star className="w-4 h-4 text-[#D4A75E] fill-[#D4A75E]" />
+                  <span className="text-[#8A601B] font-black">+{feedback.starsAwarded} {t.dashboard.stars || "نجوم"}</span>
                 </div>
               </div>
 
@@ -961,40 +961,40 @@ function ExerciseDetailContent() {
               <div className="space-y-4 text-right" style={{ direction: dir }}>
                 {/* Encouragement */}
                 {feedback.aiFeedback?.encouragement && (
-                  <div className={`bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.15)] border p-4 rounded-2xl space-y-1.5 shadow-sm ${borderSideClass} border-[var(--color-accent)]`}>
-                    <h4 className="text-xs font-black text-[var(--color-accent)] flex items-center gap-1.5 justify-start">
+                  <div className={`bg-[#EEF6F3] border-[#D5EAE1] border p-4 rounded-2xl space-y-1.5 shadow-xs ${borderSideClass} border-[#95C5B2]`}>
+                    <h4 className="text-xs font-black text-[#2D6A53] flex items-center gap-1.5 justify-start">
                       <ThumbsUp className="w-4.5 h-4.5" />
                       <span>{t.exercises.encouragement}</span>
                     </h4>
-                    <p className="text-sm text-[var(--color-text)] font-semibold leading-relaxed text-start">{feedback.aiFeedback.encouragement}</p>
+                    <p className="text-sm text-[#3D364A] font-semibold leading-relaxed text-start">{feedback.aiFeedback.encouragement}</p>
                   </div>
                 )}
 
                 {/* Explanation */}
                 {feedback.aiFeedback?.explanation && (
-                  <div className={`bg-[rgba(124,58,237,0.03)] border-[rgba(124,58,237,0.12)] border p-4 rounded-2xl space-y-1.5 shadow-sm ${borderSideClass} border-[var(--color-primary)]`}>
-                    <h4 className="text-xs font-black text-[var(--color-primary)] flex items-center gap-1.5 justify-start">
+                  <div className={`bg-[#FDF0EB] border-[#F2DDD0] border p-4 rounded-2xl space-y-1.5 shadow-xs ${borderSideClass} border-[#E8927C]`}>
+                    <h4 className="text-xs font-black text-[#E8927C] flex items-center gap-1.5 justify-start">
                       <HelpCircle className="w-4.5 h-4.5" />
                       <span>{t.exercises.explanation}</span>
                     </h4>
-                    <p className="text-sm text-[var(--color-text)] font-semibold leading-relaxed text-start">{feedback.aiFeedback.explanation}</p>
+                    <p className="text-sm text-[#3D364A] font-semibold leading-relaxed text-start">{feedback.aiFeedback.explanation}</p>
                   </div>
                 )}
 
                 {/* Tip */}
                 {feedback.aiFeedback?.tip && (
-                  <div className={`bg-[rgba(245,158,11,0.04)] border-[rgba(245,158,11,0.15)] border p-4 rounded-2xl space-y-1.5 shadow-sm ${borderSideClass} border-[var(--color-warning)]`}>
-                    <h4 className="text-xs font-black text-[var(--color-warning)] flex items-center gap-1.5 justify-start">
+                  <div className={`bg-[#FEF8EC] border-[#F6E3B8] border p-4 rounded-2xl space-y-1.5 shadow-xs ${borderSideClass} border-[#F5C26B]`}>
+                    <h4 className="text-xs font-black text-[#966014] flex items-center gap-1.5 justify-start">
                       <Lightbulb className="w-4.5 h-4.5" />
                       <span>{t.exercises.tip}</span>
                     </h4>
-                    <p className="text-sm text-[var(--color-text)] font-semibold leading-relaxed text-start">{feedback.aiFeedback.tip}</p>
+                    <p className="text-sm text-[#3D364A] font-semibold leading-relaxed text-start">{feedback.aiFeedback.tip}</p>
                   </div>
                 )}
               </div>
 
               <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`}>
-                <button className="btn-primary w-full py-4 font-black cursor-pointer mt-4 shadow-md hover:shadow-lg transition-all">
+                <button className="btn-primary w-full py-4 font-black cursor-pointer mt-4 shadow-sm hover:shadow-md transition-all">
                   <span>{fromLesson ? "العودة إلى الدرس / Back to Lesson" : "العودة إلى الدروس / Back to Lessons"}</span>
                 </button>
               </Link>
@@ -1010,8 +1010,8 @@ function ExerciseDetailContent() {
 export default function ExerciseDetailPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center stars-bg">
-        <Loader2 className="w-10 h-10 text-[var(--color-primary)] animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#FDF8F3]">
+        <Loader2 className="w-10 h-10 text-[#E8927C] animate-spin" />
       </div>
     }>
       <ExerciseDetailContent />

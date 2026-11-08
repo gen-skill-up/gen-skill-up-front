@@ -211,26 +211,26 @@ function LibraryContent() {
     <div className="w-full px-6 lg:px-8 pt-8 pb-20 max-w-5xl mx-auto space-y-8">
           
           {/* Header Banner */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
-            <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-[0.03]" style={{ background: '#10B981' }} />
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F2DDD0] shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+            <div className="absolute -right-6 -bottom-6 w-36 h-36 rounded-full opacity-[0.06]" style={{ background: '#E8927C' }} />
             <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
-                <Book className="w-7 h-7" />
+              <div className="w-16 h-16 rounded-2xl bg-[#FDF0EB] text-[#E8927C] flex items-center justify-center shadow-inner shrink-0">
+                <Book className="w-8 h-8" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+                <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
                   {dir === 'rtl' ? 'مكتبة الأبطال 📖' : 'Bibliothèque des Héros 📖'}
                 </h1>
-                <p className="text-slate-500 text-xs font-semibold mt-0.5">
+                <p className="text-[#6E637C] text-sm sm:text-base font-bold mt-1">
                   {dir === 'rtl' ? 'اقرأ قصصاً قصيرة ممتعة، واجب عن الأسئلة لتكسب مكافآت حقيقية!' : 'Lis de courtes histoires et gagne des récompenses en répondant aux quiz !'}
                 </p>
               </div>
             </div>
             
             {child && (
-              <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-100/50 px-4 py-2.5 rounded-2xl shrink-0">
-                <Star className="w-5 h-5 text-amber-500 fill-amber-400" />
-                <span className="text-xs font-black text-emerald-800">
+              <div className="flex items-center gap-2 bg-[#FEF8EC] border border-[#F6E3B8] px-4 py-2.5 rounded-2xl shrink-0">
+                <Star className="w-5 h-5 text-[#D4A75E] fill-[#D4A75E]" />
+                <span className="text-sm font-black text-[#8A601B]">
                   {child.points} XP
                 </span>
               </div>
@@ -239,22 +239,22 @@ function LibraryContent() {
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24">
-              <Loader2 className="w-12 h-12 animate-spin text-[#10B981] mb-3" />
-              <p className="text-slate-500 text-xs font-black animate-pulse">جاري تحميل كتب المكتبة... / Chargement...</p>
+              <Loader2 className="w-12 h-12 animate-spin text-[#E8927C] mb-3" />
+              <p className="text-[#6E637C] text-sm font-black animate-pulse">جاري تحميل كتب المكتبة... / Chargement...</p>
             </div>
           ) : (
             <div className="space-y-6">
               
               {/* Category tabs */}
-              <div className="flex gap-2 border-b border-slate-200 pb-3 overflow-x-auto">
+              <div className="flex gap-2.5 border-b border-[#F2DDD0] pb-3.5 overflow-x-auto">
                 {['ALL', 'MATHS', 'SCIENCE'].map((sub) => (
                   <button
                     key={sub}
                     onClick={() => setSelectedSubject(sub as any)}
-                    className={`px-4 py-2 rounded-2xl text-xs font-black transition-all cursor-pointer ${
+                    className={`px-5 py-2.5 rounded-2xl text-xs font-black transition-all cursor-pointer ${
                       selectedSubject === sub
-                        ? 'bg-[#10B981] text-white shadow'
-                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                        ? 'bg-[#E8927C] text-white shadow-xs'
+                        : 'bg-white border border-[#F2DDD0] text-[#6E637C] hover:bg-[#FAF8F5]'
                     }`}
                   >
                     {sub === 'ALL' ? (dir === 'rtl' ? 'الكل' : 'Tous') : sub === 'MATHS' ? (dir === 'rtl' ? 'الرياضيات' : 'Maths') : (dir === 'rtl' ? 'العلوم' : 'Sciences')}

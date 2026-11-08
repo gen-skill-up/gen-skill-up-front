@@ -290,26 +290,26 @@ function VirtualClassContent() {
     <div className="w-full px-6 lg:px-8 pt-8 pb-20 max-w-6xl mx-auto space-y-8">
           
           {/* Header Banner */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
-            <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-[0.03]" style={{ background: '#3B82F6' }} />
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F2DDD0] shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+            <div className="absolute -right-6 -bottom-6 w-36 h-36 rounded-full opacity-[0.06]" style={{ background: '#E8927C' }} />
             <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-inner">
-                <Monitor className="w-7 h-7" />
+              <div className="w-16 h-16 rounded-2xl bg-[#FDF0EB] text-[#E8927C] flex items-center justify-center shadow-inner shrink-0">
+                <Monitor className="w-8 h-8" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-black text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+                <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
                   {dir === 'rtl' ? 'القسم الافتراضي الذكي 🖥️' : 'Classe Virtuelle 🖥️'}
                 </h1>
-                <p className="text-slate-500 text-xs font-semibold mt-0.5">
+                <p className="text-[#6E637C] text-sm sm:text-base font-bold mt-1">
                   {dir === 'rtl' ? 'ادرس مع أصدقائك، وحلوا التحديات المشتركة والمسابقات الحية!' : 'Étudie avec tes amis et relève les défis de la classe !'}
                 </p>
               </div>
             </div>
             
             {child && (
-              <div className="flex items-center gap-2 bg-blue-50 border border-blue-100/50 px-4 py-2.5 rounded-2xl shrink-0">
-                <Star className="w-5 h-5 text-amber-500 fill-amber-400 animate-pulse" />
-                <span className="text-xs font-black text-blue-800">
+              <div className="flex items-center gap-2 bg-[#FEF8EC] border border-[#F6E3B8] px-4 py-2.5 rounded-2xl shrink-0">
+                <Star className="w-5 h-5 text-[#D4A75E] fill-[#D4A75E] animate-pulse" />
+                <span className="text-sm font-black text-[#8A601B]">
                   {child.points} XP
                 </span>
               </div>

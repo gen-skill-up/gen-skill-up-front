@@ -33,7 +33,7 @@ export default function AiAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState<string | null>(null); // tracks msg id currently speaking
+  const [isSpeaking, setIsSpeaking] = useState<string | null>(null);
   const [activeChildId, setActiveChildId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -58,7 +58,6 @@ export default function AiAssistant() {
       const storedChildId = localStorage.getItem('activeChildId');
       setActiveChildId(storedChildId);
 
-      // Listen to storage changes
       const handleStorageChange = () => {
         setActiveChildId(localStorage.getItem('activeChildId'));
       };
@@ -93,26 +92,23 @@ export default function AiAssistant() {
   const handleSpeak = (msgId: string, text: string) => {
     if (!synthRef.current) return;
 
-    // If already speaking this message, stop it
     if (isSpeaking === msgId) {
       synthRef.current.cancel();
       setIsSpeaking(null);
       return;
     }
 
-    // Stop anything currently speaking
     synthRef.current.cancel();
 
-    const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, ""); // strip emojis for cleaner pronunciation
+    const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "");
     const utterance = new SpeechSynthesisUtterance(cleanText);
 
-    // Map language
     if (lang === 'ar') {
-      utterance.lang = 'ar-XA'; // Arabic
+      utterance.lang = 'ar-XA';
     } else if (lang === 'fr') {
-      utterance.lang = 'fr-FR'; // French
+      utterance.lang = 'fr-FR';
     } else {
-      utterance.lang = 'en-US'; // English
+      utterance.lang = 'en-US';
     }
 
     utterance.onend = () => {
@@ -131,7 +127,6 @@ export default function AiAssistant() {
   const handleSend = async (text: string) => {
     if (!text.trim() || !activeChildId || loading) return;
 
-    // 1. Add user message
     const userMsg: Message = {
       id: Date.now().toString(),
       role: 'user',
@@ -142,7 +137,6 @@ export default function AiAssistant() {
     setInputValue('');
     setLoading(true);
 
-    // 2. Format history for backend (limit to last 6 messages)
     const historyPayload = messages
       .slice(-6)
       .map((m) => ({
@@ -150,7 +144,6 @@ export default function AiAssistant() {
         content: m.content,
       }));
 
-    // 3. Extract page context
     let subject = 'General';
     let lessonTitle = 'General Learning';
     
@@ -220,24 +213,23 @@ export default function AiAssistant() {
     setMessages([welcomeMsg]);
   };
 
-  // If no child profile is logged in, don't show the assistant at all
-  if (!activeChildId) return null;
-
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Floating Mascot Trigger Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 z-40 w-16 h-16 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white flex items-center justify-center shadow-2xl border-b-4 border-indigo-800 cursor-pointer"
+        className="fixed bottom-6 z-40 w-16 h-16 rounded-full bg-gradient-to-tr from-[#E8927C] to-[#E27B63] text-white flex items-center justify-center shadow-xl border-2 border-white/80 cursor-pointer"
         style={{
           right: dir === 'rtl' ? 'auto' : '24px',
           left: dir === 'rtl' ? '24px' : 'auto',
+          boxShadow: '0 8px 25px rgba(232, 146, 124, 0.45)',
         }}
-        whileHover={{ scale: 1.1, rotate: -5 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.08, rotate: -4 }}
+        whileTap={{ scale: 0.92 }}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        aria-label="AI Tutor Chat"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -260,58 +252,57 @@ export default function AiAssistant() {
               className="relative"
             >
               <OwlLogo size={42} />
-              <span className="absolute -top-1 -right-1 bg-cyan-400 w-3 h-3 rounded-full animate-ping" />
-              <span className="absolute -top-1 -right-1 bg-cyan-400 w-3 h-3 rounded-full" />
+              <span className="absolute -top-1 -right-1 bg-[#95C5B2] w-3.5 h-3.5 rounded-full animate-ping" />
+              <span className="absolute -top-1 -right-1 bg-[#95C5B2] w-3.5 h-3.5 rounded-full border-2 border-white" />
             </motion.div>
           )}
         </AnimatePresence>
       </motion.button>
 
-      {/* Glassmorphic Chat Drawer */}
+      {/* Warm Pastel Chat Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
+            initial={{ opacity: 0, y: 80, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-24 z-40 w-[90vw] sm:w-[400px] h-[550px] rounded-[2rem] shadow-2xl flex flex-col border border-white/10 overflow-hidden"
+            exit={{ opacity: 0, y: 80, scale: 0.92 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            className="fixed bottom-24 z-40 w-[92vw] sm:w-[420px] h-[560px] rounded-[2.2rem] shadow-2xl flex flex-col border border-[#E8927C]/25 overflow-hidden bg-white/98 backdrop-blur-md"
             style={{
               right: dir === 'rtl' ? 'auto' : '24px',
               left: dir === 'rtl' ? '24px' : 'auto',
-              background: 'linear-gradient(135deg, rgba(17, 15, 76, 0.95) 0%, rgba(26, 23, 102, 0.95) 100%)',
-              backdropFilter: 'blur(20px)',
+              boxShadow: '0 20px 50px rgba(90, 60, 45, 0.16)',
             }}
           >
             {/* Header */}
-            <div className="p-5 border-b border-white/5 flex items-center justify-between bg-white/5">
+            <div className="p-4 sm:p-5 border-b border-[#F2ECE5] flex items-center justify-between bg-[#FDF8F3]">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center shadow-inner relative">
+                <div className="w-11 h-11 rounded-2xl bg-white shadow-xs border border-[#E8927C]/20 flex items-center justify-center relative">
                   <OwlLogo size={32} />
-                  <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#110f4c]" />
+                  <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#10B981] border-2 border-white" />
                 </div>
                 <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
-                  <h3 className="font-black text-sm text-white flex items-center gap-1.5">
-                    <span>{tc.title || 'أنيس المساعد الذكي'}</span>
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-400 fill-cyan-400/20" />
+                  <h3 className="font-black text-sm text-[#3D364A] flex items-center gap-1.5">
+                    <span>{tc.title || 'أنيس المساعد الذكي 🦉'}</span>
+                    <Sparkles className="w-3.5 h-3.5 text-[#E8927C]" />
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-bold leading-normal">
-                    {tc.subtitle || 'اسألني أي شيء وسأساعدك!'}
+                  <p className="text-[11px] text-[#6E647D] font-bold leading-normal">
+                    {tc.subtitle || 'اسألني أي شيء وسأساعدك في دراستك!'}
                   </p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   onClick={handleClear}
-                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer transition-all"
+                  className="p-2 rounded-xl bg-white border border-[#E8927C]/20 text-[#6E647D] hover:text-[#E8927C] cursor-pointer transition-all shadow-xs"
                   title={tc.clearBtn || 'مسح'}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer transition-all"
+                  className="p-2 rounded-xl bg-white border border-[#E8927C]/20 text-[#6E647D] hover:text-[#E8927C] cursor-pointer transition-all shadow-xs"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -319,7 +310,7 @@ export default function AiAssistant() {
             </div>
 
             {/* Conversation Messages */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-thin">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-[#FFFDFB]">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -331,10 +322,10 @@ export default function AiAssistant() {
                 >
                   {/* Avatar */}
                   <div
-                    className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-white font-bold shadow-md ${
+                    className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center font-black shadow-xs text-xs ${
                       msg.role === 'user'
-                        ? 'bg-gradient-to-tr from-cyan-500 to-blue-500'
-                        : 'bg-gradient-to-tr from-violet-600 to-indigo-600'
+                        ? 'bg-[#E8927C] text-white'
+                        : 'bg-[#95C5B2] text-[#1F3D33]'
                     }`}
                   >
                     {msg.role === 'user' ? (
@@ -345,12 +336,12 @@ export default function AiAssistant() {
                   </div>
 
                   {/* Bubble content */}
-                  <div className="max-w-[75%] space-y-1.5">
+                  <div className="max-w-[78%] space-y-1.5">
                     <div
-                      className={`p-3.5 rounded-[1.5rem] text-xs font-bold leading-relaxed shadow-md ${
+                      className={`p-3.5 rounded-2xl text-xs font-bold leading-relaxed shadow-xs ${
                         msg.role === 'user'
-                          ? 'bg-gradient-to-tr from-cyan-600 to-blue-600 text-white rounded-tr-none'
-                          : 'bg-white/5 border border-white/5 text-slate-100 rounded-tl-none'
+                          ? 'bg-[#E8927C] text-white rounded-tr-none'
+                          : 'bg-[#F4FAF6] border border-[#95C5B2]/30 text-[#3D364A] rounded-tl-none'
                       }`}
                       style={{
                         direction: lang === 'ar' ? 'rtl' : 'ltr',
@@ -365,10 +356,10 @@ export default function AiAssistant() {
                       <div className={`flex ${dir === 'rtl' ? 'justify-start' : 'justify-end'}`}>
                         <button
                           onClick={() => handleSpeak(msg.id, msg.content)}
-                          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black cursor-pointer transition-all ${
+                          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black cursor-pointer transition-all ${
                             isSpeaking === msg.id
-                              ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                              : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                              ? 'bg-[#E8927C]/20 text-[#D4785F] border border-[#E8927C]/30'
+                              : 'bg-[#F2ECE5] text-[#6E647D] hover:text-[#3D364A]'
                           }`}
                         >
                           {isSpeaking === msg.id ? (
@@ -393,8 +384,8 @@ export default function AiAssistant() {
                           <motion.button
                             key={idx}
                             onClick={() => handleSend(sug)}
-                            className="bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 border border-violet-500/25 rounded-full py-1.5 px-3 text-[10px] font-extrabold cursor-pointer transition-all"
-                            whileHover={{ scale: 1.03 }}
+                            className="bg-[#FDF2EE] hover:bg-[#FBE4DD] text-[#C45E45] border border-[#E8927C]/25 rounded-full py-1.5 px-3 text-[11px] font-black cursor-pointer transition-all shadow-xs"
+                            whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                           >
                             {sug}
@@ -409,15 +400,15 @@ export default function AiAssistant() {
               {/* Typing indicator */}
               {loading && (
                 <div className="flex items-start gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 shrink-0 flex items-center justify-center text-white font-bold shadow-md">
+                  <div className="w-8 h-8 rounded-xl bg-[#95C5B2] text-[#1F3D33] shrink-0 flex items-center justify-center font-bold shadow-xs">
                     <Loader2 className="w-4 h-4 animate-spin" />
                   </div>
-                  <div className="bg-white/5 border border-white/5 text-slate-400 px-4 py-3 rounded-[1.5rem] rounded-tl-none flex items-center gap-1.5">
-                    <span className="text-[10px] font-black">{tc.aiTyping || 'أنيس يفكر...'}</span>
+                  <div className="bg-[#F4FAF6] border border-[#95C5B2]/30 text-[#6E647D] px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-2">
+                    <span className="text-[11px] font-black">{tc.aiTyping || 'أنيس يفكّر...'}</span>
                     <div className="flex gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -432,21 +423,21 @@ export default function AiAssistant() {
                 e.preventDefault();
                 handleSend(inputValue);
               }}
-              className="p-4 border-t border-white/5 bg-white/5 flex gap-2.5 items-center"
+              className="p-3 sm:p-4 border-t border-[#F2ECE5] bg-[#FDF8F3] flex gap-2.5 items-center"
             >
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={tc.placeholder || 'اكتب رسالة...'}
-                className="flex-1 bg-white/5 border border-white/5 text-slate-100 rounded-2xl py-3 px-4 text-xs font-bold focus:outline-none focus:border-violet-500 placeholder-slate-500"
+                placeholder={tc.placeholder || 'اكتب رسالة لأنيس...'}
+                className="flex-1 bg-white border border-[#E8927C]/25 text-[#3D364A] rounded-2xl py-2.5 px-4 text-xs font-bold focus:outline-none focus:border-[#E8927C] placeholder-[#A396B5] shadow-xs"
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || loading}
-                className="w-10 h-10 shrink-0 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white flex items-center justify-center shadow-lg cursor-pointer transition-all"
+                className="w-10 h-10 shrink-0 rounded-2xl bg-[#E8927C] hover:bg-[#D4785F] disabled:opacity-50 text-white flex items-center justify-center shadow-md cursor-pointer transition-all"
               >
-                <Send className="w-4.5 h-4.5" />
+                <Send className="w-4 h-4" />
               </button>
             </form>
           </motion.div>
@@ -456,7 +447,6 @@ export default function AiAssistant() {
   );
 }
 
-// Minimal user avatar inside chat
 function SmileAvatar() {
   return (
     <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
