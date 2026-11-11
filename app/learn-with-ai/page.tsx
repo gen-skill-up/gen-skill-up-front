@@ -210,7 +210,23 @@ function LearnWithAiContent() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
-      setChildId(id);
+      if (id) {
+        setChildId(id);
+        localStorage.setItem('activeChildId', id);
+      } else {
+        childrenApi
+          .list()
+          .then((res) => {
+            if (res.data && res.data.length > 0) {
+              const detected = res.data[0].id;
+              setChildId(detected);
+              localStorage.setItem('activeChildId', detected);
+            } else {
+              setLoadingLessons(false);
+            }
+          })
+          .catch(() => setLoadingLessons(false));
+      }
 
       const paramSubject = searchParams.get('subject');
       if (

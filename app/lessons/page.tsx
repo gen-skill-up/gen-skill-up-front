@@ -112,7 +112,15 @@ const gradeSubjects: Record<number, string[]> = {
   6: ['MATHS', 'ARABIC', 'FRANCAIS', 'ENGLISH', 'SCIENCE', 'SOCIALS'],
 };
 
-const AVAILABLE_SUBJECTS = new Set(['MATHS']);
+const AVAILABLE_SUBJECTS = new Set([
+  'MATHS',
+  'ARABIC',
+  'FRANCAIS',
+  'SCIENCE',
+  'ISLAMIC_CIVIC',
+  'ENGLISH',
+  'SOCIALS',
+]);
 
 // ─── 3D Chibi Avatar Mascot Cheering on the Active Node ──────────────────────
 function ChibiMascotCheer({ speechText }: { speechText?: string }) {
@@ -355,8 +363,27 @@ function LessonsContent() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
-      setChildId(id);
-      if (id) localStorage.setItem('activeChildId', id);
+      if (id) {
+        setChildId(id);
+        localStorage.setItem('activeChildId', id);
+      } else {
+        // Fallback: auto-detect first child profile
+        childrenApi
+          .list()
+          .then((res) => {
+            if (res.data && res.data.length > 0) {
+              const detectedId = res.data[0].id;
+              setChildId(detectedId);
+              localStorage.setItem('activeChildId', detectedId);
+            } else {
+              setLoading(false);
+            }
+          })
+          .catch((err) => {
+            console.error('Failed to auto-detect child profile:', err);
+            setLoading(false);
+          });
+      }
     }
   }, [searchParams]);
 
@@ -391,16 +418,28 @@ function LessonsContent() {
 
   useEffect(() => {
     if (!childId) return;
+    let isCancelled = false;
     setLoading(true);
     lessonsApi
       .list(childId, selectedSubject, selectedGrade)
       .then((res) => {
-        const filtered = res.data.filter((l: Lesson) => l.grade === selectedGrade);
+        if (isCancelled) return;
+        const list = Array.isArray(res.data) ? res.data : [];
+        const filtered = list.filter((l: Lesson) => Number(l.grade) === Number(selectedGrade));
         setLessons(filtered);
         fetchLeaderboard();
       })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (isCancelled) return;
+        console.error('Failed to load lessons:', err);
+      })
+      .finally(() => {
+        if (!isCancelled) setLoading(false);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [childId, selectedGrade, selectedSubject]);
 
   const handleGradeChange = (grade: number) => {

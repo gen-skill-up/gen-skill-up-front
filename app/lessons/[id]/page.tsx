@@ -55,15 +55,27 @@ function LessonDetailContent() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
-      setChildId(id);
+      if (id) {
+        setChildId(id);
+      } else {
+        import('@/lib/api').then(({ childrenApi }) => {
+          childrenApi.list().then((res) => {
+            if (res.data && res.data.length > 0) {
+              const detected = res.data[0].id;
+              setChildId(detected);
+              localStorage.setItem('activeChildId', detected);
+            }
+          }).catch(() => {});
+        });
+      }
     }
   }, [searchParams]);
 
   useEffect(() => {
-    if (!lessonId || !childId) return;
+    if (!lessonId) return;
 
     lessonsApi
-      .get(lessonId, childId)
+      .get(lessonId, childId || undefined)
       .then((res) => {
         setLesson(res.data);
         // If lesson was previously marked as read (has LessonCompletion), show exercises
