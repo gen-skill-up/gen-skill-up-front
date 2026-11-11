@@ -48,18 +48,26 @@ export const fr: TranslationType = {
   features: {
     sectionTitle: "Pourquoi Gen Skill Up ?",
     sectionSubtitle: "Tout ce dont votre enfant a besoin pour un parcours éducatif réussi",
+    interactiveHint: "Cliquez sur une fonctionnalité pour explorer les détails et l'essayer",
+    tryFeature: "Essayer 🚀",
     aiLearningTitle: "Apprentissage par l'IA",
     aiLearningDesc: "Contenu automatiquement personnalisé selon le niveau de votre enfant",
+    aiLearningDetail: "L'IA analyse le rythme et les forces de votre enfant pour générer des exercices sur-mesure étape par étape.",
     rewardsTitle: "Système de récompenses",
     rewardsDesc: "Des étoiles et badges pour motiver la régularité",
+    rewardsDetail: "Chaque exercice réussi rapporte des points XP et des trophées stimulant la motivation et le goût d'apprendre.",
     trackingTitle: "Suivre la progression",
     trackingDesc: "Un tableau de bord pour suivre le développement quotidien de votre enfant",
+    trackingDetail: "Un espace parents clair détaillant le temps d'étude, la précision et les compétences acquises.",
     testTitle: "Test de Niveau",
     testDesc: "Nous déterminons le bon point de départ pour chaque enfant",
+    testDetail: "Un test initial calibré évitant à votre enfant l'ennui des leçons trop simples ou le découragement des défis trop ardus.",
     lessonsTitle: "Leçons Interactives",
     lessonsDesc: "Français, Maths, Logique et culture générale",
+    lessonsDetail: "Des leçons courtes et attrayantes adaptées au temps d'attention des enfants avec des visuels stimulants.",
     challengesTitle: "Défis Quotidiens",
     challengesDesc: "Des défis amusants qui transforment l'apprentissage en aventure",
+    challengesDetail: "Des quêtes journalières stimulantes pour ancrer une habitude d'apprentissage positive.",
   },
   cta: {
     sectionTitle: "Commencez dès aujourd'hui — C'est gratuit !",
@@ -320,57 +328,92 @@ export const fr: TranslationType = {
     feature3Title: "Maths et Logique d'abord",
     feature3Desc: "Des programmes spécialisés axés sur les compétences fondamentales, favorisant la pensée critique et la résolution de problèmes.",
   },
+  interactiveDemo: {
+    badge: "Essayez vous-même dès maintenant !",
+    title: "Mini-défi intelligent avec Anis 🦉",
+    subtitle: "Sélectionnez la bonne réponse et voyez comment l'IA encourage instantanément votre enfant !",
+    question1: "Si Anis a 5 étoiles et gagne 7 étoiles de plus, combien en a-t-il maintenant ?",
+    options1: ["10 étoiles", "12 étoiles", "14 étoiles"],
+    correctFeedback: "Bravo champion ! Bonne réponse +15 XP 🌟",
+    wrongFeedback: "Essaie encore ! 5 + 7 = 12 ✨",
+    nextChallenge: "Nouveau Défi 🔄",
+    question2: "Complète la suite logique : 2, 4, 6, ... Quel est le prochain nombre ?",
+    options2: ["7", "8", "9"],
+    correctFeedback2: "Génial ! Tu as trouvé la règle très vite 🚀",
+    ctaTeaser: "Tu as aimé ce défi ? Plus de 500 exercices interactifs t'attendent !",
+  },
   pricing: {
-    title: "Des Tarifs Adaptés",
-    subtitle: "Choisissez le forfait idéal pour le parcours éducatif de votre enfant",
+    title: "Des Tarifs Adaptés — Avec Forfait Gratuit",
+    subtitle: "Commencez gratuitement dès maintenant ou passez à l'offre supérieure pour un accès illimité",
     currency: "DT",
     period: "mois",
+    monthly: "Mensuel",
+    yearly: "Annuel (-20%)",
     popularBadge: "Le Plus Populaire",
+    freeBadge: "Gratuit pour toujours",
     startBtn: "Choisir & Démarrer",
+    startFreeBtn: "Commencer Gratuitement 🚀",
+    noCreditCard: "Sans carte bancaire • Annulation facile",
     featuresTitle: "Fonctionnalités incluses :",
     plans: {
+      free: {
+        name: "🌱 Formule Gratuite (Freemium)",
+        price: "0",
+        priceYearly: "0",
+        desc: "Accédez gratuitement aux bases de la plateforme sans aucune carte de crédit.",
+        features: [
+          "5 leçons interactives complètes en maths et langues",
+          "3 exercices intelligents adaptatifs par jour",
+          "Test diagnostique de niveau initial",
+          "Tableau de bord de suivi essentiel"
+        ]
+      },
       basic: {
         name: "🟢 GenSkillUp Primaire",
         price: "29",
-        desc: "Un parcours d'apprentissage ludique et intelligent destiné aux élèves du primaire. La plateforme combine intelligence artificielle, exercices interactifs, quiz adaptatifs et gamification pour renforcer les compétences fondamentales en mathématiques, français, arabe et sciences. Les parents bénéficient d'un suivi régulier des progrès de leur enfant.",
+        priceYearly: "23",
+        desc: "Un parcours d'apprentissage ludique et intelligent destiné aux élèves du primaire combinant IA et gamification.",
         features: [
-          "Renforce les maths, français, arabe et sciences",
-          "Exercices interactifs et quiz adaptatifs",
-          "Gamification stimulante pour l'enfant",
-          "Suivi régulier des progrès pour les parents"
+          "Tous les cours de maths, français, arabe et sciences",
+          "Exercices adaptatifs et quiz illimités",
+          "Gamification stimulante et badges réguliers",
+          "Suivi et rapports réguliers pour les parents"
         ]
       },
       advanced: {
         name: "🔵 GenSkillUp Collège",
         price: "49",
-        desc: "Une solution d'apprentissage personnalisée conçue pour les collégiens. L'intelligence artificielle identifie les lacunes, adapte les exercices au niveau de l'élève et propose des explications ciblées afin d'améliorer les résultats scolaires, la compréhension et l'autonomie dans l'apprentissage.",
+        priceYearly: "39",
+        desc: "Une solution d'apprentissage personnalisée conçue pour les collégiens afin de combler les lacunes et développer l'autonomie.",
         features: [
           "L'IA identifie et comble les lacunes",
-          "Adapte les exercices au niveau de l'élève",
-          "Propose des explications ciblées",
-          "Améliore les résultats et l'autonomie"
+          "Adapte les exercices avancés au niveau de l'élève",
+          "Explications ciblées instantanées avec le tuteur Anis",
+          "Développe l'esprit critique et la méthode de travail"
         ]
       },
       premium: {
         name: "🟣 GenSkillUp Premium Support",
         price: "89",
-        desc: "Une offre spécialisée pour les élèves rencontrant des difficultés d'apprentissage, des lacunes scolaires, des troubles de l'attention, des problèmes de concentration ou un manque de motivation. Grâce à l'IA adaptative, chaque élève bénéficie d'un parcours personnalisé favorisant la progression, la confiance en soi et la réussite scolaire.",
+        priceYearly: "71",
+        desc: "Une offre spécialisée pour les élèves rencontrant des difficultés d'apprentissage, troubles de l'attention ou manque de motivation.",
         features: [
-          "Idéal pour difficultés d'apprentissage et TDAH",
-          "Parcours sur mesure via l'IA adaptative",
-          "Favorise la confiance en soi et la progression",
-          "Aide à la concentration et à la motivation"
+          "Conçu pour difficultés d'apprentissage et TDAH",
+          "Parcours sur-mesure respectant le rythme de l'enfant",
+          "Renforce la confiance en soi et l'engagement",
+          "Accompagnement pas à pas avec visuels et audio"
         ]
       },
       family: {
         name: "👨‍👩‍👧 GenSkillUp Famille (jusqu'à 3 enfants)",
         price: "99",
-        desc: "Une formule avantageuse permettant à trois enfants d'une même famille d'accéder à la plateforme via un seul abonnement. Les parents disposent d'un tableau de bord centralisé pour suivre les progrès, les performances et les objectifs de chaque enfant, tout en optimisant leur budget éducatif.",
+        priceYearly: "79",
+        desc: "Une formule avantageuse permettant à 3 enfants d'une même famille d'accéder à la plateforme via un seul abonnement.",
         features: [
-          "Accès pour 3 enfants avec un seul abonnement",
+          "1 seul abonnement pour jusqu'à 3 enfants",
           "Tableau de bord centralisé pour les parents",
-          "Optimisation du budget éducatif de la famille",
-          "Suivi des objectifs de chaque enfant"
+          "Suivi des objectifs personnalisés pour chaque enfant",
+          "Excellente rentabilité pour le budget familial"
         ]
       }
     }

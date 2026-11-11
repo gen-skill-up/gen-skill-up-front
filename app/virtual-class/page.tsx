@@ -206,11 +206,11 @@ function VirtualClassContent() {
         prev.map((msg) =>
           msg.id === loadingMsgId
             ? {
-                ...msg,
-                text: aiResponse,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                isLoading: false,
-              }
+              ...msg,
+              text: aiResponse,
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              isLoading: false,
+            }
             : msg,
         ),
       );
@@ -221,13 +221,13 @@ function VirtualClassContent() {
         prev.map((msg) =>
           msg.id === loadingMsgId
             ? {
-                ...msg,
-                text: dir === 'rtl'
-                  ? `أحسنت يا ${child.name}! استمر في التقدم والمشاركة.`
-                  : `Excellent travail, ${child.name} ! Continue comme ça.`,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                isLoading: false,
-              }
+              ...msg,
+              text: dir === 'rtl'
+                ? `أحسنت يا ${child.name}! استمر في التقدم والمشاركة.`
+                : `Excellent travail, ${child.name} ! Continue comme ça.`,
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              isLoading: false,
+            }
             : msg,
         ),
       );
@@ -288,325 +288,323 @@ function VirtualClassContent() {
 
   return (
     <div className="w-full px-6 lg:px-8 pt-8 pb-20 max-w-6xl mx-auto space-y-8">
-          
-          {/* Header Banner */}
-          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F2DDD0] shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
-            <div className="absolute -right-6 -bottom-6 w-36 h-36 rounded-full opacity-[0.06]" style={{ background: '#E8927C' }} />
-            <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
-              <div className="w-16 h-16 rounded-2xl bg-[#FDF0EB] text-[#E8927C] flex items-center justify-center shadow-inner shrink-0">
-                <Monitor className="w-8 h-8" />
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
-                  {dir === 'rtl' ? 'القسم الافتراضي الذكي 🖥️' : 'Classe Virtuelle 🖥️'}
-                </h1>
-                <p className="text-[#6E637C] text-sm sm:text-base font-bold mt-1">
-                  {dir === 'rtl' ? 'ادرس مع أصدقائك، وحلوا التحديات المشتركة والمسابقات الحية!' : 'Étudie avec tes amis et relève les défis de la classe !'}
-                </p>
-              </div>
-            </div>
-            
-            {child && (
-              <div className="flex items-center gap-2 bg-[#FEF8EC] border border-[#F6E3B8] px-4 py-2.5 rounded-2xl shrink-0">
-                <Star className="w-5 h-5 text-[#D4A75E] fill-[#D4A75E] animate-pulse" />
-                <span className="text-sm font-black text-[#8A601B]">
-                  {child.points} XP
+
+      {/* Header Banner */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F2DDD0] shadow-sm flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+        <div className="absolute -right-6 -bottom-6 w-36 h-36 rounded-full opacity-[0.06]" style={{ background: '#E8927C' }} />
+        <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}>
+          <div className="w-16 h-16 rounded-2xl bg-[#FDF0EB] text-[#E8927C] flex items-center justify-center shadow-inner shrink-0">
+            <Monitor className="w-8 h-8" />
+          </div>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
+              {dir === 'rtl' ? 'القسم الافتراضي الذكي 🖥️' : 'Classe Virtuelle 🖥️'}
+            </h1>
+            <p className="text-[#6E637C] text-sm sm:text-base font-bold mt-1">
+              {dir === 'rtl' ? 'ادرس مع أصدقائك، وحلوا التحديات المشتركة والمسابقات الحية!' : 'Étudie avec tes amis et relève les défis de la classe !'}
+            </p>
+          </div>
+        </div>
+
+        {child && (
+          <div className="flex items-center gap-2 bg-[#FEF8EC] border border-[#F6E3B8] px-4 py-2.5 rounded-2xl shrink-0">
+            <Star className="w-5 h-5 text-[#D4A75E] fill-[#D4A75E] animate-pulse" />
+            <span className="text-sm font-black text-[#8A601B]">
+              {child.points} XP
+            </span>
+          </div>
+        )}
+      </div>
+
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-24">
+          <Loader2 className="w-12 h-12 animate-spin text-[#3B82F6] mb-3" />
+          <p className="text-slate-500 text-xs font-black animate-pulse">
+            {dir === 'rtl' ? 'جاري الاتصال بالقسم الافتراضي...' : 'Connexion à la classe...'}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* Left Column: Virtual blackboard & Quick quiz */}
+          <div className="lg:col-span-2 space-y-6">
+
+            {/* Dynamic Classroom Blackboard */}
+            <div className="bg-[#1E293B] rounded-3xl p-6 border-8 border-slate-700 shadow-2xl relative text-white space-y-4">
+              {/* Screws on corner */}
+              <div className="absolute top-2 left-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
+              <div className="absolute top-2 right-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
+              <div className="absolute bottom-2 left-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
+              <div className="absolute bottom-2 right-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
+
+              <div className="border-b border-white/10 pb-2.5 flex justify-between items-center">
+                <span className="text-xs font-black text-amber-400">
+                  {tipData
+                    ? `💡 ${tipData.title}`
+                    : (dir === 'rtl' ? '💡 قاعدة اليوم' : '💡 Règle du Jour')}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {new Date().toLocaleDateString(dir === 'rtl' ? 'ar-TN' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </span>
               </div>
-            )}
-          </div>
 
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-24">
-              <Loader2 className="w-12 h-12 animate-spin text-[#3B82F6] mb-3" />
-              <p className="text-slate-500 text-xs font-black animate-pulse">
-                {dir === 'rtl' ? 'جاري الاتصال بالقسم الافتراضي...' : 'Connexion à la classe...'}
-              </p>
+              {tipLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
+                </div>
+              ) : (
+                <div className={`space-y-3 font-mono leading-relaxed text-slate-100 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
+                  {tipData?.subject && (
+                    <span className="inline-block text-[9px] font-black bg-white/10 text-cyan-400 px-2 py-0.5 rounded-full mb-1">
+                      {tipData.subject}
+                      {tipData.axis ? ` — ${tipData.axis}` : ''}
+                    </span>
+                  )}
+                  <p className="text-xs leading-normal">
+                    {tipData?.content || (dir === 'rtl' ? 'جاري تحميل نصيحة اليوم...' : 'Chargement du conseil...')}
+                  </p>
+                  {tipData?.example && (
+                    <div className="bg-white/5 p-3 rounded-2xl border border-white/5 font-mono text-[11px] text-emerald-400 space-y-1 whitespace-pre-line">
+                      {tipData.example}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex justify-end pt-2 text-[10px] text-slate-400 font-semibold">
+                <span>{dir === 'rtl' ? 'المعلم البومة 🦉' : 'Chouette Prof 🦉'}</span>
+              </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              
-              {/* Left Column: Virtual blackboard & Quick quiz */}
-              <div className="lg:col-span-2 space-y-6">
-                
-                {/* Dynamic Classroom Blackboard */}
-                <div className="bg-[#1E293B] rounded-3xl p-6 border-8 border-slate-700 shadow-2xl relative text-white space-y-4">
-                  {/* Screws on corner */}
-                  <div className="absolute top-2 left-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
-                  <div className="absolute top-2 right-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
-                  <div className="absolute bottom-2 left-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
-                  <div className="absolute bottom-2 right-2 w-3.5 h-3.5 bg-slate-500 rounded-full border border-slate-600" />
 
-                  <div className="border-b border-white/10 pb-2.5 flex justify-between items-center">
-                    <span className="text-xs font-black text-amber-400">
-                      {tipData
-                        ? `💡 ${tipData.title}`
-                        : (dir === 'rtl' ? '💡 قاعدة اليوم' : '💡 Règle du Jour')}
-                    </span>
-                    <span className="text-[10px] text-slate-400">
-                      {new Date().toLocaleDateString(dir === 'rtl' ? 'ar-TN' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                    </span>
-                  </div>
-
-                  {tipLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
-                    </div>
-                  ) : (
-                    <div className={`space-y-3 font-mono leading-relaxed text-slate-100 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-                      {tipData?.subject && (
-                        <span className="inline-block text-[9px] font-black bg-white/10 text-cyan-400 px-2 py-0.5 rounded-full mb-1">
-                          {tipData.subject}
-                          {tipData.axis ? ` — ${tipData.axis}` : ''}
-                        </span>
-                      )}
-                      <p className="text-xs leading-normal">
-                        {tipData?.content || (dir === 'rtl' ? 'جاري تحميل نصيحة اليوم...' : 'Chargement du conseil...')}
-                      </p>
-                      {tipData?.example && (
-                        <div className="bg-white/5 p-3 rounded-2xl border border-white/5 font-mono text-[11px] text-emerald-400 space-y-1 whitespace-pre-line">
-                          {tipData.example}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex justify-end pt-2 text-[10px] text-slate-400 font-semibold">
-                    <span>{dir === 'rtl' ? 'المعلم البومة 🦉' : 'Chouette Prof 🦉'}</span>
-                  </div>
+            {/* Quick Quiz Interactive Widget — Real Data */}
+            <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-500 animate-bounce" />
+                  <h3 className="text-sm font-black text-slate-800">
+                    {dir === 'rtl' ? 'سؤال سريع لاكتساب +15 نقطة ⚡' : 'Quiz rapide pour +15 XP ⚡'}
+                  </h3>
                 </div>
-
-                {/* Quick Quiz Interactive Widget — Real Data */}
-                <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-amber-500 animate-bounce" />
-                      <h3 className="text-sm font-black text-slate-800">
-                        {dir === 'rtl' ? 'سؤال سريع لاكتساب +15 نقطة ⚡' : 'Quiz rapide pour +15 XP ⚡'}
-                      </h3>
-                    </div>
-                    {quizAnswered && (
-                      <button
-                        onClick={handleNextQuiz}
-                        className="flex items-center gap-1 text-[10px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full transition-all cursor-pointer"
-                      >
-                        <RefreshCw className="w-3 h-3" />
-                        {dir === 'rtl' ? 'سؤال آخر' : 'Suivant'}
-                      </button>
-                    )}
-                  </div>
-
-                  {quizLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
-                    </div>
-                  ) : quizData ? (
-                    <>
-                      <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-xs font-bold text-slate-700 leading-snug">
-                        {quizData.question}
-                        {quizData.lessonTitle && (
-                          <span className="block mt-1.5 text-[9px] text-slate-400 font-semibold">
-                            {dir === 'rtl' ? `📚 من درس: ${quizData.lessonTitle}` : `📚 Leçon: ${quizData.lessonTitle}`}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        {quizData.options.map((opt, oIdx) => {
-                          const isCorrect = oIdx === quizData.correctIdx;
-                          const isSelected = selectedAnswer === oIdx;
-
-                          let btnStyle = "bg-white hover:bg-slate-50 border-slate-200 text-slate-700";
-                          if (quizAnswered) {
-                            if (isCorrect) {
-                              btnStyle = "bg-emerald-500 border-emerald-600 text-white shadow-emerald-200 shadow-lg";
-                            } else if (isSelected) {
-                              btnStyle = "bg-rose-500 border-rose-600 text-white shadow-rose-200 shadow-lg";
-                            } else {
-                              btnStyle = "bg-slate-100 border-slate-200 text-slate-400 opacity-60";
-                            }
-                          }
-
-                          return (
-                            <button
-                              key={oIdx}
-                              onClick={() => handleQuizSubmit(oIdx)}
-                              disabled={quizAnswered}
-                              className={`border-b-4 font-black py-3 rounded-2xl text-xs transition-all cursor-pointer ${btnStyle}`}
-                            >
-                              {opt}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      <AnimatePresence>
-                        {showExplanation && quizResult && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`rounded-2xl p-3.5 text-[10px] font-semibold border flex gap-2.5 items-start ${
-                              quizResult.correct
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                : 'bg-rose-50 text-rose-700 border-rose-200'
-                            }`}
-                          >
-                            {quizResult.correct ? (
-                              <CheckCircle className="w-5 h-5 shrink-0" />
-                            ) : (
-                              <AlertCircle className="w-5 h-5 shrink-0" />
-                            )}
-                            <div>
-                              <p className="font-bold">
-                                {quizResult.correct
-                                  ? (dir === 'rtl' ? `أحسنت! إجابة صحيحة +${quizResult.rewardPoints} XP 🎉` : `Félicitations ! +${quizResult.rewardPoints} XP 🎉`)
-                                  : (dir === 'rtl' ? 'إجابة خاطئة! حاول مرة أخرى مع السؤال التالي 💪' : 'Mauvaise réponse ! Réessaie avec la prochaine question 💪')}
-                              </p>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  ) : (
-                    <div className="text-center py-6 text-slate-400 text-xs font-bold">
-                      {dir === 'rtl' ? 'لا توجد أسئلة متاحة حالياً' : 'Aucune question disponible'}
-                    </div>
-                  )}
-                </div>
-
+                {quizAnswered && (
+                  <button
+                    onClick={handleNextQuiz}
+                    className="flex items-center gap-1 text-[10px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full transition-all cursor-pointer"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    {dir === 'rtl' ? 'سؤال آخر' : 'Suivant'}
+                  </button>
+                )}
               </div>
 
-              {/* Right Column: Online classmates & classroom chat */}
-              <div className="space-y-6">
-                
-                {/* Online Students List — Real Friends */}
-                <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
-                  <h3 className="text-sm font-black text-slate-800 flex items-center gap-2">
-                    <Users className="w-4.5 h-4.5 text-blue-500" />
-                    <span>{dir === 'rtl' ? 'الأصدقاء في القسم' : 'Amis dans la classe'}</span>
-                    {classmates.length > 0 && (
-                      <span className="text-[8px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-black">
-                        {classmates.length}
+              {quizLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+                </div>
+              ) : quizData ? (
+                <>
+                  <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-xs font-bold text-slate-700 leading-snug">
+                    {quizData.question}
+                    {quizData.lessonTitle && (
+                      <span className="block mt-1.5 text-[9px] text-slate-400 font-semibold">
+                        {dir === 'rtl' ? `📚 من درس: ${quizData.lessonTitle}` : `📚 Leçon: ${quizData.lessonTitle}`}
                       </span>
                     )}
-                  </h3>
+                  </div>
 
-                  {classmates.length > 0 ? (
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {classmates.map((member: any) => (
-                        <div key={member.id} className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center font-bold text-[10px] uppercase text-slate-600 relative">
-                              {member.name.charAt(0)}
-                              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
-                            </div>
-                            <div>
-                              <span className="text-[10px] font-black text-slate-800 block">{member.name}</span>
-                              {member.level && (
-                                <span className="text-[8px] font-bold text-slate-400">
-                                  {member.level === 'DEBUTANT' ? '🌱' : member.level === 'INTERMEDIAIRE' ? '🚀' : '🏆'} 
-                                  {member.level}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-[8px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{member.points} XP</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-6 space-y-3">
-                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
-                        <UserPlus className="w-6 h-6 text-slate-400" />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-bold text-slate-500">
-                          {dir === 'rtl' ? 'لم تضف أصدقاء بعد!' : 'Tu n\'as pas encore d\'amis !'}
-                        </p>
-                        <p className="text-[9px] text-slate-400 mt-0.5">
-                          {dir === 'rtl' 
-                            ? 'شارك كود صداقتك مع زملائك للانضمام'
-                            : 'Partage ton code ami avec tes camarades'}
-                        </p>
-                        {leaderboard?.child?.shareCode && (
-                          <div className="mt-2 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2">
-                            <span className="text-[9px] text-indigo-400 font-semibold block">
-                              {dir === 'rtl' ? 'كود الصداقة' : 'Code ami'}
-                            </span>
-                            <span className="text-sm font-black text-indigo-700 tracking-widest">
-                              {leaderboard.child.shareCode}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {quizData.options.map((opt, oIdx) => {
+                      const isCorrect = oIdx === quizData.correctIdx;
+                      const isSelected = selectedAnswer === oIdx;
 
-                {/* Classroom Chat — AI-Powered */}
-                <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col h-[320px] justify-between">
-                  <h3 className="text-xs font-black text-slate-800 flex items-center gap-2 border-b border-slate-50 pb-2">
-                    <MessageSquare className="w-4 h-4 text-blue-500" />
-                    <span>{dir === 'rtl' ? 'اسأل المعلم البومة 🦉' : 'Demande à Chouette Prof 🦉'}</span>
-                  </h3>
+                      let btnStyle = "bg-white hover:bg-slate-50 border-slate-200 text-slate-700";
+                      if (quizAnswered) {
+                        if (isCorrect) {
+                          btnStyle = "bg-emerald-500 border-emerald-600 text-white shadow-emerald-200 shadow-lg";
+                        } else if (isSelected) {
+                          btnStyle = "bg-rose-500 border-rose-600 text-white shadow-rose-200 shadow-lg";
+                        } else {
+                          btnStyle = "bg-slate-100 border-slate-200 text-slate-400 opacity-60";
+                        }
+                      }
 
-                  {/* Messages container */}
-                  <div className="flex-1 overflow-y-auto space-y-3 py-3 pr-1">
-                    {chatMessages.length === 0 && (
-                      <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
-                        <Logo size={32} />
-                        <p className="text-[10px] font-bold text-slate-400 mt-2">
-                          {dir === 'rtl' 
-                            ? 'اسأل المعلم البومة أي سؤال تعليمي! 💡'
-                            : 'Pose une question à Chouette Prof ! 💡'}
-                        </p>
-                      </div>
-                    )}
-                    {chatMessages.map((msg) => (
-                      <div key={msg.id} className={`flex flex-col ${msg.sender === child?.name ? 'items-end' : 'items-start'}`}>
-                        <span className="text-[8px] font-black text-slate-400 mb-0.5">{msg.sender}</span>
-                        <div 
-                          className={`rounded-2xl p-2.5 text-[10px] leading-relaxed max-w-[85%] font-medium ${
-                            msg.sender === child?.name
-                              ? 'bg-blue-600 text-white rounded-tr-none'
-                              : 'bg-slate-100 text-slate-800 rounded-tl-none border border-slate-200/50'
-                          }`}
+                      return (
+                        <button
+                          key={oIdx}
+                          onClick={() => handleQuizSubmit(oIdx)}
+                          disabled={quizAnswered}
+                          className={`border-b-4 font-black py-3 rounded-2xl text-xs transition-all cursor-pointer ${btnStyle}`}
                         >
-                          {msg.isLoading ? (
-                            <span className="flex items-center gap-1">
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                              <span className="animate-pulse">{dir === 'rtl' ? 'يفكر...' : 'Réflexion...'}</span>
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <AnimatePresence>
+                    {showExplanation && quizResult && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`rounded-2xl p-3.5 text-[10px] font-semibold border flex gap-2.5 items-start ${quizResult.correct
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-rose-50 text-rose-700 border-rose-200'
+                          }`}
+                      >
+                        {quizResult.correct ? (
+                          <CheckCircle className="w-5 h-5 shrink-0" />
+                        ) : (
+                          <AlertCircle className="w-5 h-5 shrink-0" />
+                        )}
+                        <div>
+                          <p className="font-bold">
+                            {quizResult.correct
+                              ? (dir === 'rtl' ? `أحسنت! إجابة صحيحة +${quizResult.rewardPoints} XP 🎉` : `Félicitations ! +${quizResult.rewardPoints} XP 🎉`)
+                              : (dir === 'rtl' ? 'إجابة خاطئة! حاول مرة أخرى مع السؤال التالي 💪' : 'Mauvaise réponse ! Réessaie avec la prochaine question 💪')}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              ) : (
+                <div className="text-center py-6 text-slate-400 text-xs font-bold">
+                  {dir === 'rtl' ? 'لا توجد أسئلة متاحة حالياً' : 'Aucune question disponible'}
+                </div>
+              )}
+            </div>
+
+          </div>
+
+          {/* Right Column: Online classmates & classroom chat */}
+          <div className="space-y-6">
+
+            {/* Online Students List — Real Friends */}
+            <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+              <h3 className="text-sm font-black text-slate-800 flex items-center gap-2">
+                <Users className="w-4.5 h-4.5 text-blue-500" />
+                <span>{dir === 'rtl' ? 'الأصدقاء في القسم' : 'Amis dans la classe'}</span>
+                {classmates.length > 0 && (
+                  <span className="text-[8px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-black">
+                    {classmates.length}
+                  </span>
+                )}
+              </h3>
+
+              {classmates.length > 0 ? (
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {classmates.map((member: any) => (
+                    <div key={member.id} className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center font-bold text-[10px] uppercase text-slate-600 relative">
+                          {member.name.charAt(0)}
+                          <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-black text-slate-800 block">{member.name}</span>
+                          {member.level && (
+                            <span className="text-[8px] font-bold text-slate-400">
+                              {member.level === 'DEBUTANT' ? '🌱' : member.level === 'INTERMEDIAIRE' ? '🚀' : '🏆'}
+                              {member.level}
                             </span>
-                          ) : (
-                            msg.text
                           )}
                         </div>
                       </div>
-                    ))}
-                  </div>
-
-                  {/* Input form */}
-                  <form onSubmit={handleSendMessage} className="flex gap-1.5 border-t border-slate-50 pt-3">
-                    <input
-                      type="text"
-                      placeholder={dir === 'rtl' ? 'اسأل المعلم البومة...' : 'Pose ta question...'}
-                      value={chatInput}
-                      onChange={(e) => setChatInput(e.target.value)}
-                      className="flex-1 bg-slate-50 border border-slate-200 text-[10px] font-bold p-2.5 rounded-xl outline-none focus:border-blue-400"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl border-b-2 border-blue-900 cursor-pointer"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                    </button>
-                  </form>
+                      <span className="text-[8px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{member.points} XP</span>
+                    </div>
+                  ))}
                 </div>
+              ) : (
+                <div className="text-center py-6 space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
+                    <UserPlus className="w-6 h-6 text-slate-400" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-500">
+                      {dir === 'rtl' ? 'لم تضف أصدقاء بعد!' : 'Tu n\'as pas encore d\'amis !'}
+                    </p>
+                    <p className="text-[9px] text-slate-400 mt-0.5">
+                      {dir === 'rtl'
+                        ? 'شارك كود صداقتك مع زملائك للانضمام'
+                        : 'Partage ton code ami avec tes camarades'}
+                    </p>
+                    {leaderboard?.child?.shareCode && (
+                      <div className="mt-2 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2">
+                        <span className="text-[9px] text-indigo-400 font-semibold block">
+                          {dir === 'rtl' ? 'كود الصداقة' : 'Code ami'}
+                        </span>
+                        <span className="text-sm font-black text-indigo-700 tracking-widest">
+                          {leaderboard.child.shareCode}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
+            {/* Classroom Chat — AI-Powered */}
+            <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col h-[320px] justify-between">
+              <h3 className="text-xs font-black text-slate-800 flex items-center gap-2 border-b border-slate-50 pb-2">
+                <MessageSquare className="w-4 h-4 text-blue-500" />
+                <span>{dir === 'rtl' ? 'اسأل المعلم البومة 🦉' : 'Demande à Chouette Prof 🦉'}</span>
+              </h3>
+
+              {/* Messages container */}
+              <div className="flex-1 overflow-y-auto space-y-3 py-3 pr-1">
+                {chatMessages.length === 0 && (
+                  <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
+                    <Logo size={32} />
+                    <p className="text-[10px] font-bold text-slate-400 mt-2">
+                      {dir === 'rtl'
+                        ? 'اسأل المعلم البومة أي سؤال تعليمي! 💡'
+                        : 'Pose une question à Chouette Prof ! 💡'}
+                    </p>
+                  </div>
+                )}
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className={`flex flex-col ${msg.sender === child?.name ? 'items-end' : 'items-start'}`}>
+                    <span className="text-[8px] font-black text-slate-400 mb-0.5">{msg.sender}</span>
+                    <div
+                      className={`rounded-2xl p-2.5 text-[10px] leading-relaxed max-w-[85%] font-medium ${msg.sender === child?.name
+                        ? 'bg-blue-600 text-white rounded-tr-none'
+                        : 'bg-slate-100 text-slate-800 rounded-tl-none border border-slate-200/50'
+                        }`}
+                    >
+                      {msg.isLoading ? (
+                        <span className="flex items-center gap-1">
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                          <span className="animate-pulse">{dir === 'rtl' ? 'يفكر...' : 'Réflexion...'}</span>
+                        </span>
+                      ) : (
+                        msg.text
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
 
+              {/* Input form */}
+              <form onSubmit={handleSendMessage} className="flex gap-1.5 border-t border-slate-50 pt-3">
+                <input
+                  type="text"
+                  placeholder={dir === 'rtl' ? 'اسأل المعلم البومة...' : 'Pose ta question...'}
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  className="flex-1 bg-slate-50 border border-slate-200 text-[10px] font-bold p-2.5 rounded-xl outline-none focus:border-blue-400"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl border-b-2 border-blue-900 cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                </button>
+              </form>
             </div>
-          )}
+
+          </div>
+
+        </div>
+      )}
 
     </div>
   );

@@ -48,18 +48,26 @@ export const en: TranslationType = {
   features: {
     sectionTitle: "Why Gen Skill Up?",
     sectionSubtitle: "Everything your child needs for a successful educational journey",
+    interactiveHint: "Click any feature to explore details and try it out",
+    tryFeature: "Try Feature 🚀",
     aiLearningTitle: "Learn with AI",
     aiLearningDesc: "Content automatically personalized to your child's level",
+    aiLearningDetail: "Our smart AI assesses speed, strengths, and weaknesses to generate personalized questions and step-by-step guidance.",
     rewardsTitle: "Rewards System",
     rewardsDesc: "Stars and badges that motivate continued learning",
+    rewardsDetail: "Every completed exercise awards XP points and collectible trophies, turning studying into an exciting adventure.",
     trackingTitle: "Track Progress",
     trackingDesc: "A dashboard to follow your child's daily development",
+    trackingDetail: "Parents get a transparent overview of study time, accuracy rates, and areas needing support.",
     testTitle: "Placement Test",
     testDesc: "We determine the correct starting point for each child",
+    testDetail: "A smart diagnostic test ensures your child never feels bored with easy tasks or frustrated with hard ones.",
     lessonsTitle: "Bite-sized Lessons",
     lessonsDesc: "French, Math, Logic, and general knowledge",
+    lessonsDetail: "Short, engaging lessons designed specifically for children's attention spans with rich visual aids.",
     challengesTitle: "Daily Challenges",
     challengesDesc: "Fun challenges that turn learning into an adventure",
+    challengesDetail: "Daily quests build consistent learning habits and award bonus XP on completion.",
   },
   cta: {
     sectionTitle: "Start Today — For Free!",
@@ -320,57 +328,92 @@ export const en: TranslationType = {
     feature3Title: "Math & Logic First",
     feature3Desc: "Specialized curricula focusing on fundamental skills, nurturing critical thinking and problem-solving.",
   },
+  interactiveDemo: {
+    badge: "Try it yourself right now!",
+    title: "Instant Brain Challenge with Anis 🦉",
+    subtitle: "Tap the correct answer and see how our AI encourages your child in real-time!",
+    question1: "If Anis has 5 stars and earns 7 more, how many stars does he have now?",
+    options1: ["10 stars", "12 stars", "14 stars"],
+    correctFeedback: "Super job, champion! Correct answer +15 XP 🌟",
+    wrongFeedback: "Try again! 5 + 7 = 12 ✨",
+    nextChallenge: "New Challenge 🔄",
+    question2: "Complete the logical pattern: 2, 4, 6, ... What comes next?",
+    options2: ["7", "8", "9"],
+    correctFeedback2: "Brilliant! You figured out the pattern super fast 🚀",
+    ctaTeaser: "Loved the challenge? Over 500+ interactive exercises await you!",
+  },
   pricing: {
-    title: "Affordable Pricing Plans",
-    subtitle: "Choose the perfect plan for your child's learning journey",
+    title: "Affordable Pricing Plans — Free Tier Forever",
+    subtitle: "Start for free right away or upgrade for unlimited AI superpowers",
     currency: "DT",
     period: "month",
+    monthly: "Monthly",
+    yearly: "Yearly (Save 20%)",
     popularBadge: "Most Popular",
+    freeBadge: "Free Forever",
     startBtn: "Choose Plan & Start",
+    startFreeBtn: "Start Free Now 🚀",
+    noCreditCard: "No credit card needed • Cancel anytime",
     featuresTitle: "Included features:",
     plans: {
+      free: {
+        name: "🌱 Freemium Free Tier",
+        price: "0",
+        priceYearly: "0",
+        desc: "Start learning right now with zero commitment or payment info needed.",
+        features: [
+          "5 complete interactive lessons in Math & Languages",
+          "3 adaptive AI exercises per day",
+          "Initial smart placement & diagnostic test",
+          "Essential parent & student dashboard"
+        ]
+      },
       basic: {
         name: "🟢 GenSkillUp Primary",
         price: "29",
+        priceYearly: "23",
         desc: "A fun and intelligent learning journey designed for primary school students combining AI and gamification.",
         features: [
-          "Strengthens Math, French, Arabic, & Science",
-          "Adaptive quizzes and interactive exercises",
-          "Motivating point and gamified rewards system",
+          "All Math, French, Arabic, & Science curricula",
+          "Unlimited adaptive AI exercises & quizzes",
+          "Motivating XP points, stars, and badges system",
           "Regular progress reports for parents"
         ]
       },
       advanced: {
         name: "🔵 GenSkillUp College",
         price: "49",
+        priceYearly: "39",
         desc: "A personalized learning solution designed for middle schoolers to identify gaps and build learning autonomy.",
         features: [
-          "AI detects learning gaps automatically",
-          "Adapts exercises to match student's level",
-          "Targeted explanations for better understanding",
-          "Improves academic results and autonomy"
+          "AI automatically detects and bridges learning gaps",
+          "Adapts advanced exercises to student's level",
+          "Instant detailed explanations with AI tutor Anis",
+          "Builds critical thinking and problem-solving autonomy"
         ]
       },
       premium: {
         name: "🟣 GenSkillUp Premium Support",
         price: "89",
+        priceYearly: "71",
         desc: "A specialized offer for students facing learning difficulties, attention gaps, concentration, or motivation issues.",
         features: [
-          "Designed for learning difficulties & ADHD",
-          "Adaptive AI provides fully custom path",
-          "Boosts self-confidence and learning motivation",
-          "Focused progression and academic success"
+          "Designed for learning difficulties and ADHD support",
+          "Fully adaptive AI pace matching slow or fast learners",
+          "Intensive motivation building self-esteem and confidence",
+          "Interactive step-by-step guidance with visuals & audio"
         ]
       },
       family: {
-        name: "👨‍👩‍👧 GenSkillUp Family",
+        name: "👨‍👩‍👧 GenSkillUp Family (up to 3 children)",
         price: "99",
+        priceYearly: "79",
         desc: "An advantageous package allowing up to three children from the same family to access the platform with one subscription.",
         features: [
-          "Single subscription for up to 3 children",
-          "Centralized dashboard to follow progress",
-          "Optimizes your educational budget",
-          "Track performance & goals for each child"
+          "1 unified subscription covering up to 3 children",
+          "Centralized parent dashboard to track everyone",
+          "Individual progress goals & stats for each child",
+          "Great value and savings for family education budgets"
         ]
       }
     }
