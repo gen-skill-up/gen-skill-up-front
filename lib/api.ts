@@ -39,6 +39,7 @@ export const authApi = {
   login: (data: { email: string; password: string }) =>
     api.post('/auth/login', data),
   profile: () => api.get('/auth/profile'),
+  upgradePremium: (plan?: string) => api.post('/auth/upgrade-premium', { plan }),
 };
 
 // ─── Children ──────────────────────────────────────────────────────────────

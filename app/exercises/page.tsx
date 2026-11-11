@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { exercisesApi, childrenApi, lessonsApi } from '@/lib/api';
+import { exercisesApi, childrenApi, lessonsApi, authApi } from '@/lib/api';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import {
   Brain,
@@ -33,7 +33,8 @@ import {
   ChevronUp,
   Play,
   Video,
-  X
+  X,
+  Crown
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -47,6 +48,7 @@ interface ExerciseDetail {
   completed: boolean;
   isAdapted: boolean;
   isMandatory?: boolean;
+  isPremium?: boolean;
 }
 
 interface LessonExercise {
@@ -54,6 +56,7 @@ interface LessonExercise {
   title: string;
   isMandatory: boolean;
   completed: boolean;
+  isPremium?: boolean;
 }
 
 interface Lesson {
@@ -110,7 +113,8 @@ const videoExercisesList = [
     thumbnail: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=500&auto=format&fit=crop&q=80',
     videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLb0zKSynM2PAeEecVf3-oKjV640ePz3hW',
     xpReward: 40,
-    difficulty: 'MOYEN'
+    difficulty: 'MOYEN',
+    isPremium: true
   }
 ];
 
@@ -142,6 +146,62 @@ function ExercisesContent() {
   const [selectedSubject, setSelectedSubject] = useState<string>('MATHS');
   const [expandedAxes, setExpandedAxes] = useState<Set<string>>(new Set());
   const [activeVideoModal, setActiveVideoModal] = useState<any | null>(null);
+  const [isUserPremium, setIsUserPremium] = useState(false);
+  const [premiumModalExercise, setPremiumModalExercise] = useState<any | null>(null);
+  const [togglingPremium, setTogglingPremium] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const u = JSON.parse(userStr);
+          setIsUserPremium(!!u.isPremium);
+        } catch (e) {}
+      }
+    }
+    authApi.profile()
+      .then((res) => {
+        if (res.data) {
+          setIsUserPremium(!!res.data.isPremium);
+          const userStr = localStorage.getItem('user');
+          if (userStr) {
+            try {
+              const u = JSON.parse(userStr);
+              u.isPremium = res.data.isPremium;
+              u.plan = res.data.plan;
+              localStorage.setItem('user', JSON.stringify(u));
+            } catch (e) {}
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleToggleDemoPremium = async () => {
+    setTogglingPremium(true);
+    try {
+      const res = await authApi.upgradePremium();
+      const updated = res.data;
+      setIsUserPremium(!!updated.isPremium);
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const u = JSON.parse(userStr);
+          u.isPremium = updated.isPremium;
+          u.plan = updated.plan;
+          localStorage.setItem('user', JSON.stringify(u));
+        } catch (e) {}
+      }
+      if (updated.isPremium) {
+        setPremiumModalExercise(null);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTogglingPremium(false);
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -306,12 +366,36 @@ function ExercisesContent() {
           </div>
         </div>
 
-        {child && (
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E8927C]/25 text-xs font-black text-[#3D364A] shadow-xs">
-            <span>{dir === 'rtl' ? 'ملف التلميذ:' : 'Profil :'}</span>
-            <span className="text-[#E8927C]">{child.name}</span>
+        <div className={`flex items-center gap-2.5 flex-wrap ${dir === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Premium Status Pill */}
+          <div
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black shadow-xs transition-all ${
+              isUserPremium
+                ? 'bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-900 border border-amber-300 ring-2 ring-amber-300/30'
+                : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+            }`}
+          >
+            <Crown className={`w-3.5 h-3.5 ${isUserPremium ? 'text-amber-900 fill-amber-900' : 'text-emerald-700'}`} />
+            <span>{isUserPremium ? (dir === 'rtl' ? '👑 عضوية بريميوم' : '👑 Membre Premium') : (dir === 'rtl' ? '🌱 باقة مجانية' : '🌱 Forfait Gratuit')}</span>
+            <button
+              type="button"
+              onClick={handleToggleDemoPremium}
+              disabled={togglingPremium}
+              className="text-[10px] underline ml-1 cursor-pointer opacity-75 hover:opacity-100 font-extrabold"
+            >
+              {isUserPremium
+                ? (dir === 'rtl' ? '(تجريبي: تحويل لمجاني)' : '(Démo: Gratuit)')
+                : (dir === 'rtl' ? '(تجربة بريميوم ⚡)' : '(Démo: Premium ⚡)')}
+            </button>
           </div>
-        )}
+
+          {child && (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E8927C]/25 text-xs font-black text-[#3D364A] shadow-xs">
+              <span>{dir === 'rtl' ? 'ملف التلميذ:' : 'Profil :'}</span>
+              <span className="text-[#E8927C]">{child.name}</span>
+            </div>
+          )}
+        </div>
       </motion.div>
 
       {/* ── Featured Video Exercises Section (Contenu: تمرين أو اثنين مع فيديوهات) ── */}
@@ -336,48 +420,74 @@ function ExercisesContent() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-          {videoExercisesList.map(vid => (
-            <div 
-              key={vid.id}
-              className="rounded-3xl p-4 border border-[#F2ECE5] bg-[#FFFBF7] shadow-xs flex flex-col sm:flex-row items-center gap-4"
-            >
-              <div 
-                onClick={() => setActiveVideoModal(vid)}
-                className="w-full sm:w-44 h-32 rounded-2xl overflow-hidden relative group cursor-pointer shrink-0 shadow-xs"
-              >
-                <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/35 transition-colors">
-                  <div className="w-11 h-11 rounded-full bg-white text-[#E8927C] flex items-center justify-center shadow-md">
-                    <Play className="w-5 h-5 fill-[#E8927C] ml-0.5" />
-                  </div>
-                </div>
-                <span className="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
-                  {vid.duration}
-                </span>
-              </div>
+          {videoExercisesList.map(vid => {
+            const isVidLocked = vid.isPremium && !isUserPremium;
+            const handleVideoClick = () => {
+              if (isVidLocked) {
+                setPremiumModalExercise(vid);
+              } else {
+                setActiveVideoModal(vid);
+              }
+            };
 
-              <div className="flex-1 min-w-0 space-y-2 text-center sm:text-start">
-                <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#E8927C]/15 text-[#D4785F]">
-                    +{vid.xpReward} XP
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#F5EDE4] text-[#6E647D]">
-                    {vid.difficulty}
+            return (
+              <div 
+                key={vid.id}
+                className={`rounded-3xl p-4 border shadow-xs flex flex-col sm:flex-row items-center gap-4 transition-all ${
+                  isVidLocked
+                    ? 'border-amber-300/80 bg-gradient-to-r from-[#FFFBF2] to-amber-50/40 ring-1 ring-amber-300/30'
+                    : 'border-[#F2ECE5] bg-[#FFFBF7]'
+                }`}
+              >
+                <div 
+                  onClick={handleVideoClick}
+                  className="w-full sm:w-44 h-32 rounded-2xl overflow-hidden relative group cursor-pointer shrink-0 shadow-xs"
+                >
+                  <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/35 transition-colors">
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center shadow-md ${
+                      isVidLocked ? 'bg-amber-400 text-slate-900' : 'bg-white text-[#E8927C]'
+                    }`}>
+                      {isVidLocked ? <Crown className="w-5 h-5 fill-slate-900" /> : <Play className="w-5 h-5 fill-[#E8927C] ml-0.5" />}
+                    </div>
+                  </div>
+                  <span className="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+                    {vid.duration}
                   </span>
                 </div>
-                <h3 className="font-black text-sm text-[#3D364A] leading-snug line-clamp-2">
-                  {dir === 'rtl' ? vid.title : vid.titleFr}
-                </h3>
-                <button
-                  onClick={() => setActiveVideoModal(vid)}
-                  className="btn-primary text-xs py-2 px-4 rounded-xl cursor-pointer"
-                >
-                  <Play className="w-3.5 h-3.5 fill-white" />
-                  <span className="mx-1">{dir === 'rtl' ? 'مشاهدة وبدء التمرين' : 'Regarder & Jouer'}</span>
-                </button>
+
+                <div className="flex-1 min-w-0 space-y-2 text-center sm:text-start">
+                  <div className="flex items-center justify-center sm:justify-start gap-1.5 flex-wrap">
+                    {vid.isPremium && (
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-900 shadow-xs">
+                        👑 بريميوم
+                      </span>
+                    )}
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#E8927C]/15 text-[#D4785F]">
+                      +{vid.xpReward} XP
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#F5EDE4] text-[#6E647D]">
+                      {vid.difficulty}
+                    </span>
+                  </div>
+                  <h3 className="font-black text-sm text-[#3D364A] leading-snug line-clamp-2">
+                    {dir === 'rtl' ? vid.title : vid.titleFr}
+                  </h3>
+                  <button
+                    onClick={handleVideoClick}
+                    className={`text-xs py-2 px-4 rounded-xl cursor-pointer font-black flex items-center justify-center gap-1.5 ${
+                      isVidLocked
+                        ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 hover:shadow-md'
+                        : 'btn-primary'
+                    }`}
+                  >
+                    {isVidLocked ? <Crown className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-white" />}
+                    <span className="mx-1">{isVidLocked ? (dir === 'rtl' ? 'فتح مع بريميوم' : 'Débloquer Premium') : (dir === 'rtl' ? 'مشاهدة وبدء التمرين' : 'Regarder & Jouer')}</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -623,34 +733,77 @@ function ExercisesContent() {
                                     {lesson.exercises.map((ex, exIdx) => {
                                       const detail = exerciseDetailsMap[ex.id];
                                       const isUnlocked = lesson.unlocked;
+                                      const isPremiumEx = ex.isPremium || detail?.isPremium || detail?.difficulty === 'DIFFICILE';
+                                      const isLockedByPremium = isPremiumEx && !isUserPremium;
+
+                                      const handleCardClick = () => {
+                                        if (isLockedByPremium) {
+                                          setPremiumModalExercise({ ...ex, ...detail, title: ex.title });
+                                        }
+                                      };
 
                                       const cardContent = (
                                         <motion.div
                                           initial={{ opacity: 0, y: 6 }}
                                           animate={{ opacity: 1, y: 0 }}
                                           transition={{ delay: exIdx * 0.04 }}
+                                          onClick={handleCardClick}
                                           className={`rounded-2xl p-4 flex items-center gap-3 transition-all ${
                                             isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
                                           } ${dir === 'rtl' ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}
                                           style={{
-                                            background: ex.completed ? '#F5FBF8' : isUnlocked ? 'white' : '#F8F4F0',
-                                            border: `1.5px solid ${ex.completed ? '#95C5B2' : isUnlocked ? '#E8927C30' : '#E0D7CD'}`,
-                                            boxShadow: isUnlocked ? '0 2px 10px rgba(0,0,0,0.03)' : 'none',
+                                            background: ex.completed
+                                              ? '#F5FBF8'
+                                              : isLockedByPremium
+                                              ? '#FFFDF9'
+                                              : isUnlocked
+                                              ? 'white'
+                                              : '#F8F4F0',
+                                            border: `1.5px solid ${
+                                              ex.completed
+                                                ? '#95C5B2'
+                                                : isLockedByPremium
+                                                ? '#F6D896'
+                                                : isUnlocked
+                                                ? '#E8927C30'
+                                                : '#E0D7CD'
+                                            }`,
+                                            boxShadow: isLockedByPremium
+                                              ? '0 4px 14px rgba(245,158,11,0.08)'
+                                              : isUnlocked
+                                              ? '0 2px 10px rgba(0,0,0,0.03)'
+                                              : 'none',
                                           }}
                                           whileHover={
                                             isUnlocked
-                                              ? { y: -2, borderColor: lessonStyles.color, boxShadow: `0 6px 20px ${lessonStyles.bg}` }
+                                              ? {
+                                                  y: -2,
+                                                  borderColor: isLockedByPremium ? '#F59E0B' : lessonStyles.color,
+                                                  boxShadow: isLockedByPremium
+                                                    ? '0 8px 24px rgba(245,158,11,0.18)'
+                                                    : `0 6px 20px ${lessonStyles.bg}`,
+                                                }
                                               : {}
                                           }
                                         >
                                           <div
-                                            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                                            style={{ background: isUnlocked ? lessonStyles.bg : '#E0D7CD' }}
+                                            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-2xs"
+                                            style={{
+                                              background: isLockedByPremium
+                                                ? 'linear-gradient(135deg, #FEF3C7, #FDE68A)'
+                                                : isUnlocked
+                                                ? lessonStyles.bg
+                                                : '#E0D7CD',
+                                            }}
                                           >
-                                            {isUnlocked ? (
-                                              ex.isMandatory
-                                                ? <Target className="w-5 h-5" style={{ color: lessonStyles.color }} />
-                                                : <Zap className="w-5 h-5" style={{ color: lessonStyles.color }} />
+                                            {isLockedByPremium ? (
+                                              <Crown className="w-5 h-5 text-amber-700 fill-amber-400" />
+                                            ) : isUnlocked ? (
+                                              ex.isMandatory ? (
+                                                <Target className="w-5 h-5" style={{ color: lessonStyles.color }} />
+                                              ) : (
+                                                <Zap className="w-5 h-5" style={{ color: lessonStyles.color }} />
+                                              )
                                             ) : (
                                               <Lock className="w-4 h-4 text-[#A396B5]" />
                                             )}
@@ -661,6 +814,17 @@ function ExercisesContent() {
                                               <h3 className={`font-black text-sm truncate ${isUnlocked ? 'text-[#3D364A]' : 'text-[#A396B5]'}`}>
                                                 {ex.title}
                                               </h3>
+                                              {isPremiumEx && (
+                                                <span
+                                                  className={`shrink-0 text-[9px] font-black px-2 py-0.5 rounded-full ${
+                                                    isUserPremium
+                                                      ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                                                      : 'bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-900 shadow-2xs'
+                                                  }`}
+                                                >
+                                                  {isUserPremium ? t.exercises.premiumUnlocked : t.exercises.premiumBadge}
+                                                </span>
+                                              )}
                                               {ex.isMandatory && (
                                                 <span
                                                   className="shrink-0 text-[9px] font-black px-2 py-0.5 rounded-full"
@@ -682,6 +846,10 @@ function ExercisesContent() {
                                               <CheckCircle className="w-3.5 h-3.5" />
                                               <span>{t.lessons.completed}</span>
                                             </div>
+                                          ) : isLockedByPremium ? (
+                                            <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-amber-100 text-amber-800 shadow-2xs">
+                                              <Lock className="w-3.5 h-3.5" />
+                                            </div>
                                           ) : isUnlocked ? (
                                             <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center border border-[#F2ECE5] bg-[#FDF8F3] text-[#6E647D]">
                                               {dir === 'rtl' ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -693,6 +861,10 @@ function ExercisesContent() {
                                           )}
                                         </motion.div>
                                       );
+
+                                      if (isLockedByPremium) {
+                                        return <div key={ex.id}>{cardContent}</div>;
+                                      }
 
                                       return isUnlocked ? (
                                         <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}`}>
@@ -830,6 +1002,102 @@ function ExercisesContent() {
                   className="btn-primary text-xs sm:text-sm py-2 px-5 rounded-xl cursor-pointer"
                 >
                   {dir === 'rtl' ? 'بدء الأسئلة التطبيقية ✍️' : 'Commencer le quiz ✍️'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Premium Upgrade Modal ── */}
+      <AnimatePresence>
+        {premiumModalExercise && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+            onClick={() => setPremiumModalExercise(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-white rounded-[2.5rem] p-6 sm:p-8 max-w-lg w-full shadow-2xl border-2 border-amber-300 relative overflow-hidden text-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Decorative glows */}
+              <div className="absolute -top-16 -right-16 w-44 h-44 rounded-full bg-gradient-to-br from-amber-300 to-yellow-500 opacity-20 blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-16 -left-16 w-44 h-44 rounded-full bg-gradient-to-tr from-purple-400 to-indigo-500 opacity-20 blur-2xl pointer-events-none" />
+
+              <button
+                type="button"
+                onClick={() => setPremiumModalExercise(null)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-900 mx-auto flex items-center justify-center shadow-lg shadow-amber-400/30 mb-4 animate-bounce">
+                <Crown className="w-9 h-9 fill-current" />
+              </div>
+
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 mb-2">
+                {t.exercises.premiumBadge}
+              </span>
+
+              <h3 className="text-xl sm:text-2xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
+                {t.exercises.premiumModalTitle}
+              </h3>
+
+              <div className="my-3 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 text-xs font-bold text-amber-900">
+                <span>{premiumModalExercise.title}</span>
+              </div>
+
+              <p className="text-xs sm:text-sm text-[#6E647D] font-medium leading-relaxed mb-5">
+                {t.exercises.premiumModalDesc}
+              </p>
+
+              <div className="bg-slate-50 rounded-2xl p-4 text-start space-y-2 mb-6 border border-slate-100">
+                <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                  {t.exercises.premiumPerksTitle}
+                </p>
+                <ul className="space-y-1.5 text-xs font-semibold text-slate-700">
+                  <li className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span>{t.exercises.premiumPerk1}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-purple-500 shrink-0" />
+                    <span>{t.exercises.premiumPerk2}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-blue-500 shrink-0" />
+                    <span>{t.exercises.premiumPerk3}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>{t.exercises.premiumPerk4}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                <Link href="/#pricing" onClick={() => setPremiumModalExercise(null)}>
+                  <button className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-slate-900 font-black text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <span>{t.exercises.upgradeBtn}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleToggleDemoPremium}
+                  disabled={togglingPremium}
+                  className="w-full py-2.5 px-4 rounded-2xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition-colors cursor-pointer border border-purple-200 flex items-center justify-center gap-1.5"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{t.exercises.testPremiumBtn}</span>
                 </button>
               </div>
             </motion.div>

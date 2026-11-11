@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { exercisesApi } from '@/lib/api';
+import { exercisesApi, authApi } from '@/lib/api';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import OwlLogo from '../../components/Logo';
@@ -31,7 +31,8 @@ import {
   Trophy,
   Check,
   X,
-  BookmarkCheck
+  BookmarkCheck,
+  Crown
 } from 'lucide-react';
 
 const subjectIcons: Record<string, any> = {
@@ -98,13 +99,20 @@ function ExerciseDetailContent() {
     }
   }, [searchParams]);
 
+  const [premiumGate, setPremiumGate] = useState(false);
+
   useEffect(() => {
     if (!exerciseId) return;
 
     exercisesApi
       .get(exerciseId)
       .then((res) => setExercise(res.data))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err);
+        if (err.response?.status === 403 || err.response?.data?.error === 'PREMIUM_REQUIRED') {
+          setPremiumGate(true);
+        }
+      })
       .finally(() => setLoading(false));
   }, [exerciseId]);
 
@@ -627,6 +635,55 @@ function ExerciseDetailContent() {
         {loading ? (
           <div className="flex-grow flex items-center justify-center py-20">
             <Loader2 className="w-10 h-10 text-[#E8927C] animate-spin" />
+          </div>
+        ) : premiumGate ? (
+          <div className="flex-grow flex flex-col items-center justify-center text-center px-6 py-12 max-w-lg mx-auto">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-900 mx-auto flex items-center justify-center shadow-lg shadow-amber-400/30 mb-4 animate-bounce">
+              <Crown className="w-10 h-10 fill-current" />
+            </div>
+
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 mb-2">
+              {t.exercises.premiumBadge}
+            </span>
+
+            <h2 className="text-2xl font-black text-[#3D364A] mb-2" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
+              {t.exercises.premiumGateTitle}
+            </h2>
+
+            <p className="text-sm text-[#6E647D] font-medium leading-relaxed mb-6">
+              {t.exercises.premiumGateDesc}
+            </p>
+
+            <div className="w-full flex flex-col gap-3">
+              <Link href="/#pricing">
+                <button className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-slate-900 font-black text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2">
+                  <span>{t.exercises.upgradeBtn}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    await authApi.upgradePremium();
+                    window.location.reload();
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+                className="w-full py-2.5 px-4 rounded-2xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs transition-colors cursor-pointer border border-purple-200 flex items-center justify-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{t.exercises.testPremiumBtn}</span>
+              </button>
+
+              <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/exercises?childId=${childId}`}>
+                <button className="w-full py-2.5 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition-colors cursor-pointer">
+                  {t.exercises.backToExercises}
+                </button>
+              </Link>
+            </div>
           </div>
         ) : !exercise ? (
           <div className="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
