@@ -63,7 +63,7 @@ interface TipData {
 function VirtualClassContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   const [childId, setChildId] = useState<string | null>(null);
   const [child, setChild] = useState<Child | null>(null);
@@ -166,7 +166,7 @@ function VirtualClassContent() {
       ...prev,
       {
         id: loadingMsgId,
-        sender: dir === 'rtl' ? 'المشرف البومة 🦉' : 'Chouette Prof 🦉',
+        sender: lang === 'ar' ? 'المشرف البومة 🦉' : lang === 'fr' ? 'Chouette Prof 🦉' : 'Professor Owl 🦉',
         text: '...',
         time: '',
         isLoading: true,
@@ -187,7 +187,7 @@ function VirtualClassContent() {
         updatedHistory,
         {
           page: 'virtual-class',
-          language: dir === 'rtl' ? 'ar' : 'fr',
+          language: lang,
         },
       );
 
@@ -195,7 +195,7 @@ function VirtualClassContent() {
         res.data?.response ||
         res.data?.reply ||
         res.data?.message ||
-        (dir === 'rtl' ? 'أحسنت! استمر في التقدم.' : 'Excellent travail ! Continue comme ça.');
+        (lang === 'ar' ? 'أحسنت! استمر في التقدم.' : lang === 'fr' ? 'Excellent travail ! Continue comme ça.' : 'Great job! Keep progressing.');
 
       setChatHistory([
         ...updatedHistory,
@@ -222,9 +222,11 @@ function VirtualClassContent() {
           msg.id === loadingMsgId
             ? {
               ...msg,
-              text: dir === 'rtl'
-                ? `أحسنت يا ${child.name}! استمر في التقدم والمشاركة.`
-                : `Excellent travail, ${child.name} ! Continue comme ça.`,
+              text: lang === 'ar'
+                ? `أحسنت يا ${child?.name || ''}! استمر في التقدم والمشاركة.`
+                : lang === 'fr'
+                ? `Excellent travail, ${child?.name || ''} ! Continue comme ça.`
+                : `Great job, ${child?.name || ''}! Keep engaging and learning.`,
               time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
               isLoading: false,
             }
@@ -275,9 +277,13 @@ function VirtualClassContent() {
         <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-red-100 border border-red-200">
           <HelpCircle className="w-8 h-8 text-red-500" />
         </div>
-        <h2 className="text-xl font-black mb-2 text-slate-800">الرجاء اختيار طفل أولاً / Please Select a Child</h2>
+        <h2 className="text-xl font-black mb-2 text-slate-800">
+          {lang === 'ar' ? 'الرجاء اختيار طفل أولاً' : lang === 'fr' ? 'Veuillez sélectionner un enfant' : 'Please select a child first'}
+        </h2>
         <Link href="/dashboard">
-          <button className="btn-primary mt-4">لوحة التحكم / Dashboard</button>
+          <button className="btn-primary mt-4">
+            {lang === 'ar' ? 'لوحة التحكم' : lang === 'fr' ? 'Tableau de bord' : 'Dashboard'}
+          </button>
         </Link>
       </div>
     );
@@ -298,10 +304,10 @@ function VirtualClassContent() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
-              {dir === 'rtl' ? 'القسم الافتراضي الذكي 🖥️' : 'Classe Virtuelle 🖥️'}
+              {lang === 'ar' ? 'القسم الافتراضي الذكي 🖥️' : lang === 'fr' ? 'Classe Virtuelle 🖥️' : 'Smart Virtual Classroom 🖥️'}
             </h1>
             <p className="text-[#6E637C] text-sm sm:text-base font-bold mt-1">
-              {dir === 'rtl' ? 'ادرس مع أصدقائك، وحلوا التحديات المشتركة والمسابقات الحية!' : 'Étudie avec tes amis et relève les défis de la classe !'}
+              {lang === 'ar' ? 'ادرس مع أصدقائك، وحلوا التحديات المشتركة والمسابقات الحية!' : lang === 'fr' ? 'Étudie avec tes amis et relève les défis de la classe !' : 'Study with your friends, solve challenges and quizzes together!'}
             </p>
           </div>
         </div>
@@ -320,7 +326,7 @@ function VirtualClassContent() {
         <div className="flex flex-col items-center justify-center py-24">
           <Loader2 className="w-12 h-12 animate-spin text-[#3B82F6] mb-3" />
           <p className="text-slate-500 text-xs font-black animate-pulse">
-            {dir === 'rtl' ? 'جاري الاتصال بالقسم الافتراضي...' : 'Connexion à la classe...'}
+            {lang === 'ar' ? 'جاري الاتصال بالقسم الافتراضي...' : lang === 'fr' ? 'Connexion à la classe...' : 'Connecting to virtual classroom...'}
           </p>
         </div>
       ) : (
@@ -341,10 +347,10 @@ function VirtualClassContent() {
                 <span className="text-xs font-black text-amber-400">
                   {tipData
                     ? `💡 ${tipData.title}`
-                    : (dir === 'rtl' ? '💡 قاعدة اليوم' : '💡 Règle du Jour')}
+                    : (lang === 'ar' ? '💡 قاعدة اليوم' : lang === 'fr' ? '💡 Règle du Jour' : '💡 Rule of the Day')}
                 </span>
                 <span className="text-[10px] text-slate-400">
-                  {new Date().toLocaleDateString(dir === 'rtl' ? 'ar-TN' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                  {new Date().toLocaleDateString(lang === 'ar' ? 'ar-TN' : lang === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </span>
               </div>
 
@@ -361,7 +367,7 @@ function VirtualClassContent() {
                     </span>
                   )}
                   <p className="text-xs leading-normal">
-                    {tipData?.content || (dir === 'rtl' ? 'جاري تحميل نصيحة اليوم...' : 'Chargement du conseil...')}
+                    {tipData?.content || (lang === 'ar' ? 'جاري تحميل نصيحة اليوم...' : lang === 'fr' ? 'Chargement du conseil...' : 'Loading tip of the day...')}
                   </p>
                   {tipData?.example && (
                     <div className="bg-white/5 p-3 rounded-2xl border border-white/5 font-mono text-[11px] text-emerald-400 space-y-1 whitespace-pre-line">
@@ -372,7 +378,7 @@ function VirtualClassContent() {
               )}
 
               <div className="flex justify-end pt-2 text-[10px] text-slate-400 font-semibold">
-                <span>{dir === 'rtl' ? 'المعلم البومة 🦉' : 'Chouette Prof 🦉'}</span>
+                <span>{lang === 'ar' ? 'المعلم البومة 🦉' : lang === 'fr' ? 'Chouette Prof 🦉' : 'Professor Owl 🦉'}</span>
               </div>
             </div>
 
@@ -382,7 +388,7 @@ function VirtualClassContent() {
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-500 animate-bounce" />
                   <h3 className="text-sm font-black text-slate-800">
-                    {dir === 'rtl' ? 'سؤال سريع لاكتساب +15 نقطة ⚡' : 'Quiz rapide pour +15 XP ⚡'}
+                    {lang === 'ar' ? 'سؤال سريع لاكتساب +15 نقطة ⚡' : lang === 'fr' ? 'Quiz rapide pour +15 XP ⚡' : 'Quick quiz for +15 XP ⚡'}
                   </h3>
                 </div>
                 {quizAnswered && (
@@ -391,7 +397,7 @@ function VirtualClassContent() {
                     className="flex items-center gap-1 text-[10px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full transition-all cursor-pointer"
                   >
                     <RefreshCw className="w-3 h-3" />
-                    {dir === 'rtl' ? 'سؤال آخر' : 'Suivant'}
+                    {lang === 'ar' ? 'سؤال آخر' : lang === 'fr' ? 'Suivant' : 'Next Question'}
                   </button>
                 )}
               </div>
@@ -406,7 +412,7 @@ function VirtualClassContent() {
                     {quizData.question}
                     {quizData.lessonTitle && (
                       <span className="block mt-1.5 text-[9px] text-slate-400 font-semibold">
-                        {dir === 'rtl' ? `📚 من درس: ${quizData.lessonTitle}` : `📚 Leçon: ${quizData.lessonTitle}`}
+                        {lang === 'ar' ? `📚 من درس: ${quizData.lessonTitle}` : lang === 'fr' ? `📚 Leçon: ${quizData.lessonTitle}` : `📚 Lesson: ${quizData.lessonTitle}`}
                       </span>
                     )}
                   </div>
@@ -458,8 +464,8 @@ function VirtualClassContent() {
                         <div>
                           <p className="font-bold">
                             {quizResult.correct
-                              ? (dir === 'rtl' ? `أحسنت! إجابة صحيحة +${quizResult.rewardPoints} XP 🎉` : `Félicitations ! +${quizResult.rewardPoints} XP 🎉`)
-                              : (dir === 'rtl' ? 'إجابة خاطئة! حاول مرة أخرى مع السؤال التالي 💪' : 'Mauvaise réponse ! Réessaie avec la prochaine question 💪')}
+                              ? (lang === 'ar' ? `أحسنت! إجابة صحيحة +${quizResult.rewardPoints} XP 🎉` : lang === 'fr' ? `Félicitations ! +${quizResult.rewardPoints} XP 🎉` : `Well done! Correct answer +${quizResult.rewardPoints} XP 🎉`)
+                              : (lang === 'ar' ? 'إجابة خاطئة! حاول مرة أخرى مع السؤال التالي 💪' : lang === 'fr' ? 'Mauvaise réponse ! Réessaie avec la prochaine question 💪' : 'Incorrect answer! Try again with the next question 💪')}
                           </p>
                         </div>
                       </motion.div>
@@ -468,7 +474,7 @@ function VirtualClassContent() {
                 </>
               ) : (
                 <div className="text-center py-6 text-slate-400 text-xs font-bold">
-                  {dir === 'rtl' ? 'لا توجد أسئلة متاحة حالياً' : 'Aucune question disponible'}
+                  {lang === 'ar' ? 'لا توجد أسئلة متاحة حالياً' : lang === 'fr' ? 'Aucune question disponible' : 'No questions available right now'}
                 </div>
               )}
             </div>
@@ -482,7 +488,7 @@ function VirtualClassContent() {
             <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
               <h3 className="text-sm font-black text-slate-800 flex items-center gap-2">
                 <Users className="w-4.5 h-4.5 text-blue-500" />
-                <span>{dir === 'rtl' ? 'الأصدقاء في القسم' : 'Amis dans la classe'}</span>
+                <span>{lang === 'ar' ? 'الأصدقاء في القسم' : lang === 'fr' ? 'Amis dans la classe' : 'Classmates'}</span>
                 {classmates.length > 0 && (
                   <span className="text-[8px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-black">
                     {classmates.length}
@@ -520,17 +526,19 @@ function VirtualClassContent() {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-500">
-                      {dir === 'rtl' ? 'لم تضف أصدقاء بعد!' : 'Tu n\'as pas encore d\'amis !'}
+                      {lang === 'ar' ? 'لم تضف أصدقاء بعد!' : lang === 'fr' ? 'Tu n\'as pas encore d\'amis !' : 'No friends added yet!'}
                     </p>
                     <p className="text-[9px] text-slate-400 mt-0.5">
-                      {dir === 'rtl'
+                      {lang === 'ar'
                         ? 'شارك كود صداقتك مع زملائك للانضمام'
-                        : 'Partage ton code ami avec tes camarades'}
+                        : lang === 'fr'
+                        ? 'Partage ton code ami avec tes camarades'
+                        : 'Share your friend code with your classmates'}
                     </p>
                     {leaderboard?.child?.shareCode && (
                       <div className="mt-2 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2">
                         <span className="text-[9px] text-indigo-400 font-semibold block">
-                          {dir === 'rtl' ? 'كود الصداقة' : 'Code ami'}
+                          {lang === 'ar' ? 'كود الصداقة' : lang === 'fr' ? 'Code ami' : 'Friend Code'}
                         </span>
                         <span className="text-sm font-black text-indigo-700 tracking-widest">
                           {leaderboard.child.shareCode}
@@ -546,7 +554,7 @@ function VirtualClassContent() {
             <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col h-[320px] justify-between">
               <h3 className="text-xs font-black text-slate-800 flex items-center gap-2 border-b border-slate-50 pb-2">
                 <MessageSquare className="w-4 h-4 text-blue-500" />
-                <span>{dir === 'rtl' ? 'اسأل المعلم البومة 🦉' : 'Demande à Chouette Prof 🦉'}</span>
+                <span>{lang === 'ar' ? 'اسأل المعلم البومة 🦉' : lang === 'fr' ? 'Demande à Chouette Prof 🦉' : 'Ask Professor Owl 🦉'}</span>
               </h3>
 
               {/* Messages container */}
@@ -555,9 +563,11 @@ function VirtualClassContent() {
                   <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
                     <Logo size={32} />
                     <p className="text-[10px] font-bold text-slate-400 mt-2">
-                      {dir === 'rtl'
+                      {lang === 'ar'
                         ? 'اسأل المعلم البومة أي سؤال تعليمي! 💡'
-                        : 'Pose une question à Chouette Prof ! 💡'}
+                        : lang === 'fr'
+                        ? 'Pose une question à Chouette Prof ! 💡'
+                        : 'Ask Professor Owl any learning question! 💡'}
                     </p>
                   </div>
                 )}
@@ -573,7 +583,7 @@ function VirtualClassContent() {
                       {msg.isLoading ? (
                         <span className="flex items-center gap-1">
                           <Loader2 className="w-3 h-3 animate-spin" />
-                          <span className="animate-pulse">{dir === 'rtl' ? 'يفكر...' : 'Réflexion...'}</span>
+                          <span className="animate-pulse">{lang === 'ar' ? 'يفكر...' : lang === 'fr' ? 'Réflexion...' : 'Thinking...'}</span>
                         </span>
                       ) : (
                         msg.text
@@ -587,7 +597,7 @@ function VirtualClassContent() {
               <form onSubmit={handleSendMessage} className="flex gap-1.5 border-t border-slate-50 pt-3">
                 <input
                   type="text"
-                  placeholder={dir === 'rtl' ? 'اسأل المعلم البومة...' : 'Pose ta question...'}
+                  placeholder={lang === 'ar' ? 'اسأل المعلم البومة...' : lang === 'fr' ? 'Pose ta question...' : 'Ask Professor Owl...'}
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   className="flex-1 bg-slate-50 border border-slate-200 text-[10px] font-bold p-2.5 rounded-xl outline-none focus:border-blue-400"

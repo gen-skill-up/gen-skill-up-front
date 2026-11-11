@@ -167,7 +167,9 @@ function LessonDetailContent() {
         ) : !lesson ? (
           <div className="flex-grow flex flex-col items-center justify-center text-center px-6 py-20">
             <div className="mb-4"><OwlLogo size={60} /></div>
-            <h2 className="text-2xl font-black mb-4 text-[#3D364A]">الدرس غير موجود / Lesson Not Found</h2>
+            <h2 className="text-2xl font-black mb-4 text-[#3D364A]">
+              {lang === 'ar' ? 'الدرس غير موجود' : lang === 'fr' ? 'Leçon introuvable' : 'Lesson Not Found'}
+            </h2>
             <Link href={`/lessons?childId=${childId}`}>
               <button className="btn-primary">{t.lessons.backToLessons}</button>
             </Link>
@@ -200,7 +202,7 @@ function LessonDetailContent() {
             {content?.pages && (
               <span className="bg-[#F5F0FB] text-[#6C4E97] px-3.5 py-1.5 rounded-xl border border-[#E7DCF5] font-bold flex items-center gap-1">
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>الصحفات: {content.pages.start} - {content.pages.end}</span>
+                <span>{lang === 'ar' ? 'الصفحات:' : lang === 'fr' ? 'Pages :' : 'Pages:'} {content.pages.start} - {content.pages.end}</span>
               </span>
             )}
           </div>
@@ -208,7 +210,7 @@ function LessonDetailContent() {
           {/* Builds On */}
           {content?.builds_on && content.builds_on !== 'لا يوجد' && (
             <div className={`text-xs font-bold text-slate-500 dark:text-slate-400 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-              <span>يبني على: </span>
+              <span>{lang === 'ar' ? 'يبني على: ' : lang === 'fr' ? 'Prérequis : ' : 'Builds on: '}</span>
               <span className="text-[var(--color-primary)] text-sm">
                 {Array.isArray(content.builds_on) ? content.builds_on.join('، ') : content.builds_on}
               </span>
@@ -220,7 +222,7 @@ function LessonDetailContent() {
             <div className={`space-y-3 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
               <h3 className="font-black text-[var(--color-text)] text-sm flex items-center gap-2 justify-start opacity-80">
                 <Lightbulb className="w-4 h-4 text-amber-500" />
-                <span>المفاهيم الأساسية / Key Concepts:</span>
+                <span>{lang === 'ar' ? 'المفاهيم الأساسية' : lang === 'fr' ? 'Concepts Clés' : 'Key Concepts'}</span>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {content.key_concepts.map((concept: string, i: number) => (
@@ -318,7 +320,7 @@ function LessonDetailContent() {
             <div className={`space-y-4 pt-4 border-t border-[rgba(124,58,237,0.12)] ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
               <h3 className="font-black text-[var(--color-text)] text-base flex items-center gap-2 justify-start">
                 <Sparkles className="w-5 h-5 text-[var(--color-primary)] animate-pulse" />
-                <span>المفردات والأمثلة / Vocabulary & Examples:</span>
+                <span>{lang === 'ar' ? 'المفردات والأمثلة' : lang === 'fr' ? 'Vocabulaire & Exemples' : 'Vocabulary & Examples'}</span>
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
                 {content.examples.map((ex: string, i: number) => (
@@ -339,7 +341,7 @@ function LessonDetailContent() {
             <div className={`space-y-4 pt-4 border-t border-[rgba(124,58,237,0.12)] ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
               <h3 className="font-black text-[var(--color-text)] text-base flex items-center gap-2 justify-start">
                 <ImageIcon className="w-5 h-5 text-blue-500" />
-                <span>المشاهد البصرية / Visual Scenes:</span>
+                <span>{lang === 'ar' ? 'المشاهد البصرية' : lang === 'fr' ? 'Scènes Visuelles' : 'Visual Scenes'}</span>
               </h3>
               <div className="space-y-3">
                 {content.images.map((img: any, i: number) => (
@@ -351,7 +353,7 @@ function LessonDetailContent() {
                     <div className="space-y-1.5 w-full">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 text-[10px] font-black px-2 py-0.5 rounded-md">
-                          صفحة {img.page} | {img.position}
+                          {lang === 'ar' ? `صفحة ${img.page}` : lang === 'fr' ? `Page ${img.page}` : `Page ${img.page}`} | {img.position}
                         </span>
                         {img.concept && (
                           <span className="bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-md">
@@ -372,7 +374,9 @@ function LessonDetailContent() {
             <div className={`bg-gradient-to-r from-emerald-50/30 to-teal-50/30 dark:from-emerald-950/5 dark:to-teal-950/5 p-5 rounded-2xl border border-emerald-100/50 dark:border-emerald-900/10 text-emerald-800 dark:text-emerald-300 text-sm font-semibold flex items-start gap-3 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
               <Award className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
               <div>
-                <span className="font-black text-xs block mb-1 uppercase tracking-wider text-emerald-600 dark:text-emerald-400">خلاصة الدرس / Lesson Summary</span>
+                <span className="font-black text-xs block mb-1 uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                  {lang === 'ar' ? 'خلاصة الدرس' : lang === 'fr' ? 'Résumé de la Leçon' : 'Lesson Summary'}
+                </span>
                 <p className="leading-relaxed">{content.summary}</p>
               </div>
             </div>

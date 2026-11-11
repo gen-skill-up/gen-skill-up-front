@@ -3,10 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 import OwlLogo from '../../components/Logo';
 
 export default function PlacementTestLoadingPage() {
   const router = useRouter();
+  const { lang } = useLanguage();
 
   useEffect(() => {
     router.push('/dashboard');
@@ -18,7 +20,9 @@ export default function PlacementTestLoadingPage() {
         <OwlLogo size={70} />
       </div>
       <Loader2 className="w-12 h-12 text-[var(--color-primary)] animate-spin mb-4" />
-      <p className="text-[var(--color-muted)] font-black text-sm">جاري التحميل... / Loading...</p>
+      <p className="text-[var(--color-muted)] font-black text-sm">
+        {lang === 'ar' ? 'جاري التحميل...' : lang === 'fr' ? 'Chargement en cours...' : 'Loading...'}
+      </p>
     </div>
   );
 }

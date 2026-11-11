@@ -62,7 +62,7 @@ function ExerciseDetailContent() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   const exerciseId = params.id as string;
   const fromLesson = searchParams.get('fromLesson');
@@ -633,7 +633,9 @@ function ExerciseDetailContent() {
             <div className="mb-4">
               <OwlLogo size={60} />
             </div>
-            <h2 className="text-2xl font-black mb-4 text-[#3D364A]">التمرين غير موجود / Exercise Not Found</h2>
+            <h2 className="text-2xl font-black mb-4 text-[#3D364A]">
+              {lang === 'ar' ? 'التمرين غير موجود' : lang === 'fr' ? 'Exercice introuvable' : 'Exercise Not Found'}
+            </h2>
             <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`}>
               <button className="btn-primary">{fromLesson ? t.lessons.backToLessons : t.exercises.title}</button>
             </Link>
@@ -995,7 +997,11 @@ function ExerciseDetailContent() {
 
               <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`}>
                 <button className="btn-primary w-full py-4 font-black cursor-pointer mt-4 shadow-sm hover:shadow-md transition-all">
-                  <span>{fromLesson ? "العودة إلى الدرس / Back to Lesson" : "العودة إلى الدروس / Back to Lessons"}</span>
+                  <span>
+                    {fromLesson
+                      ? (lang === 'ar' ? 'العودة إلى الدرس' : lang === 'fr' ? 'Retour à la leçon' : 'Back to Lesson')
+                      : (lang === 'ar' ? 'العودة إلى الدروس' : lang === 'fr' ? 'Retour aux leçons' : 'Back to Lessons')}
+                  </span>
                 </button>
               </Link>
             </motion.div>

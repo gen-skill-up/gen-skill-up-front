@@ -311,7 +311,7 @@ function WoodenBridgeOverlay({ x, y }: { x: number; y: number }) {
 function LessonsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   const [childId, setChildId] = useState<string | null>(null);
   const [child, setChild] = useState<Child | null>(null);
@@ -507,10 +507,14 @@ function LessonsContent() {
           <HelpCircle className="w-10 h-10 text-[#E8927C]" />
         </motion.div>
         <h2 className="text-2xl font-black mb-2 text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
-          الرجاء اختيار طفل أولاً / Please Select a Child
+          {lang === 'ar' ? 'الرجاء اختيار طفل أولاً' : lang === 'fr' ? 'Veuillez sélectionner un enfant' : 'Please select a child first'}
         </h2>
         <p className="text-[#6E637C] text-sm mb-8 max-w-sm font-semibold">
-          يجب اختيار ملف الطفل من لوحة التحكم لعرض الدروس المتوافقة مع مستواه.
+          {lang === 'ar'
+            ? 'يجب اختيار ملف الطفل من لوحة التحكم لعرض الدروس المتوافقة مع مستواه.'
+            : lang === 'fr'
+            ? 'Veuillez sélectionner le profil de l\'enfant pour afficher les leçons adaptées à son niveau.'
+            : 'Please select a child profile from the dashboard to display lessons adapted to their level.'}
         </p>
         <Link href="/dashboard">
           <button className="btn-primary flex items-center gap-2 cursor-pointer">

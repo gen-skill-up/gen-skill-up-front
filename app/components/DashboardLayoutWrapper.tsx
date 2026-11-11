@@ -16,7 +16,6 @@ export default function DashboardLayoutWrapper({ children }: { children: React.R
     '/reviews',
     '/challenges',
     '/games',
-    '/attar-game',
     '/badges',
     '/virtual-class',
     '/library',

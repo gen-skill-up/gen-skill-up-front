@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { chatApi } from '@/lib/api';
@@ -26,6 +27,7 @@ interface Message {
 }
 
 export default function AiAssistant() {
+  const pathname = usePathname();
   const { t, dir, lang } = useLanguage();
   const tc = t.chatAssistant as any;
 
@@ -212,6 +214,10 @@ export default function AiAssistant() {
     };
     setMessages([welcomeMsg]);
   };
+
+  if (pathname?.startsWith('/learn-with-ai') || pathname?.startsWith('/games/play')) {
+    return null;
+  }
 
   return (
     <>

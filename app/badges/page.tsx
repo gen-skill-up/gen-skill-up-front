@@ -50,7 +50,7 @@ const badgeIconMap: Record<string, any> = {
 function BadgesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   const [childId, setChildId] = useState<string | null>(null);
   const [child, setChild] = useState<Child | null>(null);
@@ -98,7 +98,7 @@ function BadgesContent() {
           <HelpCircle className="w-10 h-10 text-red-400" />
         </motion.div>
         <h2 className="text-2xl font-black mb-2 text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
-          {dir === 'rtl' ? 'الرجاء اختيار طفل أولاً' : 'Veuillez sélectionner un enfant'}
+          {lang === 'ar' ? 'الرجاء اختيار طفل أولاً' : lang === 'fr' ? 'Veuillez sélectionner un enfant' : 'Please select a child first'}
         </h2>
         <Link href="/dashboard">
           <button className="btn-primary flex items-center gap-2 cursor-pointer mt-6">
@@ -195,14 +195,16 @@ function BadgesContent() {
             <h3 className="font-black text-white text-xl">
               {child?.name} —{' '}
               <span className="text-amber-200 font-extrabold">
-                {earnedCount} {dir === 'rtl' ? 'شارة مكتسبة' : 'badge(s) obtenu(s)'}
+                {earnedCount} {lang === 'ar' ? 'شارة مكتسبة' : lang === 'fr' ? 'badge(s) obtenu(s)' : 'badge(s) earned'}
               </span>
             </h3>
           </div>
           <p className="text-sm text-white/90 font-bold mb-4 leading-relaxed">
-            {dir === 'rtl'
+            {lang === 'ar'
               ? `رائع! لقد أنجزت ${progressPercent}% من رحلة جمع الشارات. تابع الدروس والتمارين لتكسب الباقي!`
-              : `Super ! Tu as accompli ${progressPercent}% de ta collection de badges. Continue à apprendre pour tous les débloquer !`}
+              : lang === 'fr'
+              ? `Super ! Tu as accompli ${progressPercent}% de ta collection de badges. Continue à apprendre pour tous les débloquer !`
+              : `Awesome! You have completed ${progressPercent}% of your badge collection. Keep learning to unlock them all!`}
           </p>
           
           <div className="w-full h-3 bg-black/20 rounded-full overflow-hidden border border-white/10 p-[1px]">
@@ -223,7 +225,7 @@ function BadgesContent() {
             <div className="text-center">
               <span className="text-base font-black text-white block leading-none">{child.stars}</span>
               <span className="text-xs font-bold text-white/80 mt-1 block">
-                {dir === 'rtl' ? 'نجوم' : 'Étoiles'}
+                {lang === 'ar' ? 'نجوم' : lang === 'fr' ? 'Étoiles' : 'Stars'}
               </span>
             </div>
           </div>
@@ -237,7 +239,7 @@ function BadgesContent() {
             <Award className="w-8 h-8 text-[#A49AA7]" />
           </div>
           <p className="text-[#6E637C] font-bold text-base">
-            {dir === 'rtl' ? 'لا توجد شارات بعد' : 'Aucun badge disponible'}
+            {lang === 'ar' ? 'لا توجد شارات بعد' : lang === 'fr' ? 'Aucun badge disponible' : 'No badges available yet'}
           </p>
         </div>
       ) : (
@@ -299,20 +301,20 @@ function BadgesContent() {
                     className="text-xs font-black px-4 py-1.5 rounded-2xl flex items-center gap-1.5 mt-auto bg-white border border-[#95C5B2] text-[#2D6A53] shadow-xs"
                   >
                     <CheckCircle className="w-4 h-4 text-[#2D6A53]" />
-                    {dir === 'rtl' ? 'مكتسبة' : 'Obtenu'}
+                    {lang === 'ar' ? 'مكتسبة' : lang === 'fr' ? 'Obtenu' : 'Earned'}
                   </motion.span>
                 ) : (
                   <span
                     className="text-xs font-black px-4 py-1.5 rounded-2xl mt-auto bg-[#FAF8F5] text-[#A49AA7] border border-[#F2DDD0]"
                   >
-                    {dir === 'rtl' ? '🔒 مقفلة' : '🔒 Bloqué'}
+                    {lang === 'ar' ? '🔒 مقفلة' : lang === 'fr' ? '🔒 Bloqué' : '🔒 Locked'}
                   </span>
                 )}
 
                 {b.earnedAt && (
                   <p className="text-[10px] text-[#A49AA7] mt-2 font-bold uppercase tracking-wider">
                     {new Date(b.earnedAt).toLocaleDateString(
-                      dir === 'rtl' ? 'ar-TN' : 'fr-FR',
+                      lang === 'ar' ? 'ar-TN' : lang === 'fr' ? 'fr-FR' : 'en-US',
                       { day: 'numeric', month: 'short', year: 'numeric' },
                     )}
                   </p>

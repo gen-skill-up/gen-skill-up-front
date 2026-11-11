@@ -47,7 +47,7 @@ interface StoryBook {
 function LibraryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   const [childId, setChildId] = useState<string | null>(null);
   const [child, setChild] = useState<Child | null>(null);
@@ -88,60 +88,60 @@ function LibraryContent() {
   const booksList: StoryBook[] = [
     {
       id: 'book1',
-      title: dir === 'rtl' ? 'قصّة الصفر العجيب 🧮' : 'L\'histoire magique du Zéro 🧮',
-      desc: dir === 'rtl' ? 'تعلم كيف غير الصفر عالم الأرقام وأصبح بطلاً خارقاً في الرياضيات!' : 'Découvre comment le zéro a changé le monde des mathématiques !',
+      title: lang === 'ar' ? 'قصّة الصفر العجيب 🧮' : lang === 'fr' ? 'L\'histoire magique du Zéro 🧮' : 'The Magical Story of Zero 🧮',
+      desc: lang === 'ar' ? 'تعلم كيف غير الصفر عالم الأرقام وأصبح بطلاً خارقاً في الرياضيات!' : lang === 'fr' ? 'Découvre comment le zéro a changé le monde des mathématiques !' : 'Learn how zero transformed numbers and became a math superhero!',
       subject: 'MATHS',
       coverBg: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
       emoji: '💡',
       pages: [
         {
-          title: dir === 'rtl' ? 'الصفر وحيداً' : 'Le zéro tout seul',
-          text: dir === 'rtl' ? 'في قديم الزمان، كانت الأرقام من 1 إلى 9 تعيش معاً بسعادة. لكن لم يكن هناك شيء اسمه صفر. عندما كانوا يريدون قول "لا شيء"، لم يجدوا رمزاً لكتابته.' : 'Il y a très longtemps, les chiffres de 1 à 9 vivaient ensemble. Mais le zéro n\'existait pas encore. Pour dire "rien", ils n\'avaient aucun symbole.',
+          title: lang === 'ar' ? 'الصفر وحيداً' : lang === 'fr' ? 'Le zéro tout seul' : 'Zero Alone',
+          text: lang === 'ar' ? 'في قديم الزمان، كانت الأرقام من 1 إلى 9 تعيش معاً بسعادة. لكن لم يكن هناك شيء اسمه صفر. عندما كانوا يريدون قول "لا شيء"، لم يجدوا رمزاً لكتابته.' : lang === 'fr' ? 'Il y a très longtemps, les chiffres de 1 à 9 vivaient ensemble. Mais le zéro n\'existait pas encore. Pour dire "rien", ils n\'avaient aucun symbole.' : 'Long ago, digits from 1 to 9 lived happily together. But there was no zero yet. When they wanted to express "nothing", they had no symbol.',
           illustration: '🥚'
         },
         {
-          title: dir === 'rtl' ? 'اختراع البطل' : 'L\'invention du héros',
-          text: dir === 'rtl' ? 'اخترع علماء الرياضيات العرب الصفر ليحجز الخانات الفارغة! أصبح الصفر يوضع بجانب الـ 1 ليعطينا 10، ويضاعف قوة كل رقم يرافقه عشرات المرات.' : 'Les mathématiciens ont inventé le zéro pour remplir les espaces vides ! Mis à droite du 1, il crée le 10 et décuple la valeur de chaque chiffre.',
+          title: lang === 'ar' ? 'اختراع البطل' : lang === 'fr' ? 'L\'invention du héros' : 'Inventing the Hero',
+          text: lang === 'ar' ? 'اخترع علماء الرياضيات العرب الصفر ليحجز الخانات الفارغة! أصبح الصفر يوضع بجانب الـ 1 ليعطينا 10، ويضاعف قوة كل رقم يرافقه عشرات المرات.' : lang === 'fr' ? 'Les mathématiciens ont inventé le zéro pour remplir les espaces vides ! Mis à droite du 1, il crée le 10 et décuple la valeur de chaque chiffre.' : 'Mathematicians invented zero to hold empty places! Placed next to 1, it makes 10, multiplying the value of adjacent numbers tenfold.',
           illustration: '🚀'
         },
         {
-          title: dir === 'rtl' ? 'القوة الكبرى' : 'Le super-pouvoir',
-          text: dir === 'rtl' ? 'الصفر لا يغير قيمة الجمع أو الطرح، لكنه في الضرب يدمر كل الأرقام ويحولها إلى صفر! 999 × 0 = صفر. إنه الرقم الأقوى في الضرب!' : 'Le zéro ne change rien à l\'addition, mais à la multiplication, il transforme tout en zéro ! 999 × 0 = 0. C\'est le plus fort !',
+          title: lang === 'ar' ? 'القوة الكبرى' : lang === 'fr' ? 'Le super-pouvoir' : 'The Superpower',
+          text: lang === 'ar' ? 'الصفر لا يغير قيمة الجمع أو الطرح، لكنه في الضرب يدمر كل الأرقام ويحولها إلى صفر! 999 × 0 = صفر. إنه الرقم الأقوى في الضرب!' : lang === 'fr' ? 'Le zéro ne change rien à l\'addition, mais à la multiplication, il transforme tout en zéro ! 999 × 0 = 0. C\'est le plus fort !' : 'Zero doesn\'t change additions or subtractions, but in multiplication, it turns everything into zero! 999 × 0 = 0. It is unbeatable in multiplication!',
           illustration: '👑'
         }
       ],
       question: {
-        text: dir === 'rtl' ? 'ما هو ناتج ضرب 25 × 0 ؟' : 'Calcule le résultat de 25 × 0 ?',
+        text: lang === 'ar' ? 'ما هو ناتج ضرب 25 × 0 ؟' : lang === 'fr' ? 'Calcule le résultat de 25 × 0 ?' : 'What is the result of 25 × 0?',
         options: ['25', '0', '1', '250'],
         correctIdx: 1
       }
     },
     {
       id: 'book2',
-      title: dir === 'rtl' ? 'مغامرة في الفضاء 🚀' : 'Aventure dans l\'Espace 🚀',
-      desc: dir === 'rtl' ? 'سافر مع رائد الفضاء الصغير واكتشف أسرار كواكب المجموعة الشمسية.' : 'Voyage avec le petit astronaute et découvre les planètes du système solaire.',
+      title: lang === 'ar' ? 'مغامرة في الفضاء 🚀' : lang === 'fr' ? 'Aventure dans l\'Espace 🚀' : 'Adventure in Space 🚀',
+      desc: lang === 'ar' ? 'سافر مع رائد الفضاء الصغير واكتشف أسرار كواكب المجموعة الشمسية.' : lang === 'fr' ? 'Voyage avec le petit astronaute et découvre les planètes du système solaire.' : 'Travel with the little astronaut and discover the planets of the solar system.',
       subject: 'SCIENCE',
       coverBg: 'linear-gradient(135deg, #A855F7 0%, #6D28D9 100%)',
       emoji: '🪐',
       pages: [
         {
-          title: dir === 'rtl' ? 'الانطلاق الكبير' : 'Le grand départ',
-          text: dir === 'rtl' ? 'استعد رائد الفضاء الصغير وارتدى خوذته اللامعة. انطلق الصاروخ بسرعة هائلة متجاوزاً الجاذبية الأرضية نحو الفضاء الفسيح.' : 'Le petit astronaute enfile son casque brillant. La fusée décolle à toute vitesse vers l\'espace infini.',
+          title: lang === 'ar' ? 'الانطلاق الكبير' : lang === 'fr' ? 'Le grand départ' : 'The Big Blastoff',
+          text: lang === 'ar' ? 'استعد رائد الفضاء الصغير وارتدى خوذته اللامعة. انطلق الصاروخ بسرعة هائلة متجاوزاً الجاذبية الأرضية نحو الفضاء الفسيح.' : lang === 'fr' ? 'Le petit astronaute enfile son casque brillant. La fusée décolle à toute vitesse vers l\'espace infini.' : 'The little astronaut put on his shiny helmet. The rocket blasted off past Earth\'s gravity into outer space.',
           illustration: '👨‍🚀'
         },
         {
-          title: dir === 'rtl' ? 'ملك الكواكب' : 'Le roi des planètes',
-          text: dir === 'rtl' ? 'أول محطة كانت كوكب المشتري، وهو أكبر الكواكب في مجموعتنا الشمسية! يتكون معظمه من الغاز ولديه حلقات خفيفة جداً.' : 'Le premier arrêt est Jupiter, la plus grande planète ! Elle est géante et faite de gaz.',
+          title: lang === 'ar' ? 'ملك الكواكب' : lang === 'fr' ? 'Le roi des planètes' : 'King of Planets',
+          text: lang === 'ar' ? 'أول محطة كانت كوكب المشتري، وهو أكبر الكواكب في مجموعتنا الشمسية! يتكون معظمه من الغاز ولديه حلقات خفيفة جداً.' : lang === 'fr' ? 'Le premier arrêt est Jupiter, la plus grande planète ! Elle est géante et faite de gaz.' : 'The first stop was Jupiter, the largest planet in our solar system! It is made of gas with faint rings.',
           illustration: '🪐'
         }
       ],
       question: {
-        text: dir === 'rtl' ? 'ما هو أكبر كواكب المجموعة الشمسية؟' : 'Quelle est la plus grande planète du système solaire ?',
+        text: lang === 'ar' ? 'ما هو أكبر كواكب المجموعة الشمسية؟' : lang === 'fr' ? 'Quelle est la plus grande planète du système solaire ?' : 'What is the largest planet in our solar system?',
         options: [
-          dir === 'rtl' ? 'الأرض' : 'La Terre',
-          dir === 'rtl' ? 'المريخ' : 'Mars',
-          dir === 'rtl' ? 'المشتري' : 'Jupiter',
-          dir === 'rtl' ? 'زحل' : 'Saturne'
+          lang === 'ar' ? 'الأرض' : lang === 'fr' ? 'La Terre' : 'Earth',
+          lang === 'ar' ? 'المريخ' : lang === 'fr' ? 'Mars' : 'Mars',
+          lang === 'ar' ? 'المشتري' : lang === 'fr' ? 'Jupiter' : 'Jupiter',
+          lang === 'ar' ? 'زحل' : lang === 'fr' ? 'Saturne' : 'Saturn'
         ],
         correctIdx: 2
       }
@@ -199,9 +199,13 @@ function LibraryContent() {
         <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-red-100 border border-red-200">
           <HelpCircle className="w-8 h-8 text-red-500" />
         </div>
-        <h2 className="text-xl font-black mb-2 text-slate-800">الرجاء اختيار طفل أولاً / Please Select a Child</h2>
+        <h2 className="text-xl font-black mb-2 text-slate-800">
+          {lang === 'ar' ? 'الرجاء اختيار طفل أولاً' : lang === 'fr' ? 'Veuillez sélectionner un enfant' : 'Please select a child first'}
+        </h2>
         <Link href="/dashboard">
-          <button className="btn-primary mt-4">لوحة التحكم / Dashboard</button>
+          <button className="btn-primary mt-4">
+            {lang === 'ar' ? 'لوحة التحكم' : lang === 'fr' ? 'Tableau de bord' : 'Dashboard'}
+          </button>
         </Link>
       </div>
     );
@@ -219,10 +223,10 @@ function LibraryContent() {
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
-                  {dir === 'rtl' ? 'مكتبة الأبطال 📖' : 'Bibliothèque des Héros 📖'}
+                  {lang === 'ar' ? 'مكتبة الأبطال 📖' : lang === 'fr' ? 'Bibliothèque des Héros 📖' : 'Heroes Library 📖'}
                 </h1>
                 <p className="text-[#6E637C] text-sm sm:text-base font-bold mt-1">
-                  {dir === 'rtl' ? 'اقرأ قصصاً قصيرة ممتعة، واجب عن الأسئلة لتكسب مكافآت حقيقية!' : 'Lis de courtes histoires et gagne des récompenses en répondant aux quiz !'}
+                  {lang === 'ar' ? 'اقرأ قصصاً قصيرة ممتعة، واجب عن الأسئلة لتكسب مكافآت حقيقية!' : lang === 'fr' ? 'Lis de courtes histoires et gagne des récompenses en répondant aux quiz !' : 'Read fun short stories and earn rewards by answering quizzes!'}
                 </p>
               </div>
             </div>
@@ -240,7 +244,9 @@ function LibraryContent() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24">
               <Loader2 className="w-12 h-12 animate-spin text-[#E8927C] mb-3" />
-              <p className="text-[#6E637C] text-sm font-black animate-pulse">جاري تحميل كتب المكتبة... / Chargement...</p>
+              <p className="text-[#6E637C] text-sm font-black animate-pulse">
+                {lang === 'ar' ? 'جاري تحميل كتب المكتبة...' : lang === 'fr' ? 'Chargement des livres...' : 'Loading library books...'}
+              </p>
             </div>
           ) : (
             <div className="space-y-6">

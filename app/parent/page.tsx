@@ -36,7 +36,7 @@ interface Child {
 function ParentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
 
   const [childId, setChildId] = useState<string | null>(null);
   const [children, setChildren] = useState<Child[]>([]);
@@ -159,17 +159,22 @@ function ParentContent() {
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-black text-[#3D364A]" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
-                  {dir === 'rtl' ? 'بوابة الأولياء والأوصياء 👨‍👩‍👧' : 'Espace Parent / Tuteur 👨‍👩‍👧'}
+                  {lang === 'ar' ? 'بوابة الأولياء والأوصياء 👨‍👩‍👧' : lang === 'fr' ? 'Espace Parent / Tuteur 👨‍👩‍👧' : 'Parent & Guardian Portal 👨‍👩‍👧'}
                 </h1>
                 <p className="text-[#6E647D] text-xs font-bold mt-0.5">
-                  {dir === 'rtl' ? 'تحكم في أوقات الشاشة، حدد الأهداف، وتابع التقارير المفصلة لطفلك.' : 'Configure les limites d\'écran, ajuste les classes et supervise le travail.'}</p>
+                  {lang === 'ar'
+                    ? 'تحكم في أوقات الشاشة، حدد الأهداف، وتابع التقارير المفصلة لطفلك.'
+                    : lang === 'fr'
+                    ? 'Configure les limites d\'écran, ajuste les classes et supervise le travail.'
+                    : 'Manage screen time, set learning targets, and track detailed progress reports.'}
+                </p>
               </div>
             </div>
             
             <Link href="/age-select">
               <button className="bg-[#E8927C] hover:bg-[#D4785F] text-white font-black text-xs px-4 py-2.5 rounded-2xl shadow-sm cursor-pointer flex items-center gap-1.5 transition-all">
                 <Plus className="w-4 h-4" />
-                <span>{dir === 'rtl' ? 'إضافة طفل' : 'Ajouter enfant'}</span>
+                <span>{lang === 'ar' ? 'إضافة طفل' : lang === 'fr' ? 'Ajouter enfant' : 'Add Child'}</span>
               </button>
             </Link>
           </div>
@@ -177,17 +182,27 @@ function ParentContent() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24">
               <Loader2 className="w-12 h-12 animate-spin text-indigo-600 mb-3" />
-              <p className="text-slate-500 text-xs font-black animate-pulse">جاري تحميل البوابة... / Chargement...</p>
+              <p className="text-slate-500 text-xs font-black animate-pulse">
+                {lang === 'ar' ? 'جاري تحميل البوابة...' : lang === 'fr' ? 'Chargement de l\'espace parent...' : 'Loading parent portal...'}
+              </p>
             </div>
           ) : !selectedChild ? (
             <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-slate-200">
               <Logo size={48} className="mx-auto opacity-35 mb-4 animate-float" />
-              <h4 className="text-sm font-black text-slate-600">{dir === 'rtl' ? 'لا يوجد أطفال مضافين حالياً!' : 'Aucun enfant enregistré !'}</h4>
+              <h4 className="text-sm font-black text-slate-600">
+                {lang === 'ar' ? 'لا يوجد أطفال مضافين حالياً!' : lang === 'fr' ? 'Aucun enfant enregistré !' : 'No children added yet!'}
+              </h4>
               <p className="text-xs text-slate-400 font-semibold mt-1">
-                {dir === 'rtl' ? 'الرجاء الضغط على إضافة طفل لإنشاء ملفهم الأول.' : 'Crée un profil enfant pour commencer.'}
+                {lang === 'ar'
+                  ? 'الرجاء الضغط على إضافة طفل لإنشاء ملفهم الأول.'
+                  : lang === 'fr'
+                  ? 'Crée un profil enfant pour commencer.'
+                  : 'Click add child to create their first profile.'}
               </p>
               <Link href="/age-select">
-                <button className="btn-primary mt-6">{dir === 'rtl' ? 'إنشاء ملف طفل 🚀' : 'Créer un profil 🚀'}</button>
+                <button className="btn-primary mt-6">
+                  {lang === 'ar' ? 'إنشاء ملف طفل 🚀' : lang === 'fr' ? 'Créer un profil 🚀' : 'Create Child Profile 🚀'}
+                </button>
               </Link>
             </div>
           ) : (
@@ -319,25 +334,25 @@ function ParentContent() {
                   <div className="flex items-center gap-2">
                     <Award className="w-5 h-5 text-[#E8927C]" />
                     <h3 className="font-black text-xs text-[#C45E45]">
-                      {dir === 'rtl' ? 'تقرير التميز الأكاديمي' : 'Rapport Académique'}
+                      {lang === 'ar' ? 'تقرير التميز الأكاديمي' : lang === 'fr' ? 'Rapport Académique' : 'Academic Performance Report'}
                     </h3>
                   </div>
 
                   <div className="space-y-2 text-xs font-bold mt-2">
                     <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
-                      <span>{dir === 'rtl' ? 'الاسم:' : 'Nom :'}</span>
+                      <span>{lang === 'ar' ? 'الاسم:' : lang === 'fr' ? 'Nom :' : 'Name:'}</span>
                       <span className="font-black text-[#3D364A]">{selectedChild.name}</span>
                     </div>
                     <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
-                      <span>{dir === 'rtl' ? 'مجموع النقاط:' : 'XP total :'}</span>
+                      <span>{lang === 'ar' ? 'مجموع النقاط:' : lang === 'fr' ? 'XP total :' : 'Total XP:'}</span>
                       <span className="text-[#E8927C] font-black">{selectedChild.points} XP</span>
                     </div>
                     <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
-                      <span>{dir === 'rtl' ? 'الدروس المكتملة:' : 'Leçons terminées :'}</span>
+                      <span>{lang === 'ar' ? 'الدروس المكتملة:' : lang === 'fr' ? 'Leçons terminées :' : 'Completed Lessons:'}</span>
                       <span className="text-[#3B82F6] font-black">{analytics?.totalLessonsCompleted ?? 0}</span>
                     </div>
                     <div className="flex justify-between bg-white/70 p-2.5 rounded-xl border border-white/80">
-                      <span>{dir === 'rtl' ? 'التمارين المنجزة:' : 'Exercices résolus :'}</span>
+                      <span>{lang === 'ar' ? 'التمارين المنجزة:' : lang === 'fr' ? 'Exercices résolus :' : 'Completed Exercises:'}</span>
                       <span className="text-[#10B981] font-black">{analytics?.totalExercisesSolved ?? 0}</span>
                     </div>
                   </div>
@@ -349,7 +364,7 @@ function ParentContent() {
                     <div className="flex items-center gap-2 border-b border-slate-50 pb-2">
                       <BookOpen className="w-4.5 h-4.5 text-indigo-600" />
                       <h4 className="text-xs font-black text-slate-800">
-                        {dir === 'rtl' ? 'معدل الأداء حسب المواد' : 'Performance par Matière'}
+                        {lang === 'ar' ? 'معدل الأداء حسب المواد' : lang === 'fr' ? 'Performance par Matière' : 'Subject Performance'}
                       </h4>
                     </div>
                     <div className="space-y-3 pt-1">
@@ -366,7 +381,7 @@ function ParentContent() {
                             />
                           </div>
                           <div className="flex justify-between text-[9px] text-slate-400 font-semibold">
-                            <span>{item.lessonsCompleted} {dir === 'rtl' ? 'دروس' : 'leçons'}</span>
+                            <span>{item.lessonsCompleted} {lang === 'ar' ? 'دروس' : lang === 'fr' ? 'leçons' : 'lessons'}</span>
                             <span>{item.xp} XP</span>
                           </div>
                         </div>
