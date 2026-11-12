@@ -201,14 +201,14 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'exercises',
       label: t.sidebar.exercices,
       icon: Pencil,
-      href: activeChildId ? `/exercises?childId=${activeChildId}` : '/lessons',
+      href: activeChildId ? `/exercises?childId=${activeChildId}` : '/exercises',
       comingSoon: false,
     },
     {
       id: 'learn-with-ai',
       label: t.sidebar.learnWithAi || 'تعلم مع الذكاء الاصطناعي',
       icon: Sparkles,
-      href: isGuest ? '/lessons' : (activeChildId ? `/learn-with-ai?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/learn-with-ai?childId=${activeChildId}` : '/learn-with-ai',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -216,7 +216,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'exams',
       label: t.sidebar.examens,
       icon: ClipboardList,
-      href: isGuest ? '/lessons' : (activeChildId ? `/placement-test?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/placement-test?childId=${activeChildId}` : '/placement-test',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -224,7 +224,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'reviews',
       label: t.sidebar.revisions,
       icon: Repeat,
-      href: isGuest ? '/lessons' : (activeChildId ? `/reviews?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/reviews?childId=${activeChildId}` : '/reviews',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -232,7 +232,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'challenges',
       label: t.sidebar.defis,
       icon: Zap,
-      href: isGuest ? '/lessons' : (activeChildId ? `/challenges?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/challenges?childId=${activeChildId}` : '/challenges',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -247,7 +247,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'badges',
       label: t.sidebar.badges,
       icon: Medal,
-      href: isGuest ? '/lessons' : (activeChildId ? `/badges?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/badges?childId=${activeChildId}` : '/badges',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -255,7 +255,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'virtual-class',
       label: t.sidebar.classeVirtuelle,
       icon: Monitor,
-      href: isGuest ? '/lessons' : (activeChildId ? `/virtual-class?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/virtual-class?childId=${activeChildId}` : '/virtual-class',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -263,7 +263,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'library',
       label: t.sidebar.bibliotheque,
       icon: Book,
-      href: isGuest ? '/lessons' : (activeChildId ? `/library?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/library?childId=${activeChildId}` : '/library',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -271,7 +271,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'parent',
       label: t.sidebar.parentTuteur,
       icon: Users,
-      href: isGuest ? '/lessons' : (activeChildId ? `/parent?childId=${activeChildId}` : '/dashboard'),
+      href: activeChildId ? `/parent?childId=${activeChildId}` : '/parent',
       comingSoon: false,
       requiresAuth: true,
     },
@@ -405,22 +405,28 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
         )}
 
         {/* Menu Navigation Links */}
-        <nav className="space-y-1 overflow-y-auto max-h-[calc(100vh-380px)] pr-1 pl-1">
+        <nav className="space-y-1 overflow-y-auto max-h-[calc(100vh-380px)] pr-1 pl-1 no-scrollbar">
           {menuItems.filter(item => !(item.id === 'parent' && userRole === 'CHILD')).map((item) => {
+            const itemPathPrefixes: Record<string, string> = {
+              dashboard: '/dashboard',
+              lessons: '/lessons',
+              exercises: '/exercises',
+              'learn-with-ai': '/learn-with-ai',
+              exams: '/placement-test',
+              reviews: '/reviews',
+              challenges: '/challenges',
+              games: '/games',
+              badges: '/badges',
+              'virtual-class': '/virtual-class',
+              library: '/library',
+              parent: '/parent',
+            };
+            const prefix = itemPathPrefixes[item.id] || item.href.split('?')[0];
             const isSelected = activeTab 
               ? activeTab === item.id 
               : (item.id === 'dashboard' 
-                ? pathname === '/dashboard' 
-                : (item.id === 'exams'
-                  ? pathname.startsWith('/placement-test')
-                  : (item.id === 'badges'
-                    ? pathname.startsWith('/badges')
-                    : (item.id === 'challenges'
-                      ? pathname.startsWith('/challenges')
-                      : pathname.startsWith(item.href.split('?')[0])
-                    )
-                  )
-                )
+                ? (pathname === '/dashboard' || (isGuest && pathname === '/'))
+                : pathname.startsWith(prefix)
               );
             const IconComponent = item.icon;
 

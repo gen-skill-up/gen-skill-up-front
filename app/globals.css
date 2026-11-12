@@ -91,19 +91,29 @@ h1, h2, h3, h4, h5, h6 {
    Custom Scrollbar
    ======================== */
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F7EFE7;
-  border-radius: 6px;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E8927C;
-  border-radius: 6px;
+  background: rgba(232, 146, 124, 0.35);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4785F;
+  background: rgba(212, 120, 95, 0.7);
+}
+
+/* Hide scrollbar utility while preserving scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 /* ========================
