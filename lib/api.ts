@@ -79,7 +79,7 @@ export const placementTestApi = {
 
 // ─── Lessons ───────────────────────────────────────────────────────────────
 export const lessonsApi = {
-  list: (childId: string, subject?: string, grade?: number) =>
+  list: (childId?: string, subject?: string, grade?: number) =>
     api.get('/lessons', { params: { childId, subject, grade } }),
   get: (id: string, childId?: string) => api.get(`/lessons/${id}`, { params: { childId } }),
   complete: (id: string, childId: string) =>
@@ -90,7 +90,7 @@ export const lessonsApi = {
 
 // ─── Exercises ─────────────────────────────────────────────────────────────
 export const exercisesApi = {
-  list: (childId: string, subject?: string) =>
+  list: (childId?: string, subject?: string) =>
     api.get('/exercises', { params: { childId, subject } }),
   get: (id: string) => api.get(`/exercises/${id}`),
   generateCustom: (childId: string, subject: string) =>

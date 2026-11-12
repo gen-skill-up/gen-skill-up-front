@@ -182,7 +182,7 @@ function ExerciseBranchNode({
   offsetY,
 }: {
   exercise: LessonExercise;
-  childId: string;
+  childId?: string;
   lessonId: string;
   offsetX: number;
   offsetY: number;
@@ -202,8 +202,12 @@ function ExerciseBranchNode({
       ? '#C98D2E'
       : '#C8735F';
 
+  const linkHref = childId
+    ? `/exercises/${exercise.id}?childId=${childId}&fromLesson=${lessonId}`
+    : `/exercises/${exercise.id}?fromLesson=${lessonId}`;
+
   return (
-    <Link href={`/exercises/${exercise.id}?childId=${childId}&fromLesson=${lessonId}`}>
+    <Link href={linkHref}>
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -417,17 +421,18 @@ function LessonsContent() {
   }, [childId]);
 
   useEffect(() => {
-    if (!childId) return;
     let isCancelled = false;
     setLoading(true);
     lessonsApi
-      .list(childId, selectedSubject, selectedGrade)
+      .list(childId || undefined, selectedSubject, selectedGrade)
       .then((res) => {
         if (isCancelled) return;
         const list = Array.isArray(res.data) ? res.data : [];
         const filtered = list.filter((l: Lesson) => Number(l.grade) === Number(selectedGrade));
         setLessons(filtered);
-        fetchLeaderboard();
+        if (childId) {
+          fetchLeaderboard();
+        }
       })
       .catch((err) => {
         if (isCancelled) return;
@@ -534,37 +539,6 @@ function LessonsContent() {
     }
   };
 
-  if (!childId) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ background: '#FFF9F0' }}>
-        <motion.div
-          className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
-          style={{ background: 'rgba(232,146,124,0.15)', border: '2px solid rgba(232,146,124,0.3)' }}
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <HelpCircle className="w-10 h-10 text-[#E8927C]" />
-        </motion.div>
-        <h2 className="text-2xl font-black mb-2 text-[#3D364A]" style={{ fontFamily: 'Fredoka One, Tajawal, sans-serif' }}>
-          {lang === 'ar' ? 'الرجاء اختيار طفل أولاً' : lang === 'fr' ? 'Veuillez sélectionner un enfant' : 'Please select a child first'}
-        </h2>
-        <p className="text-[#6E637C] text-sm mb-8 max-w-sm font-semibold">
-          {lang === 'ar'
-            ? 'يجب اختيار ملف الطفل من لوحة التحكم لعرض الدروس المتوافقة مع مستواه.'
-            : lang === 'fr'
-            ? 'Veuillez sélectionner le profil de l\'enfant pour afficher les leçons adaptées à son niveau.'
-            : 'Please select a child profile from the dashboard to display lessons adapted to their level.'}
-        </p>
-        <Link href="/dashboard">
-          <button className="btn-primary flex items-center gap-2 cursor-pointer">
-            <Home className="w-5 h-5" />
-            <span>{t.placementTest.goToDashboard}</span>
-          </button>
-        </Link>
-      </div>
-    );
-  }
-
   // ─── Map Path Construction ────────────────────────────────────────────────
   const pathNodes: PathNode[] = [];
   lessons.forEach((lesson, index) => {
@@ -622,7 +596,7 @@ function LessonsContent() {
   const activeLessonIndex = pathNodes.findIndex((n) => n.type === 'LESSON' && n.unlocked && !n.completed);
   const mascotNodeIndex = activeLessonIndex !== -1 ? activeLessonIndex : pathNodes.findIndex((n) => n.type === 'LESSON' && n.unlocked);
 
-  const NODE_SPACING = 115;
+  const NODE_SPACING = 135;
   const BRANCH_EXTRA = 75;
 
   const lessonYPositions: number[] = [];
@@ -721,6 +695,27 @@ function LessonsContent() {
             </AnimatePresence>
           </div>
         </div>
+
+        {/* Guest / No-Child Preview Mode Notice */}
+        {!childId && (
+          <div className="bg-amber-50/95 border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-amber-900 text-sm font-bold shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🌟</span>
+              <span>
+                {lang === 'ar'
+                  ? 'أنت تستعرض الدروس حالياً في وضع المعاينة. اختر أو أضف ملف طفل من لوحة التحكم لحفظ تقدمه ومتابعة إنجازاته.'
+                  : lang === 'fr'
+                  ? 'Vous prévisualisez les leçons. Sélectionnez ou ajoutez un profil enfant depuis le tableau de bord pour enregistrer ses progrès.'
+                  : 'You are viewing lessons in preview mode. Select or add a child profile from dashboard to save progress.'}
+              </span>
+            </div>
+            <Link href="/dashboard">
+              <button className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-black px-4 py-2 rounded-xl shrink-0 transition-all shadow-xs cursor-pointer">
+                {lang === 'ar' ? 'لوحة التحكم' : lang === 'fr' ? 'Tableau de bord' : 'Dashboard'}
+              </button>
+            </Link>
+          </div>
+        )}
 
         {/* Split Layout: Subjects Sidebar + Adventure Map */}
         <div className="flex flex-col md:flex-row gap-6 items-start animate-fade-in" style={{ direction: dir }}>
@@ -1125,6 +1120,24 @@ function LessonsContent() {
                             )}
                           </motion.button>
 
+                          {/* Visible Lesson Title Badge below button */}
+                          <div
+                            className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 text-center pointer-events-none select-none z-10"
+                          >
+                            <span
+                              className={`inline-block px-2.5 py-1 rounded-xl text-[11px] font-black leading-tight shadow-xs border transition-all truncate max-w-full ${
+                                state === 'active'
+                                  ? 'bg-white/95 text-[#3D364A] border-[#F2DDD0] shadow-sm'
+                                  : state === 'completed'
+                                    ? 'bg-[#EEF6F3]/95 text-[#2D6A53] border-[#D5EAE1]'
+                                    : 'bg-[#FAF8F5]/90 text-[#8C8191] border-[#EAE5DE]'
+                              }`}
+                              title={lesson.title}
+                            >
+                              {lesson.title}
+                            </span>
+                          </div>
+
                           {/* Lesson Info Popover */}
                           <AnimatePresence>
                             {activeLessonPopover === lesson.id && (
@@ -1166,7 +1179,7 @@ function LessonsContent() {
                                         <span>+20 XP</span>
                                       </span>
                                     </div>
-                                    <Link href={`/lessons/${lesson.id}?childId=${childId}`}>
+                                    <Link href={childId ? `/lessons/${lesson.id}?childId=${childId}` : `/lessons/${lesson.id}`}>
                                       <button className="w-full bg-[#E8927C] hover:bg-[#D97D67] text-white text-sm font-black py-2.5 rounded-2xl shadow-md border-b-2 border-[#C9725C] cursor-pointer block transition-all active:translate-y-0.5">
                                         {state === 'completed' ? '🔄 مراجعة الدرس' : t.lessons.startLessonBtn}
                                       </button>
@@ -1230,7 +1243,7 @@ function LessonsContent() {
 
                           <div className="flex flex-col items-center justify-center w-full h-full relative">
                             {isUnlocked ? (
-                              <Link href={`/exercises/${exercise.id}?childId=${childId}&fromLesson=${node.lessonId}`}>
+                              <Link href={childId ? `/exercises/${exercise.id}?childId=${childId}&fromLesson=${node.lessonId}` : `/exercises/${exercise.id}?fromLesson=${node.lessonId}`}>
                                 {innerContent}
                               </Link>
                             ) : (
@@ -1249,7 +1262,7 @@ function LessonsContent() {
                                 <ExerciseBranchNode
                                   key={ex.id}
                                   exercise={ex}
-                                  childId={childId!}
+                                  childId={childId || undefined}
                                   lessonId={node.lessonId}
                                   offsetX={offset.x}
                                   offsetY={offset.y}
