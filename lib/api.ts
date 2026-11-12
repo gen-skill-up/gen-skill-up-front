@@ -95,7 +95,7 @@ export const exercisesApi = {
   get: (id: string) => api.get(`/exercises/${id}`),
   generateCustom: (childId: string, subject: string) =>
     api.post('/exercises/custom', { childId, subject }),
-  submit: (id: string, childId: string, answers: { questionIdx: number; selectedIdx: number }[]) =>
+  submit: (id: string, childId: string | undefined, answers: { questionIdx: number; selectedIdx: number }[]) =>
     api.post(`/exercises/${id}/submit`, { childId, answers }),
 };
 
@@ -125,6 +125,8 @@ export const chatApi = {
 
 // ─── AI Tutor ──────────────────────────────────────────────────────────────
 export const aiTutorApi = {
+  getQuota: (childId: string) =>
+    api.get(`/ai-tutor/child/${childId}/quota`),
   listLessons: (childId: string, subject: string) =>
     api.get(`/ai-tutor/child/${childId}/lessons`, { params: { subject } }),
   sendMessage: (childId: string, lessonId: string, message: string, history: any[], language: string) =>

@@ -4,8 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { chatApi } from '@/lib/api';
+import { chatApi, aiTutorApi } from '@/lib/api';
 import OwlLogo from './Logo';
+import GuestSignupModal from './GuestSignupModal';
+import PremiumUpgradeModal from './PremiumUpgradeModal';
 import {
   MessageCircle,
   X,
@@ -16,6 +18,10 @@ import {
   Sparkles,
   Bot,
   Loader2,
+  Crown,
+  Lock,
+  ArrowRight,
+  ArrowLeft,
 } from 'lucide-react';
 
 interface Message {
@@ -30,6 +36,7 @@ export default function AiAssistant() {
   const pathname = usePathname();
   const { t, dir, lang } = useLanguage();
   const tc = t.chatAssistant as any;
+  const ArrowIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -37,6 +44,17 @@ export default function AiAssistant() {
   const [loading, setLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState<string | null>(null);
   const [activeChildId, setActiveChildId] = useState<string | null>(null);
+
+  // 3-Tier State & Modals
+  const [isGuest, setIsGuest] = useState(false);
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
+  const [quota, setQuota] = useState<{
+    isPremium: boolean;
+    used: number;
+    max: number | null;
+    remaining: number | null;
+  } | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
@@ -54,37 +72,64 @@ export default function AiAssistant() {
     };
   }, []);
 
-  // Fetch active child on mount & check localStorage
+  // Fetch active child & quota on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedChildId = localStorage.getItem('activeChildId');
-      setActiveChildId(storedChildId);
+      const checkAuthState = () => {
+        const token = localStorage.getItem('token');
+        const storedChildId = localStorage.getItem('activeChildId');
+        setActiveChildId(storedChildId);
+        const guestMode = !token || !storedChildId;
+        setIsGuest(guestMode);
 
-      const handleStorageChange = () => {
-        setActiveChildId(localStorage.getItem('activeChildId'));
+        if (token && storedChildId) {
+          aiTutorApi
+            .getQuota(storedChildId)
+            .then((res) => setQuota(res.data))
+            .catch(() => {});
+        } else {
+          setQuota(null);
+        }
       };
-      window.addEventListener('storage', handleStorageChange);
-      return () => window.removeEventListener('storage', handleStorageChange);
+
+      checkAuthState();
+      window.addEventListener('storage', checkAuthState);
+      window.addEventListener('activeChildChanged', checkAuthState as any);
+      return () => {
+        window.removeEventListener('storage', checkAuthState);
+        window.removeEventListener('activeChildChanged', checkAuthState as any);
+      };
     }
   }, []);
 
-  // Set up welcome message once activeChildId or lang changes
+  // Set up welcome message based on tier
   useEffect(() => {
-    if (!activeChildId) return;
-
-    const welcomeMsg: Message = {
-      id: 'welcome',
-      role: 'assistant',
-      content: tc.welcomeMessage || 'مرحباً! أنا أنيس 🦉 رفيقك الذكي.',
-      suggestions: [
-        tc.suggestMath || 'ساعدني في الرياضيات 📐',
-        tc.suggestScience || 'معلومة علمية مفيدة 💡',
-        tc.suggestRiddle || 'قل لي حزورة ذكية 🧩',
-      ],
-    };
-
-    setMessages([welcomeMsg]);
-  }, [activeChildId, lang, tc]);
+    if (isGuest) {
+      const guestMsg: Message = {
+        id: 'guest-welcome',
+        role: 'assistant',
+        content:
+          lang === 'ar'
+            ? 'أهلاً بك يا بطل! 🦉 أنا أنيس، مرشدك ومعلمك الذكي. يمكنك تصفح أول درسين وحل تمارينهما مجاناً كزائر! للتحدث معي وسؤالي في دروسك، سجّل حسابك مجاناً الآن في 30 ثانية 🚀'
+            : lang === 'fr'
+            ? 'Bienvenue champion ! 🦉 Je suis Anis, ton tuteur intelligent. Tu peux explorer les 2 premières leçons gratuitement ! Pour discuter avec moi, crée ton compte gratuit en 30s 🚀'
+            : 'Welcome superstar! 🦉 I am Anis, your AI tutor. You can explore the first 2 lessons for free! To chat with me and ask questions, create your free account in 30s 🚀',
+      };
+      setMessages([guestMsg]);
+    } else if (activeChildId) {
+      const welcomeMsg: Message = {
+        id: 'welcome',
+        role: 'assistant',
+        content: tc.welcomeMessage || 'مرحباً! أنا أنيس 🦉 رفيقك الذكي.',
+        suggestions: [
+          tc.suggestMath || 'ساعدني في الرياضيات 📐',
+          tc.suggestScience || 'معلومة علمية مفيدة 💡',
+          tc.suggestRiddle || 'قل لي حزورة ذكية 🧩',
+        ],
+      };
+      setMessages([welcomeMsg]);
+    }
+  }, [isGuest, activeChildId, lang, tc]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -102,7 +147,10 @@ export default function AiAssistant() {
 
     synthRef.current.cancel();
 
-    const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "");
+    const cleanText = text.replace(
+      /[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g,
+      ''
+    );
     const utterance = new SpeechSynthesisUtterance(cleanText);
 
     if (lang === 'ar') {
@@ -127,7 +175,28 @@ export default function AiAssistant() {
   };
 
   const handleSend = async (text: string) => {
+    if (isGuest) {
+      setGuestModalOpen(true);
+      return;
+    }
     if (!text.trim() || !activeChildId || loading) return;
+
+    // Check free quota before sending
+    if (quota && !quota.isPremium && quota.remaining !== null && quota.remaining <= 0) {
+      setPremiumModalOpen(true);
+      const limitMsg: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content:
+          lang === 'ar'
+            ? 'لقد استنفدت حصتك اليومية المجانية (5 أسئلة) يا بطل! 🌟 اشترك في باقة Premium للحديث غير المحدود وتوليد التمارين الذكية 👑'
+            : lang === 'fr'
+            ? 'Tu as atteint ta limite quotidienne de 5 questions ! Passe à Premium pour des questions illimitées 👑'
+            : 'You have reached your daily free limit of 5 questions! Upgrade to Premium for unlimited AI access 👑',
+      };
+      setMessages((prev) => [...prev, limitMsg]);
+      return;
+    }
 
     const userMsg: Message = {
       id: Date.now().toString(),
@@ -139,16 +208,14 @@ export default function AiAssistant() {
     setInputValue('');
     setLoading(true);
 
-    const historyPayload = messages
-      .slice(-6)
-      .map((m) => ({
-        role: m.role,
-        content: m.content,
-      }));
+    const historyPayload = messages.slice(-6).map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
 
     let subject = 'General';
     let lessonTitle = 'General Learning';
-    
+
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       if (path.includes('lessons')) {
@@ -178,19 +245,48 @@ export default function AiAssistant() {
       };
 
       setMessages((prev) => [...prev, aiMsg]);
-    } catch (error) {
+
+      // Refresh remaining quota
+      if (activeChildId) {
+        aiTutorApi
+          .getQuota(activeChildId)
+          .then((qRes) => setQuota(qRes.data))
+          .catch(() => {});
+      }
+    } catch (error: any) {
       console.error('Error sending message:', error);
-      const errorMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content:
-          lang === 'ar'
-            ? 'عذراً يا بطل! واجهت مشكلة في الاتصال بالخادم. يرجى المحاولة مرة أخرى قريباً. 🦉'
-            : lang === 'fr'
+      if (error.response?.status === 403 && error.response?.data?.code === 'AI_LIMIT_REACHED') {
+        setPremiumModalOpen(true);
+        if (activeChildId) {
+          aiTutorApi
+            .getQuota(activeChildId)
+            .then((qRes) => setQuota(qRes.data))
+            .catch(() => {});
+        }
+        const limitMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content:
+            lang === 'ar'
+              ? 'لقد وصلت إلى الحد اليومي المجاني (5 أسئلة)! يمكنك الترقية إلى باقة Premium للحديث مع أنيس بلا قيود 👑'
+              : lang === 'fr'
+              ? 'Tu as atteint ta limite gratuite quotidienne de 5 questions ! Passe à Premium pour continuer 👑'
+              : 'You have reached your daily limit of 5 questions! Upgrade to Premium for unlimited AI tutoring 👑',
+        };
+        setMessages((prev) => [...prev, limitMsg]);
+      } else {
+        const errorMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content:
+            lang === 'ar'
+              ? 'عذراً يا بطل! واجهت مشكلة في الاتصال بالخادم. يرجى المحاولة مرة أخرى قريباً. 🦉'
+              : lang === 'fr'
               ? "Désolé champion ! J'ai un problème de connexion. Réessaie bientôt. 🦉"
               : 'Sorry superstar! I had trouble connecting. Please try again soon. 🦉',
-      };
-      setMessages((prev) => [...prev, errorMsg]);
+        };
+        setMessages((prev) => [...prev, errorMsg]);
+      }
     } finally {
       setLoading(false);
     }
@@ -201,18 +297,30 @@ export default function AiAssistant() {
       synthRef.current.cancel();
     }
     setIsSpeaking(null);
-    
-    const welcomeMsg: Message = {
-      id: 'welcome',
-      role: 'assistant',
-      content: tc.welcomeMessage || 'مرحباً! أنا أنيس 🦉 رفيقك الذكي.',
-      suggestions: [
-        tc.suggestMath || 'ساعدني في الرياضيات 📐',
-        tc.suggestScience || 'معلومة علمية مفيدة 💡',
-        tc.suggestRiddle || 'قل لي حزورة ذكية 🧩',
-      ],
-    };
-    setMessages([welcomeMsg]);
+
+    if (isGuest) {
+      const guestMsg: Message = {
+        id: 'guest-welcome',
+        role: 'assistant',
+        content:
+          lang === 'ar'
+            ? 'أهلاً بك يا بطل! 🦉 أنا أنيس، مرشدك ومعلمك الذكي. سجّل حسابك مجاناً للتحدث معي في أي وقت 🚀'
+            : 'Welcome superstar! 🦉 Create a free account to chat with me anytime 🚀',
+      };
+      setMessages([guestMsg]);
+    } else {
+      const welcomeMsg: Message = {
+        id: 'welcome',
+        role: 'assistant',
+        content: tc.welcomeMessage || 'مرحباً! أنا أنيس 🦉 رفيقك الذكي.',
+        suggestions: [
+          tc.suggestMath || 'ساعدني في الرياضيات 📐',
+          tc.suggestScience || 'معلومة علمية مفيدة 💡',
+          tc.suggestRiddle || 'قل لي حزورة ذكية 🧩',
+        ],
+      };
+      setMessages([welcomeMsg]);
+    }
   };
 
   if (pathname?.startsWith('/learn-with-ai') || pathname?.startsWith('/games/play')) {
@@ -273,7 +381,7 @@ export default function AiAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 80, scale: 0.92 }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed bottom-24 z-40 w-[92vw] sm:w-[420px] h-[560px] rounded-[2.2rem] shadow-2xl flex flex-col border border-[#E8927C]/25 overflow-hidden bg-white/98 backdrop-blur-md"
+            className="fixed bottom-24 z-40 w-[92vw] sm:w-[420px] h-[580px] rounded-[2.2rem] shadow-2xl flex flex-col border border-[#E8927C]/25 overflow-hidden bg-white/98 backdrop-blur-md"
             style={{
               right: dir === 'rtl' ? 'auto' : '24px',
               left: dir === 'rtl' ? '24px' : 'auto',
@@ -288,16 +396,46 @@ export default function AiAssistant() {
                   <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#10B981] border-2 border-white" />
                 </div>
                 <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
-                  <h3 className="font-black text-sm text-[#3D364A] flex items-center gap-1.5">
-                    <span>{tc.title || 'أنيس المساعد الذكي 🦉'}</span>
-                    <Sparkles className="w-3.5 h-3.5 text-[#E8927C]" />
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-black text-sm text-[#3D364A] flex items-center gap-1.5">
+                      <span>{tc.title || 'أنيس المساعد الذكي 🦉'}</span>
+                    </h3>
+
+                    {/* Quota / Tier Badge */}
+                    {quota?.isPremium ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-900 shadow-2xs flex items-center gap-1">
+                        <Crown className="w-3 h-3 fill-current" />
+                        <span>VIP</span>
+                      </span>
+                    ) : isGuest ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        {lang === 'ar' ? 'وضع الزائر' : 'Guest'}
+                      </span>
+                    ) : quota && quota.remaining !== null ? (
+                      <button
+                        onClick={() => quota.remaining === 0 && setPremiumModalOpen(true)}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-black border flex items-center gap-1 transition-all ${
+                          quota.remaining > 0
+                            ? 'bg-purple-50 text-purple-700 border-purple-200'
+                            : 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse cursor-pointer'
+                        }`}
+                        title={quota.remaining === 0 ? 'اضغط للترقية إلى Premium' : ''}
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        <span>
+                          {lang === 'ar'
+                            ? `${quota.remaining}/${quota.max} اليوم`
+                            : `${quota.remaining}/${quota.max} today`}
+                        </span>
+                      </button>
+                    ) : null}
+                  </div>
                   <p className="text-[11px] text-[#6E647D] font-bold leading-normal">
                     {tc.subtitle || 'اسألني أي شيء وسأساعدك في دراستك!'}
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={handleClear}
@@ -321,9 +459,7 @@ export default function AiAssistant() {
                 <div
                   key={msg.id}
                   className={`flex items-start gap-2.5 ${
-                    msg.role === 'user'
-                      ? 'flex-row-reverse'
-                      : 'flex-row'
+                    msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'
                   }`}
                 >
                   {/* Avatar */}
@@ -334,11 +470,7 @@ export default function AiAssistant() {
                         : 'bg-[#95C5B2] text-[#1F3D33]'
                     }`}
                   >
-                    {msg.role === 'user' ? (
-                      <SmileAvatar />
-                    ) : (
-                      <Bot className="w-4 h-4" />
-                    )}
+                    {msg.role === 'user' ? <SmileAvatar /> : <Bot className="w-4 h-4" />}
                   </div>
 
                   {/* Bubble content */}
@@ -403,6 +535,32 @@ export default function AiAssistant() {
                 </div>
               ))}
 
+              {/* Guest CTA Card inside conversation */}
+              {isGuest && (
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-200/80 shadow-xs text-center space-y-2.5 my-2">
+                  <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 mx-auto flex items-center justify-center shadow-xs">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-xs font-black text-slate-800">
+                    {lang === 'ar'
+                      ? 'سجّل حسابك مجاناً للتحدث مع أنيس 🦉'
+                      : 'Create Free Account to Chat with Anis 🦉'}
+                  </h4>
+                  <p className="text-[11px] font-semibold text-slate-600 leading-snug">
+                    {lang === 'ar'
+                      ? 'احصل على 5 أسئلة ذكاء اصطناعي يومياً، واحفظ تقدمك ونقاطك في كل المواد!'
+                      : 'Get 5 free AI questions every day and save your child\'s XP & streaks!'}
+                  </p>
+                  <button
+                    onClick={() => setGuestModalOpen(true)}
+                    className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black text-xs shadow-md cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <span>{lang === 'ar' ? 'إنشاء حساب مجاني (30 ثانية) 🚀' : 'Create Free Account (30s) 🚀'}</span>
+                    <ArrowIcon className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+
               {/* Typing indicator */}
               {loading && (
                 <div className="flex items-start gap-2.5">
@@ -412,9 +570,18 @@ export default function AiAssistant() {
                   <div className="bg-[#F4FAF6] border border-[#95C5B2]/30 text-[#6E647D] px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-2">
                     <span className="text-[11px] font-black">{tc.aiTyping || 'أنيس يفكّر...'}</span>
                     <div className="flex gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span
+                        className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce"
+                        style={{ animationDelay: '0ms' }}
+                      />
+                      <span
+                        className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce"
+                        style={{ animationDelay: '150ms' }}
+                      />
+                      <span
+                        className="w-1.5 h-1.5 rounded-full bg-[#E8927C] animate-bounce"
+                        style={{ animationDelay: '300ms' }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -427,6 +594,10 @@ export default function AiAssistant() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                if (isGuest) {
+                  setGuestModalOpen(true);
+                  return;
+                }
                 handleSend(inputValue);
               }}
               className="p-3 sm:p-4 border-t border-[#F2ECE5] bg-[#FDF8F3] flex gap-2.5 items-center"
@@ -435,27 +606,63 @@ export default function AiAssistant() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={tc.placeholder || 'اكتب رسالة لأنيس...'}
-                className="flex-1 bg-white border border-[#E8927C]/25 text-[#3D364A] rounded-2xl py-2.5 px-4 text-xs font-bold focus:outline-none focus:border-[#E8927C] placeholder-[#A396B5] shadow-xs"
+                onClick={() => {
+                  if (isGuest) setGuestModalOpen(true);
+                }}
+                placeholder={
+                  isGuest
+                    ? (lang === 'ar'
+                        ? 'سجّل حساباً مجانياً للدردشة مع أنيس 🦉...'
+                        : 'Sign up free to chat with Anis 🦉...')
+                    : (tc.placeholder || 'اكتب رسالة لأنيس...')
+                }
+                readOnly={isGuest}
+                className={`flex-1 bg-white border border-[#E8927C]/25 text-[#3D364A] rounded-2xl py-2.5 px-4 text-xs font-bold focus:outline-none focus:border-[#E8927C] placeholder-[#A396B5] shadow-xs ${
+                  isGuest ? 'cursor-pointer bg-slate-50' : ''
+                }`}
               />
               <button
                 type="submit"
-                disabled={!inputValue.trim() || loading}
+                disabled={!isGuest && (!inputValue.trim() || loading)}
                 className="w-10 h-10 shrink-0 rounded-2xl bg-[#E8927C] hover:bg-[#D4785F] disabled:opacity-50 text-white flex items-center justify-center shadow-md cursor-pointer transition-all"
               >
-                <Send className="w-4 h-4" />
+                {isGuest ? <Lock className="w-4 h-4" /> : <Send className="w-4 h-4" />}
               </button>
             </form>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Guest Signup Modal */}
+      <GuestSignupModal
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        title={lang === 'ar' ? 'تحدث مع أنيس وسجّل مجاناً 🦉' : 'Chat with Anis & Sign up Free 🦉'}
+        subtitle={
+          lang === 'ar'
+            ? 'أنشئ حسابك المجاني في 30 ثانية للحصول على 5 أسئلة ذكاء اصطناعي يومياً وحفظ إنجازاتك!'
+            : 'Create your free account to get 5 daily AI questions and save all your progress!'
+        }
+      />
+
+      {/* Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        reason="ai_limit"
+      />
     </>
   );
 }
 
 function SmileAvatar() {
   return (
-    <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 fill-none stroke-current stroke-[2.5]" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      className="w-4.5 h-4.5 fill-none stroke-current stroke-[2.5]"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
     </svg>

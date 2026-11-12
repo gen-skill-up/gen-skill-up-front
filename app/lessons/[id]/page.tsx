@@ -8,6 +8,8 @@ import { lessonsApi, aiTutorApi } from '@/lib/api';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import OwlLogo from '../../components/Logo';
+import GuestSignupModal from '../../components/GuestSignupModal';
+import PremiumUpgradeModal from '../../components/PremiumUpgradeModal';
 import {
   BookOpen,
   ArrowRight,
@@ -51,6 +53,8 @@ function LessonDetailContent() {
   const [successData, setSuccessData] = useState<any | null>(null);
   const [lessonRead, setLessonRead] = useState(false);
   const [exercises, setExercises] = useState<LessonExercise[]>([]);
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -91,7 +95,10 @@ function LessonDetailContent() {
   }, [lessonId, childId]);
 
   const handleComplete = async () => {
-    if (!childId) return;
+    if (!childId) {
+      setGuestModalOpen(true);
+      return;
+    }
     setCompleting(true);
     try {
       const res = await lessonsApi.complete(lessonId, childId);
@@ -189,6 +196,32 @@ function LessonDetailContent() {
         ) : (
           <>
             <div className="max-w-3xl mx-auto px-6 py-10 w-full">
+
+            {/* Guest Banner */}
+            {!childId && (
+              <div className="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-amber-950 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">✨</span>
+                  <div>
+                    <p className="text-xs sm:text-sm font-black">
+                      {lesson.guestAccessible
+                        ? (lang === 'ar' ? 'أنت تشاهد هذا الدرس في وضع التجربة المجانية 🚀' : 'Vous consultez cette leçon en mode découverte 🚀')
+                        : (lang === 'ar' ? 'هذا الدرس متاح للأعضاء المسجلين مجاناً 🔒' : 'Cette leçon nécessite un compte gratuit 🔒')}
+                    </p>
+                    <p className="text-xs text-amber-800/80 font-medium mt-0.5">
+                      {lang === 'ar' ? 'أنشئ حساباً مجانياً لحفظ نقاطك وشاراتك ومتابعة تقدمك.' : 'Créez un compte gratuit pour enregistrer vos points.'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setGuestModalOpen(true)}
+                  className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-black text-xs px-4 py-2.5 rounded-xl shrink-0 transition-all shadow-xs cursor-pointer"
+                >
+                  {lang === 'ar' ? 'إنشاء حساب مجاني' : 'S\'inscrire gratuitement'}
+                </button>
+              </div>
+            )}
+
         {/* Lesson Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -429,7 +462,7 @@ function LessonDetailContent() {
                       <span>🔑</span>
                       <span>التمرين الإلزامي — مطلوب لفتح الدرس التالي</span>
                     </p>
-                    <Link href={`/exercises/${mandatoryExercise.id}?childId=${childId}&fromLesson=${lessonId}`}>
+                    <Link href={childId ? `/exercises/${mandatoryExercise.id}?childId=${childId}&fromLesson=${lessonId}` : `/exercises/${mandatoryExercise.id}?fromLesson=${lessonId}`}>
                       <motion.div
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -466,7 +499,7 @@ function LessonDetailContent() {
                     </p>
                     <div className="space-y-2.5">
                       {optionalExercises.map((ex) => (
-                        <Link key={ex.id} href={`/exercises/${ex.id}?childId=${childId}&fromLesson=${lessonId}`}>
+                        <Link key={ex.id} href={childId ? `/exercises/${ex.id}?childId=${childId}&fromLesson=${lessonId}` : `/exercises/${ex.id}?fromLesson=${lessonId}`}>
                           <motion.div
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
@@ -493,7 +526,7 @@ function LessonDetailContent() {
                 )}
 
                 {/* Back to Map */}
-                <Link href={`/lessons?childId=${childId}`}>
+                <Link href={childId ? `/lessons?childId=${childId}` : `/lessons`}>
                   <button className="w-full py-3.5 rounded-2xl text-sm font-black text-[#6E637C] hover:bg-[#FDF0EB] hover:text-[#E8927C] transition-all cursor-pointer border border-[#F2DDD0] bg-white flex items-center justify-center gap-2">
                     {dir === 'rtl' ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
                     <span>العودة إلى خريطة الدروس</span>
@@ -552,6 +585,20 @@ function LessonDetailContent() {
             </AnimatePresence>
           </>
         )}
+
+      {/* Tier 1 Guest Signup Modal */}
+      <GuestSignupModal
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        title={lang === 'ar' ? 'سجّل حسابك لحفظ نقاط الدرس!' : 'Inscris-toi pour sauvegarder tes points !'}
+        subtitle={lang === 'ar' ? 'أنشئ حساباً مجانياً لكسب النجوم ومتابعة باقي الدروس.' : 'Crée un compte gratuit pour continuer.'}
+      />
+
+      {/* Tier 3 Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+      />
     </div>
   );
 }

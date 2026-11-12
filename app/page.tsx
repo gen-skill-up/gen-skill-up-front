@@ -22,7 +22,9 @@ import {
   Check,
   Star,
   Sparkles,
-  HelpCircle
+  HelpCircle,
+  Crown,
+  XCircle,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -112,40 +114,46 @@ export default function HomePage() {
     setDemoStep((prev) => (prev + 1) % demoQuestions.length);
   };
 
-  // Streamlined Freemium Plans (3 Focused Tiers)
+  // 3-Tier Experience Architecture: Guest vs Free vs Premium
+  const guestPlanData = (t.pricing.plans as any).guest;
   const streamlinedPlans = [
+    {
+      key: 'guest',
+      name: guestPlanData?.name || (dir === 'rtl' ? '🚀 زائر (بدون تسجيل)' : '🚀 Guest (No Login)'),
+      price: '0',
+      periodLabel: dir === 'rtl' ? 'بدون تسجيل أو بطاقة' : 'No account or card needed',
+      desc: guestPlanData?.desc || (dir === 'rtl' ? 'تصفح المنصة وجرّب الدروس والتمارين فوراً دون الحاجة لإنشاء حساب أو بطاقة بنكية.' : 'Explore lessons and exercises instantly without registering or entering a card.'),
+      features: guestPlanData?.features || [
+        dir === 'rtl' ? 'تصفح كل السنوات الدراسية (1-6) وجميع المواد' : 'Browse all grades (1 to 6) and subjects',
+        dir === 'rtl' ? 'أول درسين من كل مادة مجاناً بالكامل' : 'First 2 lessons of every subject free',
+        dir === 'rtl' ? 'حل التمارين التطبيقية مع تصحيح فوري وتوضيح' : 'Interactive exercises with instant feedback',
+        dir === 'rtl' ? 'استكشاف الخريطة التعليمية بحرية' : 'Freely explore the curriculum map',
+      ],
+      isFree: true,
+      popular: false,
+      badgeText: dir === 'rtl' ? 'تجربة فورية ⚡' : 'Instant Try ⚡',
+      color: '#10B981',
+      bg: 'rgba(16,185,129,0.05)',
+      border: 'rgba(16,185,129,0.3)',
+      btnClass: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/20',
+      btnText: dir === 'rtl' ? 'تصفح الدروس مجاناً 🚀' : 'Explore Free Lessons 🚀',
+      btnHref: '/lessons',
+    },
     {
       key: 'free',
       name: t.pricing.plans.free.name,
       price: '0',
-      periodLabel: dir === 'rtl' ? 'مجاني دائماً' : 'Free forever',
+      periodLabel: dir === 'rtl' ? 'مجاني للأبد' : 'Free forever',
       desc: t.pricing.plans.free.desc,
       features: t.pricing.plans.free.features,
       isFree: true,
       popular: false,
       badgeText: t.pricing.freeBadge,
-      color: '#10B981',
-      bg: 'rgba(16,185,129,0.05)',
-      border: 'rgba(16,185,129,0.3)',
-      btnClass: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/20',
-      btnText: t.pricing.startFreeBtn,
-      btnHref: isLoggedIn ? '/dashboard' : '/auth/register',
-    },
-    {
-      key: 'primary',
-      name: t.pricing.plans.basic.name,
-      price: billingCycle === 'yearly' ? t.pricing.plans.basic.priceYearly : t.pricing.plans.basic.price,
-      periodLabel: billingCycle === 'yearly' ? (dir === 'rtl' ? 'د.ت / شهر (سنوياً)' : 'DT / mo (yearly)') : (dir === 'rtl' ? 'د.ت / شهر' : 'DT / month'),
-      desc: t.pricing.plans.basic.desc,
-      features: t.pricing.plans.basic.features,
-      isFree: false,
-      popular: true,
-      badgeText: t.pricing.popularBadge,
       color: '#8B5CF6',
       bg: 'rgba(139,92,246,0.06)',
       border: 'rgba(139,92,246,0.35)',
-      btnClass: 'bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white shadow-lg shadow-purple-500/25',
-      btnText: t.pricing.startBtn,
+      btnClass: 'bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white shadow-md shadow-purple-500/25',
+      btnText: isLoggedIn ? t.navbar.dashboardBtn : t.pricing.startFreeBtn,
       btnHref: isLoggedIn ? '/dashboard' : '/auth/register',
     },
     {
@@ -154,18 +162,15 @@ export default function HomePage() {
       price: billingCycle === 'yearly' ? t.pricing.plans.premium.priceYearly : t.pricing.plans.premium.price,
       periodLabel: billingCycle === 'yearly' ? (dir === 'rtl' ? 'د.ت / شهر (سنوياً)' : 'DT / mo (yearly)') : (dir === 'rtl' ? 'د.ت / شهر' : 'DT / month'),
       desc: t.pricing.plans.premium.desc,
-      features: [
-        ...t.pricing.plans.premium.features.slice(0, 3),
-        dir === 'rtl' ? 'اشتراك عائلي يشمل حتى 3 أطفال' : 'Includes up to 3 children'
-      ],
+      features: t.pricing.plans.premium.features,
       isFree: false,
-      popular: false,
-      badgeText: dir === 'rtl' ? 'دعم شامل 👑' : 'Full Support 👑',
-      color: '#F97316',
-      bg: 'rgba(249,115,22,0.05)',
-      border: 'rgba(249,115,22,0.25)',
-      btnClass: 'bg-white hover:bg-slate-50 text-slate-800 border-2 border-slate-300 shadow-sm',
-      btnText: t.pricing.startBtn,
+      popular: true,
+      badgeText: dir === 'rtl' ? 'النسخة المتكاملة 👑' : 'VIP Complete 👑',
+      color: '#F59E0B',
+      bg: 'rgba(245,158,11,0.06)',
+      border: 'rgba(245,158,11,0.4)',
+      btnClass: 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-black shadow-lg shadow-amber-400/25',
+      btnText: isLoggedIn ? (dir === 'rtl' ? 'الترقية إلى Premium 👑' : 'Upgrade to Premium 👑') : t.pricing.startBtn,
       btnHref: isLoggedIn ? '/dashboard' : '/auth/register',
     },
   ];
@@ -208,6 +213,13 @@ export default function HomePage() {
           {/* Quick Nav Links */}
           <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 border border-slate-200/80 shadow-xs">
             <Link
+              href="/lessons"
+              className="text-xs font-black px-3 py-1.5 rounded-full text-emerald-700 hover:text-emerald-800 hover:bg-white transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+              <span>{dir === 'rtl' ? 'تصفح الدروس مجاناً 🚀' : 'Browse Lessons Free 🚀'}</span>
+            </Link>
+            <Link
               href="#demo"
               className="text-xs font-extrabold px-3 py-1.5 rounded-full text-slate-600 hover:text-[var(--color-primary)] hover:bg-white transition-colors"
             >
@@ -219,7 +231,7 @@ export default function HomePage() {
             >
               <span>{t.navbar.pricing}</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-black">
-                {dir === 'rtl' ? 'مجاني' : 'Free'}
+                {dir === 'rtl' ? 'مقارنة الباقات' : 'Plans'}
               </span>
             </Link>
             <Link
@@ -290,6 +302,19 @@ export default function HomePage() {
               className="md:hidden px-6 pt-2 pb-4 border-t border-slate-200 bg-white/95 backdrop-blur-lg shadow-xl"
             >
               <div className="flex flex-col gap-1.5 py-2">
+                <Link
+                  href="/lessons"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3.5 py-2 rounded-xl font-black text-emerald-700 bg-emerald-50/80 hover:bg-emerald-100 transition-colors flex items-center justify-between"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-emerald-500" />
+                    <span>{dir === 'rtl' ? 'تصفح الدروس مجاناً' : 'Browse Lessons Free'}</span>
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-black">
+                    {dir === 'rtl' ? 'بدون تسجيل' : 'No Login'}
+                  </span>
+                </Link>
                 <Link
                   href="#demo"
                   onClick={() => setMobileMenuOpen(false)}
@@ -403,6 +428,13 @@ export default function HomePage() {
 
           {/* Action CTAs */}
           <div className="flex flex-wrap gap-2.5 justify-center items-center mb-6">
+            <Link href="/lessons">
+              <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer">
+                <Sparkles className="w-4 h-4 text-emerald-200" />
+                <span>{dir === 'rtl' ? 'جرّب الدروس الآن بدون تسجيل 🚀' : 'Try Free Lessons (No Login) 🚀'}</span>
+              </button>
+            </Link>
+
             <Link href={isLoggedIn ? '/dashboard' : '/auth/register'}>
               <button className="btn-primary text-xs sm:text-sm px-6 py-2.5 flex items-center gap-2 cursor-pointer shadow-md">
                 <Rocket className="w-4 h-4" />
@@ -411,19 +443,10 @@ export default function HomePage() {
               </button>
             </Link>
 
-            <Link href="#demo">
-              <button className="btn-secondary text-xs sm:text-sm px-5 py-2.5 cursor-pointer flex items-center gap-1.5 font-bold">
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span>{t.interactiveDemo.badge}</span>
-              </button>
-            </Link>
-
             <Link href="#pricing">
-              <button className="text-slate-600 hover:text-[var(--color-primary)] font-bold text-xs px-3.5 py-2.5 transition-colors flex items-center gap-1 cursor-pointer">
-                <span>{t.hero.seePricing}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-extrabold">
-                  {dir === 'rtl' ? '0 د.ت' : '0 DT'}
-                </span>
+              <button className="btn-secondary text-xs sm:text-sm px-4 py-2.5 cursor-pointer flex items-center gap-1.5 font-bold">
+                <Crown className="w-3.5 h-3.5 text-amber-500" />
+                <span>{dir === 'rtl' ? 'مقارنة الباقات الثلاث' : 'Compare 3 Tiers'}</span>
               </button>
             </Link>
           </div>
@@ -766,6 +789,157 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* 3-Tier Detailed Comparison Matrix */}
+          <div className="mt-12 bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-sm">
+            <div className="text-center mb-6">
+              <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-purple-100 text-purple-800 mb-2">
+                {dir === 'rtl' ? 'جدول المقارنة التفصيلي' : 'Detailed Comparison Table'}
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-800" style={{ fontFamily: 'Fredoka One, sans-serif' }}>
+                {dir === 'rtl' ? 'مقارنة دقيقة بين مستويات التجربة الثلاثة' : 'Compare All 3 Platform Experience Tiers'}
+              </h3>
+              <p className="text-xs text-slate-500 font-semibold max-w-md mx-auto mt-1">
+                {dir === 'rtl' ? 'يمكنك بدء التجربة فوراً دون تسجيل، ثم الترقية حسب احتياجات طفلك التعليمية' : 'Start instantly without registration, then unlock more as your child progresses'}
+              </p>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-start border-collapse min-w-[580px]">
+                <thead>
+                  <tr className="border-b-2 border-slate-100 text-slate-600">
+                    <th className="py-3 px-3.5 text-start font-black text-slate-700">{dir === 'rtl' ? 'الخاصية / الإمكانية' : 'Feature / Capability'}</th>
+                    <th className="py-3 px-3 text-center font-black text-emerald-800 bg-emerald-50/60 rounded-t-2xl w-1/4">
+                      <div className="flex flex-col items-center">
+                        <span>{dir === 'rtl' ? 'زائر بدون تسجيل' : 'Guest (No Login)'}</span>
+                        <span className="text-[10px] font-extrabold text-emerald-600 mt-0.5">{dir === 'rtl' ? '0 د.ت فوري' : '0 DT Free'}</span>
+                      </div>
+                    </th>
+                    <th className="py-3 px-3 text-center font-black text-purple-800 bg-purple-50/60 rounded-t-2xl w-1/4">
+                      <div className="flex flex-col items-center">
+                        <span>{dir === 'rtl' ? 'حساب مجاني مسجّل' : 'Free Registered'}</span>
+                        <span className="text-[10px] font-extrabold text-purple-600 mt-0.5">{dir === 'rtl' ? '0 د.ت دائم' : '0 DT Forever'}</span>
+                      </div>
+                    </th>
+                    <th className="py-3 px-3 text-center font-black text-amber-900 bg-amber-50/70 rounded-t-2xl w-1/4">
+                      <div className="flex flex-col items-center">
+                        <span className="flex items-center gap-1">
+                          <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                          <span>Premium VIP</span>
+                        </span>
+                        <span className="text-[10px] font-extrabold text-amber-700 mt-0.5">15 {dir === 'rtl' ? 'د.ت / شهر' : 'DT / mo'}</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-semibold text-slate-700">
+                  {[
+                    {
+                      label: dir === 'rtl' ? 'تصفح كل السنوات (1-6) والمواد' : 'Browse all grades (1-6) & subjects',
+                      guest: { text: dir === 'rtl' ? 'متاح بالكامل' : 'Full access', ok: true },
+                      free: { text: dir === 'rtl' ? 'متاح بالكامل' : 'Full access', ok: true },
+                      premium: { text: dir === 'rtl' ? 'متاح بالكامل' : 'Full access', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'الدروس التعليمية المتاحة' : 'Available lessons',
+                      guest: { text: dir === 'rtl' ? 'أول درسين من كل مادة' : 'First 2 lessons/subject', ok: true },
+                      free: { text: dir === 'rtl' ? 'كامل دروس المنهج' : 'All standard lessons', ok: true },
+                      premium: { text: dir === 'rtl' ? 'كامل المنهج + إثرائية' : 'All lessons + enriched', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'حل التمارين والتصحيح الفوري' : 'Practice exercises & instant scoring',
+                      guest: { text: dir === 'rtl' ? 'تمارين أول درسين مجاناً' : 'First 2 lessons exercises', ok: true },
+                      free: { text: dir === 'rtl' ? 'جميع التمارين المنهجية' : 'All curriculum exercises', ok: true },
+                      premium: { text: dir === 'rtl' ? 'كل التمارين + التحديات 👑' : 'All exercises + Challenges 👑', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'حفظ نقاط XP والنجوم والأوسمة' : 'Save XP, badges & streaks',
+                      guest: { text: dir === 'rtl' ? 'عرض مؤقت فقط' : 'Session only', ok: false },
+                      free: { text: dir === 'rtl' ? 'حفظ دائم في الحساب' : 'Permanently saved', ok: true },
+                      premium: { text: dir === 'rtl' ? 'حفظ دائم ومضاعف' : 'Permanently saved', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'المساعد الذكي أنيس 🦉' : 'AI Tutor Anis 🦉',
+                      guest: { text: dir === 'rtl' ? 'يتطلب إنشاء حساب' : 'Requires free signup', ok: false },
+                      free: { text: dir === 'rtl' ? '5 أسئلة يومياً مجاناً' : '5 questions / day', ok: true },
+                      premium: { text: dir === 'rtl' ? 'غير محدود 24/7' : 'Unlimited 24/7', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'توليد تمارين ذكية مخصصة بالـ AI' : 'Adaptive AI exercise generation',
+                      guest: { text: dir === 'rtl' ? 'غير متاح' : 'Not available', ok: false },
+                      free: { text: dir === 'rtl' ? 'غير متاح' : 'Not available', ok: false },
+                      premium: { text: dir === 'rtl' ? 'غير محدود وبلا سقف 🚀' : 'Unlimited on demand 🚀', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'لوحة الشرف وتحدي الأصدقاء' : 'Leaderboard & social groups',
+                      guest: { text: dir === 'rtl' ? 'غير متاح' : 'Not available', ok: false },
+                      free: { text: dir === 'rtl' ? 'متاح بالكامل' : 'Full access', ok: true },
+                      premium: { text: dir === 'rtl' ? 'شارة التاج الذهبي VIP 👑' : 'VIP Crown badge 👑', ok: true },
+                    },
+                    {
+                      label: dir === 'rtl' ? 'لوحة تحكم ولي الأمر والإحصائيات' : 'Parent dashboard & analytics',
+                      guest: { text: dir === 'rtl' ? 'غير متاح' : 'Not available', ok: false },
+                      free: { text: dir === 'rtl' ? 'تقارير أساسية' : 'Basic stats', ok: true },
+                      premium: { text: dir === 'rtl' ? 'تقارير تحليلية متقدمة' : 'Deep analytics & tips', ok: true },
+                    },
+                  ].map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="py-3 px-3.5 text-slate-800 font-bold">{row.label}</td>
+                      <td className="py-3 px-3 text-center bg-emerald-50/20">
+                        <div className="inline-flex items-center gap-1.5 text-[11px]">
+                          {row.guest.ok ? (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          ) : (
+                            <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          )}
+                          <span className={row.guest.ok ? 'text-slate-700' : 'text-slate-400'}>{row.guest.text}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-center bg-purple-50/20">
+                        <div className="inline-flex items-center gap-1.5 text-[11px]">
+                          {row.free.ok ? (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                          ) : (
+                            <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          )}
+                          <span className={row.free.ok ? 'text-slate-700' : 'text-slate-400'}>{row.free.text}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-center bg-amber-50/30">
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-900">
+                          {row.premium.ok ? (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          ) : (
+                            <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          )}
+                          <span>{row.premium.text}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Quick Action Footer for Matrix */}
+            <div className="mt-6 pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <span className="text-slate-500 font-bold">
+                {dir === 'rtl' ? 'هل تريد استكشاف المحتوى بنفسك أولاً؟' : 'Want to explore the content yourself first?'}
+              </span>
+              <div className="flex items-center gap-2">
+                <Link href="/lessons">
+                  <button className="px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-black border border-emerald-200 transition-all cursor-pointer">
+                    {dir === 'rtl' ? 'تصفح الدروس مجاناً 🚀' : 'Browse Lessons Free 🚀'}
+                  </button>
+                </Link>
+                <Link href={isLoggedIn ? '/dashboard' : '/auth/register'}>
+                  <button className="px-4 py-2 rounded-xl bg-[var(--color-primary)] hover:bg-[#d97c66] text-white font-black transition-all cursor-pointer shadow-xs">
+                    {isLoggedIn ? t.navbar.dashboardBtn : (dir === 'rtl' ? 'إنشاء حساب مجاني' : 'Create Free Account')}
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

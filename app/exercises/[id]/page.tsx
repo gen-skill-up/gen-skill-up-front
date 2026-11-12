@@ -8,6 +8,8 @@ import { exercisesApi, authApi } from '@/lib/api';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import OwlLogo from '../../components/Logo';
+import GuestSignupModal from '../../components/GuestSignupModal';
+import PremiumUpgradeModal from '../../components/PremiumUpgradeModal';
 import {
   Brain,
   ArrowRight,
@@ -100,6 +102,7 @@ function ExerciseDetailContent() {
   }, [searchParams]);
 
   const [premiumGate, setPremiumGate] = useState(false);
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
 
   useEffect(() => {
     if (!exerciseId) return;
@@ -157,7 +160,6 @@ function ExerciseDetailContent() {
   };
 
   const handleSubmit = async () => {
-    if (!childId) return;
     setSubmitting(true);
     
     const payload = Object.entries(selectedAnswers).map(([qIdxStr, val]) => {
@@ -191,10 +193,13 @@ function ExerciseDetailContent() {
     });
 
     try {
-      const res = await exercisesApi.submit(exerciseId, childId, payload as any);
+      const res = await exercisesApi.submit(exerciseId, childId || undefined, payload as any);
       setFeedback(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      if (err.response?.status === 403 || err.response?.data?.error === 'PREMIUM_REQUIRED') {
+        setPremiumGate(true);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -1004,17 +1009,32 @@ function ExerciseDetailContent() {
                 </div>
               </div>
 
-              {/* Score Rewards */}
-              <div className={`flex items-center gap-4 py-2 justify-center`}>
-                <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FDF0EB] border border-[#F2DDD0] shadow-xs">
-                  <Award className="w-4 h-4 text-[#E8927C]" />
-                  <span className="text-[#E8927C] font-black">+{feedback.pointsAwarded} XP</span>
+              {/* Score Rewards / Guest Callout */}
+              {feedback.isGuest ? (
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 text-center space-y-2.5 my-2">
+                  <p className="text-xs sm:text-sm font-black text-amber-950">
+                    {feedback.message || (lang === 'ar' ? 'أحسنت! أنشئ حساباً مجانياً الآن لحفظ نقاطك ونجومك في لوحة المتصدرين 🏆' : 'Bravo ! Crée un compte pour sauvegarder tes points 🏆')}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setGuestModalOpen(true)}
+                    className="btn-primary text-xs py-2 px-5 rounded-xl cursor-pointer"
+                  >
+                    {lang === 'ar' ? 'إنشاء حساب مجاني لحفظ النتيجة 🎁' : 'Créer un compte pour sauvegarder 🎁'}
+                  </button>
                 </div>
-                <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FEF8EC] border border-[#F6E3B8] shadow-xs">
-                  <Star className="w-4 h-4 text-[#D4A75E] fill-[#D4A75E]" />
-                  <span className="text-[#8A601B] font-black">+{feedback.starsAwarded} {t.dashboard.stars || "نجوم"}</span>
+              ) : (
+                <div className={`flex items-center gap-4 py-2 justify-center`}>
+                  <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FDF0EB] border border-[#F2DDD0] shadow-xs">
+                    <Award className="w-4 h-4 text-[#E8927C]" />
+                    <span className="text-[#E8927C] font-black">+{feedback.pointsAwarded} XP</span>
+                  </div>
+                  <div className="rounded-2xl px-4 py-2 flex items-center gap-1.5 text-sm bg-[#FEF8EC] border border-[#F6E3B8] shadow-xs">
+                    <Star className="w-4 h-4 text-[#D4A75E] fill-[#D4A75E]" />
+                    <span className="text-[#8A601B] font-black">+{feedback.starsAwarded} {t.dashboard.stars || "نجوم"}</span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Correction details */}
               <div className="space-y-4 text-right" style={{ direction: dir }}>
@@ -1052,7 +1072,7 @@ function ExerciseDetailContent() {
                 )}
               </div>
 
-              <Link href={fromLesson ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons?childId=${childId}`}>
+              <Link href={fromLesson ? (childId ? `/lessons/${fromLesson}?childId=${childId}` : `/lessons/${fromLesson}`) : (childId ? `/lessons?childId=${childId}` : `/lessons`)}>
                 <button className="btn-primary w-full py-4 font-black cursor-pointer mt-4 shadow-sm hover:shadow-md transition-all">
                   <span>
                     {fromLesson
@@ -1066,6 +1086,21 @@ function ExerciseDetailContent() {
         </motion.div>
       </div>
         )}
+
+      {/* Tier 1 Guest Signup Modal */}
+      <GuestSignupModal
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        title={lang === 'ar' ? 'سجّل حسابك لحفظ نتيجتك!' : 'Inscris-toi pour sauvegarder ton score !'}
+        subtitle={lang === 'ar' ? 'أنشئ حساباً مجانياً لكسب XP والنجوم والظهور في لوحة الصدارة.' : 'Crée un compte gratuit pour enregistrer tes progrès.'}
+      />
+
+      {/* Tier 3 Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={premiumGate}
+        onClose={() => setPremiumGate(false)}
+        reason="exercise_locked"
+      />
     </div>
   );
 }

@@ -205,6 +205,12 @@ function ExercisesContent() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/lessons');
+        return;
+      }
+
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
       if (id) {
         setChildId(id);

@@ -371,16 +371,42 @@ export const en: TranslationType = {
     noCreditCard: "No credit card needed • Cancel anytime",
     featuresTitle: "Included features:",
     plans: {
-      free: {
-        name: "🌱 Freemium Free Tier",
+      guest: {
+        name: "🚀 Guest (No Login)",
         price: "0",
         priceYearly: "0",
-        desc: "Start learning right now with zero commitment or payment info needed.",
+        desc: "Explore the platform, browse grades, and try lessons and exercises immediately with no signup required.",
         features: [
-          "5 complete interactive lessons in Math & Languages",
-          "3 adaptive AI exercises per day",
-          "Initial smart placement & diagnostic test",
-          "Essential parent & student dashboard"
+          "Browse all grades (1 to 6) and all subjects",
+          "First 2 lessons of every subject 100% free",
+          "Interactive exercises with instant feedback",
+          "No account or payment info required"
+        ]
+      },
+      free: {
+        name: "🌱 Free Registered Account",
+        price: "0",
+        priceYearly: "0",
+        desc: "Sign up for free to unlock the full curriculum, save your child's XP, badges, and streaks, and use the AI tutor.",
+        features: [
+          "All Guest benefits included +",
+          "Sequential access to all standard lessons",
+          "Save XP, stars, badges, and daily streaks",
+          "AI Tutor Anis (5 questions per day)",
+          "Compete on leaderboards & add friends"
+        ]
+      },
+      premium: {
+        name: "👑 Premium VIP",
+        price: "15",
+        priceYearly: "12",
+        desc: "Unlimited complete learning experience with unrestricted generative AI and all challenge exercises.",
+        features: [
+          "All Free Account benefits included +",
+          "Unlimited access to all challenge exercises & exams 👑",
+          "Unlimited AI Tutor chats & custom AI exercise generation",
+          "Golden VIP crown on profile & leaderboard",
+          "Advanced analytics & reports for parents"
         ]
       },
       basic: {
@@ -407,7 +433,7 @@ export const en: TranslationType = {
           "Builds critical thinking and problem-solving autonomy"
         ]
       },
-      premium: {
+      support: {
         name: "🟣 GenSkillUp Premium Support",
         price: "89",
         priceYearly: "71",

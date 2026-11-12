@@ -371,16 +371,42 @@ export const fr: TranslationType = {
     noCreditCard: "Sans carte bancaire • Annulation facile",
     featuresTitle: "Fonctionnalités incluses :",
     plans: {
-      free: {
-        name: "🌱 Formule Gratuite (Freemium)",
+      guest: {
+        name: "🚀 Visiteur (Sans Connexion)",
         price: "0",
         priceYearly: "0",
-        desc: "Accédez gratuitement aux bases de la plateforme sans aucune carte de crédit.",
+        desc: "Découvrez la plateforme, naviguez entre les niveaux et essayez les cours et exercices immédiatement sans inscription.",
         features: [
-          "5 leçons interactives complètes en maths et langues",
-          "3 exercices intelligents adaptatifs par jour",
-          "Test diagnostique de niveau initial",
-          "Tableau de bord de suivi essentiel"
+          "Accès à tous les niveaux (1 à 6) et toutes les matières",
+          "Les 2 premières leçons de chaque matière gratuites",
+          "Exercices interactifs avec correction immédiate",
+          "Sans carte bancaire et sans inscription"
+        ]
+      },
+      free: {
+        name: "🌱 Compte Gratuit Inscrit",
+        price: "0",
+        priceYearly: "0",
+        desc: "Créez un compte gratuit pour débloquer tout le programme, sauvegarder les points XP, badges et séries, et utiliser le tuteur IA.",
+        features: [
+          "Tous les avantages du mode visiteur +",
+          "Accès séquentiel à toutes les leçons du programme",
+          "Sauvegarde permanente des XP, étoiles et badges",
+          "Tuteur IA Anis (5 questions par jour)",
+          "Classement d'honneur et ajout d'amis"
+        ]
+      },
+      premium: {
+        name: "👑 Formule Premium VIP",
+        price: "15",
+        priceYearly: "12",
+        desc: "L'expérience d'apprentissage ultime et illimitée avec IA générative sans restriction et tous les exercices de défi.",
+        features: [
+          "Tous les avantages du compte gratuit +",
+          "Accès illimité à tous les exercices et examens de défi 👑",
+          "Tuteur IA Anis en illimité et génération d'exercices sur mesure",
+          "Badge couronne dorée VIP et classement d'honneur",
+          "Rapports détaillés et analyses avancées pour les parents"
         ]
       },
       basic: {
@@ -407,7 +433,7 @@ export const fr: TranslationType = {
           "Développe l'esprit critique et la méthode de travail"
         ]
       },
-      premium: {
+      support: {
         name: "🟣 GenSkillUp Premium Support",
         price: "89",
         priceYearly: "71",

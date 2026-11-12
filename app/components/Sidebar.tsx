@@ -9,6 +9,7 @@ import { childrenApi } from '@/lib/api';
 import OwlLogo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 import AiAssistant from './AiAssistant';
+import PremiumUpgradeModal from './PremiumUpgradeModal';
 import {
   Home,
   BookOpen,
@@ -84,6 +85,8 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
   const childDropdownRef = useRef<HTMLDivElement>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [userRole, setUserRole] = useState<string>('CHILD');
+  const [isUserPremium, setIsUserPremium] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
 
   // Hydrate collapsed state and userRole from localStorage on mount
   useEffect(() => {
@@ -96,6 +99,7 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       try {
         const user = JSON.parse(userStr);
         setUserRole(user.role || 'CHILD');
+        setIsUserPremium(!!user.isPremium);
       } catch (e) {
         console.error(e);
       }
@@ -432,30 +436,48 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
 
       {/* Bottom Part (Pastel CTA card & actions) */}
       <div className="space-y-3 pt-3 border-t border-[#D5E3DB]">
-        {/* Cute Motivational / Star Club Card (Inspired by reference "Go Premium" card) */}
+        {/* Motivational / Premium Tier Card */}
         {!isCollapsedMode && (
-          <div 
-            className="p-3.5 rounded-2xl relative overflow-hidden text-center shadow-xs"
-            style={{
-              background: 'linear-gradient(135deg, #FDDECF 0%, #FBEBE1 100%)',
-              border: '1.5px solid rgba(232, 146, 124, 0.35)',
-            }}
-          >
-            <div className="w-10 h-10 rounded-xl bg-white shadow-xs mx-auto mb-2 flex items-center justify-center">
-              <Crown className="w-5 h-5 text-[#E8927C] fill-[#E8927C]" />
+          isUserPremium ? (
+            <div 
+              className="p-3.5 rounded-2xl relative overflow-hidden text-center shadow-xs bg-gradient-to-tr from-amber-100 to-yellow-100 border border-amber-300"
+            >
+              <div className="w-10 h-10 rounded-xl bg-white shadow-xs mx-auto mb-2 flex items-center justify-center">
+                <Crown className="w-5 h-5 text-amber-500 fill-amber-400" />
+              </div>
+              <h5 className="font-black text-xs text-amber-900 flex items-center justify-center gap-1">
+                <span>{dir === 'rtl' ? 'عضوية Premium VIP 👑' : 'Membre Premium VIP 👑'}</span>
+              </h5>
+              <p className="text-[11px] font-bold text-amber-800/80 mt-0.5">
+                {dir === 'rtl' ? 'وصول كامل وغير محدود لكافة التمارين والـ AI' : 'Accès illimité aux exercices et à l\'IA'}
+              </p>
             </div>
-            <h5 className="font-black text-xs text-[#4A3830]">
-              {dir === 'rtl' ? 'نادي النجوم 🌟' : 'Club des Étoiles 🌟'}
-            </h5>
-            <p className="text-[11px] font-bold text-[#7E655C] mt-0.5 mb-2.5">
-              {dir === 'rtl' ? 'أكمل التمارين لتفتح شارات جديدة!' : 'Termine les exercices et gagne des badges !'}
-            </p>
-            <Link href={activeChildId ? `/challenges?childId=${activeChildId}` : '/challenges'}>
-              <button className="w-full py-1.5 px-3 rounded-xl bg-[#E8927C] hover:bg-[#D4785F] text-white text-xs font-black shadow-sm transition-all cursor-pointer">
-                {dir === 'rtl' ? 'اكتشف التحديات 🚀' : 'Voir les Défis 🚀'}
+          ) : (
+            <div 
+              className="p-3.5 rounded-2xl relative overflow-hidden text-center shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #FDDECF 0%, #FBEBE1 100%)',
+                border: '1.5px solid rgba(232, 146, 124, 0.35)',
+              }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-white shadow-xs mx-auto mb-2 flex items-center justify-center">
+                <Crown className="w-5 h-5 text-[#E8927C] fill-[#E8927C]" />
+              </div>
+              <h5 className="font-black text-xs text-[#4A3830]">
+                {dir === 'rtl' ? 'الترقية إلى Premium 👑' : 'Passez à Premium 👑'}
+              </h5>
+              <p className="text-[11px] font-bold text-[#7E655C] mt-0.5 mb-2.5">
+                {dir === 'rtl' ? 'افتح جميع التمارين التحديّة والذكاء الاصطناعي بلا سقف!' : 'Débloquez tous les exercices et l\'IA illimitée !'}
+              </p>
+              <button 
+                onClick={() => setPremiumModalOpen(true)}
+                className="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 text-xs font-black shadow-sm transition-all cursor-pointer flex items-center justify-center gap-1"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{dir === 'rtl' ? 'ترقية الحساب الآن ✨' : 'Passer à Premium ✨'}</span>
               </button>
-            </Link>
-          </div>
+            </div>
+          )
         )}
 
         {/* Language Switcher */}
@@ -625,6 +647,12 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        reason="general"
+      />
       <AiAssistant />
     </>
   );

@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { lessonsApi, childrenApi } from '@/lib/api';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import Logo from '../components/Logo';
+import GuestSignupModal from '../components/GuestSignupModal';
+import PremiumUpgradeModal from '../components/PremiumUpgradeModal';
 import {
   BookOpen,
   CheckCircle,
@@ -58,6 +60,8 @@ interface Lesson {
   subTopic: string;
   content: any;
   exercises: LessonExercise[];
+  guestAccessible?: boolean;
+  requiresLogin?: boolean;
 }
 
 interface Child {
@@ -335,6 +339,9 @@ function LessonsContent() {
   const [activeLessonPopover, setActiveLessonPopover] = useState<string | null>(null);
   const [isGradeDropdownOpen, setIsGradeDropdownOpen] = useState(false);
   const [comingSoonSubject, setComingSoonSubject] = useState<string | null>(null);
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
+  const [guestModalReason, setGuestModalReason] = useState<{ title?: string; subtitle?: string }>({});
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
 
   // Social & Leaderboard States
   const [leaderboard, setLeaderboard] = useState<any>(null);
@@ -696,24 +703,45 @@ function LessonsContent() {
           </div>
         </div>
 
-        {/* Guest / No-Child Preview Mode Notice */}
+        {/* Tier 1: Guest Discovery Mode Notice */}
         {!childId && (
-          <div className="bg-amber-50/95 border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-amber-900 text-sm font-bold shadow-xs">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🌟</span>
-              <span>
-                {lang === 'ar'
-                  ? 'أنت تستعرض الدروس حالياً في وضع المعاينة. اختر أو أضف ملف طفل من لوحة التحكم لحفظ تقدمه ومتابعة إنجازاته.'
-                  : lang === 'fr'
-                  ? 'Vous prévisualisez les leçons. Sélectionnez ou ajoutez un profil enfant depuis le tableau de bord pour enregistrer ses progrès.'
-                  : 'You are viewing lessons in preview mode. Select or add a child profile from dashboard to save progress.'}
-              </span>
+          <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-2 border-amber-200/80 rounded-3xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 text-amber-950 text-sm font-bold shadow-sm relative overflow-hidden">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-600 flex items-center justify-center text-2xl shrink-0 border border-amber-300">
+                🚀
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-xs font-black uppercase tracking-wider bg-amber-200/70 text-amber-900 px-2.5 py-0.5 rounded-full">
+                    {lang === 'ar' ? 'وضع التجربة المجانية' : lang === 'fr' ? 'Mode Découverte' : 'Free Preview Mode'}
+                  </span>
+                  <span className="text-xs text-amber-700/80 font-extrabold">
+                    {lang === 'ar' ? 'أول درسين متاحان بدون تسجيل' : lang === 'fr' ? '2 premières leçons gratuites' : 'First 2 lessons free'}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-amber-900/90 font-medium">
+                  {lang === 'ar'
+                    ? 'جرّب الدروس والتمارين التفاعلية بحرية! أنشئ حساباً مجانياً لفتح كامل المنهج وحفظ نقاطك وشاراتك.'
+                    : lang === 'fr'
+                    ? 'Explore librement les leçons et exercices ! Crée un compte gratuit pour débloquer tout le programme et sauvegarder tes points.'
+                    : 'Try lessons and interactive exercises for free! Sign up free to unlock the entire curriculum and save your streak.'}
+                </p>
+              </div>
             </div>
-            <Link href="/dashboard">
-              <button className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-black px-4 py-2 rounded-xl shrink-0 transition-all shadow-xs cursor-pointer">
-                {lang === 'ar' ? 'لوحة التحكم' : lang === 'fr' ? 'Tableau de bord' : 'Dashboard'}
+            <div className="flex items-center gap-2.5 w-full md:w-auto shrink-0 justify-end">
+              <button
+                onClick={() => {
+                  setGuestModalReason({
+                    title: lang === 'ar' ? 'افتح كامل المنهج مجاناً!' : 'Débloque tout le programme !',
+                    subtitle: lang === 'ar' ? 'أنشئ حسابك في ثوانٍ لمتابعة جميع الدروس وحفظ نقاطك' : 'Crée ton compte pour accéder à toutes les leçons',
+                  });
+                  setGuestModalOpen(true);
+                }}
+                className="w-full md:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>{lang === 'ar' ? 'إنشاء حساب مجاني 🎁' : lang === 'fr' ? 'Créer un compte 🎁' : 'Sign Up Free 🎁'}</span>
               </button>
-            </Link>
+            </div>
           </div>
         )}
 
@@ -1122,8 +1150,18 @@ function LessonsContent() {
 
                           {/* Visible Lesson Title Badge below button */}
                           <div
-                            className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 text-center pointer-events-none select-none z-10"
+                            className="absolute -bottom-9 left-1/2 -translate-x-1/2 w-48 text-center pointer-events-none select-none z-10 flex flex-col items-center gap-0.5"
                           >
+                            {!childId && lesson.guestAccessible && (
+                              <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                                {lang === 'ar' ? 'تجربة مجانية ✨' : 'Essai Gratuit ✨'}
+                              </span>
+                            )}
+                            {!childId && lesson.requiresLogin && (
+                              <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
+                                {lang === 'ar' ? '🔒 سجّل للمتابعة' : '🔒 Compte Requis'}
+                              </span>
+                            )}
                             <span
                               className={`inline-block px-2.5 py-1 rounded-xl text-[11px] font-black leading-tight shadow-xs border transition-all truncate max-w-full ${
                                 state === 'active'
@@ -1163,10 +1201,32 @@ function LessonsContent() {
                                 <div className="my-3.5 h-[1px] bg-[#F4EBE3]" />
 
                                 {state === 'locked' ? (
-                                  <div className="text-center text-sm font-extrabold text-[#A49AA7] py-2 flex items-center justify-center gap-1.5">
-                                    <Lock className="w-4 h-4 text-rose-400" />
-                                    <span>{t.lessons.lockedLesson}</span>
-                                  </div>
+                                  lesson.requiresLogin ? (
+                                    <div className="space-y-2.5 text-center">
+                                      <div className="bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5">
+                                        <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+                                        <span>{lang === 'ar' ? 'يتطلب حساباً مجانياً للمتابعة' : 'Compte gratuit requis'}</span>
+                                      </div>
+                                      <button
+                                        onClick={() => {
+                                          setActiveLessonPopover(null);
+                                          setGuestModalReason({
+                                            title: lang === 'ar' ? `فتح درس: ${lesson.title}` : `Débloquer la leçon : ${lesson.title}`,
+                                            subtitle: lang === 'ar' ? 'سجّل حسابك مجاناً لمتابعة هذا الدرس وجميع دروس المنهج!' : 'Inscris-toi gratuitement pour accéder à toutes les leçons !',
+                                          });
+                                          setGuestModalOpen(true);
+                                        }}
+                                        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-black py-2.5 rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                                      >
+                                        <span>{lang === 'ar' ? 'سجّل مجاناً لفتح الدرس 🚀' : 'Créer un compte pour continuer 🚀'}</span>
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="text-center text-sm font-extrabold text-[#A49AA7] py-2 flex items-center justify-center gap-1.5">
+                                      <Lock className="w-4 h-4 text-rose-400" />
+                                      <span>{t.lessons.lockedLesson}</span>
+                                    </div>
+                                  )
                                 ) : (
                                   <div className="space-y-3">
                                     <div className="flex justify-around items-center text-xs text-[#6E637C] font-black">
@@ -1181,7 +1241,11 @@ function LessonsContent() {
                                     </div>
                                     <Link href={childId ? `/lessons/${lesson.id}?childId=${childId}` : `/lessons/${lesson.id}`}>
                                       <button className="w-full bg-[#E8927C] hover:bg-[#D97D67] text-white text-sm font-black py-2.5 rounded-2xl shadow-md border-b-2 border-[#C9725C] cursor-pointer block transition-all active:translate-y-0.5">
-                                        {state === 'completed' ? '🔄 مراجعة الدرس' : t.lessons.startLessonBtn}
+                                        {state === 'completed'
+                                          ? '🔄 مراجعة الدرس'
+                                          : !childId && lesson.guestAccessible
+                                            ? (lang === 'ar' ? '🚀 بدء الدرس (تجربة مجانية)' : '🚀 Commencer (Essai Gratuit)')
+                                            : t.lessons.startLessonBtn}
                                       </button>
                                     </Link>
                                   </div>
@@ -1584,6 +1648,20 @@ function LessonsContent() {
         </div>
 
       </div>
+
+      {/* Tier 1 Guest Signup Modal */}
+      <GuestSignupModal
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        title={guestModalReason.title}
+        subtitle={guestModalReason.subtitle}
+      />
+
+      {/* Tier 3 Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+      />
 
     </div>
   );
