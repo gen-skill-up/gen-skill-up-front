@@ -58,6 +58,12 @@ function LessonDetailContent() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (!token || token === 'null' || token === 'undefined') {
+        setChildId(null);
+        localStorage.removeItem('activeChildId');
+        return;
+      }
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
       if (id) {
         setChildId(id);

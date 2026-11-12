@@ -373,12 +373,21 @@ function LessonsContent() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      // If user is not authenticated, they are in Guest Mode
+      if (!token || token === 'null' || token === 'undefined') {
+        setChildId(null);
+        setChild(null);
+        localStorage.removeItem('activeChildId');
+        return;
+      }
+
       const id = searchParams.get('childId') || localStorage.getItem('activeChildId');
       if (id) {
         setChildId(id);
         localStorage.setItem('activeChildId', id);
       } else {
-        // Fallback: auto-detect first child profile
+        // Fallback: auto-detect first child profile for logged-in user
         childrenApi
           .list()
           .then((res) => {
@@ -399,7 +408,8 @@ function LessonsContent() {
   }, [searchParams]);
 
   const fetchLeaderboard = () => {
-    if (!childId) return;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token || !childId) return;
     childrenApi
       .getLeaderboard(childId)
       .then((res) => {
@@ -409,7 +419,11 @@ function LessonsContent() {
   };
 
   useEffect(() => {
-    if (!childId) return;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token || !childId) {
+      setChild(null);
+      return;
+    }
     childrenApi
       .get(childId)
       .then((res) => {
@@ -421,9 +435,10 @@ function LessonsContent() {
         }
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Failed to load child:', err);
         if (typeof window !== 'undefined') localStorage.removeItem('activeChildId');
-        router.push('/dashboard');
+        setChildId(null);
+        setChild(null);
       });
   }, [childId]);
 

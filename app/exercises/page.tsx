@@ -152,6 +152,12 @@ function ExercisesContent() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (!token || token === 'null' || token === 'undefined') {
+        setIsUserPremium(false);
+        return;
+      }
+
       const userStr = localStorage.getItem('user');
       if (userStr) {
         try {
@@ -159,23 +165,24 @@ function ExercisesContent() {
           setIsUserPremium(!!u.isPremium);
         } catch (e) {}
       }
-    }
-    authApi.profile()
-      .then((res) => {
-        if (res.data) {
-          setIsUserPremium(!!res.data.isPremium);
-          const userStr = localStorage.getItem('user');
-          if (userStr) {
-            try {
-              const u = JSON.parse(userStr);
-              u.isPremium = res.data.isPremium;
-              u.plan = res.data.plan;
-              localStorage.setItem('user', JSON.stringify(u));
-            } catch (e) {}
+
+      authApi.profile()
+        .then((res) => {
+          if (res.data) {
+            setIsUserPremium(!!res.data.isPremium);
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+              try {
+                const u = JSON.parse(userStr);
+                u.isPremium = res.data.isPremium;
+                u.plan = res.data.plan;
+                localStorage.setItem('user', JSON.stringify(u));
+              } catch (e) {}
+            }
           }
-        }
-      })
-      .catch(() => {});
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const handleToggleDemoPremium = async () => {

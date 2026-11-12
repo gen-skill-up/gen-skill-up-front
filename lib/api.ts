@@ -8,20 +8,41 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token && token !== 'null' && token !== 'undefined') {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
 
 let isRedirecting = false;
 
+// Routes that strictly require authentication and should redirect to login on 401
+const protectedRoutePrefixes = [
+  '/dashboard',
+  '/parent',
+  '/placement-test',
+  '/reviews',
+  '/virtual-class',
+  '/admin',
+  '/age-select',
+];
+
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
       const currentPath = window.location.pathname;
-      if (!currentPath.startsWith('/auth') && !isRedirecting) {
+
+      const isProtected = protectedRoutePrefixes.some(
+        (prefix) => currentPath === prefix || currentPath.startsWith(prefix + '/')
+      );
+
+      // Only redirect if user is on a protected route.
+      // Guest-accessible routes (/, /lessons, /exercises, /games, etc.) NEVER force redirect to login!
+      if (isProtected && !currentPath.startsWith('/auth') && !isRedirecting) {
         isRedirecting = true;
         window.location.href = '/auth/login';
       }

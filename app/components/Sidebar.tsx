@@ -10,12 +10,14 @@ import OwlLogo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 import AiAssistant from './AiAssistant';
 import PremiumUpgradeModal from './PremiumUpgradeModal';
+import GuestSignupModal from './GuestSignupModal';
 import {
   Home,
   BookOpen,
   Zap,
   Target,
   LogOut,
+  LogIn,
   Plus,
   Menu,
   X,
@@ -87,6 +89,8 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
   const [userRole, setUserRole] = useState<string>('CHILD');
   const [isUserPremium, setIsUserPremium] = useState(false);
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
 
   // Hydrate collapsed state and userRole from localStorage on mount
   useEffect(() => {
@@ -94,6 +98,9 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
     if (saved === 'true') {
       setIsCollapsed(true);
     }
+    const token = localStorage.getItem('token');
+    setIsGuest(!token || token === 'null' || token === 'undefined');
+
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
@@ -180,50 +187,54 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'dashboard',
       label: t.sidebar.accueil,
       icon: Home,
-      href: '/dashboard',
+      href: isGuest ? '/' : '/dashboard',
       comingSoon: false,
     },
     {
       id: 'lessons',
       label: t.sidebar.cours,
       icon: BookOpen,
-      href: activeChildId ? `/lessons?childId=${activeChildId}` : '/dashboard',
+      href: activeChildId ? `/lessons?childId=${activeChildId}` : '/lessons',
       comingSoon: false,
     },
     {
       id: 'exercises',
       label: t.sidebar.exercices,
       icon: Pencil,
-      href: activeChildId ? `/exercises?childId=${activeChildId}` : '/dashboard',
+      href: activeChildId ? `/exercises?childId=${activeChildId}` : '/lessons',
       comingSoon: false,
     },
     {
       id: 'learn-with-ai',
       label: t.sidebar.learnWithAi || 'تعلم مع الذكاء الاصطناعي',
       icon: Sparkles,
-      href: activeChildId ? `/learn-with-ai?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/learn-with-ai?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'exams',
       label: t.sidebar.examens,
       icon: ClipboardList,
-      href: activeChildId ? `/placement-test?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/placement-test?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'reviews',
       label: t.sidebar.revisions,
       icon: Repeat,
-      href: activeChildId ? `/reviews?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/reviews?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'challenges',
       label: t.sidebar.defis,
       icon: Zap,
-      href: activeChildId ? `/challenges?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/challenges?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'games',
@@ -236,29 +247,33 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
       id: 'badges',
       label: t.sidebar.badges,
       icon: Medal,
-      href: activeChildId ? `/badges?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/badges?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'virtual-class',
       label: t.sidebar.classeVirtuelle,
       icon: Monitor,
-      href: activeChildId ? `/virtual-class?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/virtual-class?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'library',
       label: t.sidebar.bibliotheque,
       icon: Book,
-      href: activeChildId ? `/library?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/library?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
     {
       id: 'parent',
       label: t.sidebar.parentTuteur,
       icon: Users,
-      href: activeChildId ? `/parent?childId=${activeChildId}` : '/dashboard',
+      href: isGuest ? '/lessons' : (activeChildId ? `/parent?childId=${activeChildId}` : '/dashboard'),
       comingSoon: false,
+      requiresAuth: true,
     },
   ];
 
@@ -304,6 +319,23 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
                   {activeChild.stars}
                 </span>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Guest Mode Indicator */}
+        {isGuest && !isCollapsedMode && (
+          <div className="p-3 rounded-2xl bg-white/80 border border-emerald-300 shadow-2xs flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <Sparkles className="w-4.5 h-4.5" />
+            </div>
+            <div className="flex-1 min-w-0 text-start">
+              <h4 className="font-black text-xs text-slate-800 truncate">
+                {dir === 'rtl' ? 'وضع الزائر 🚀' : 'Mode Visiteur 🚀'}
+              </h4>
+              <p className="text-[10px] font-bold text-emerald-700 truncate">
+                {dir === 'rtl' ? 'تصفح مجاني للدروس والتمارين' : 'Cours gratuits sans connexion'}
+              </p>
             </div>
           </div>
         )}
@@ -396,6 +428,9 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
               if (item.comingSoon) {
                 e.preventDefault();
                 setComingSoonTab(item.label);
+              } else if (isGuest && (item as any).requiresAuth) {
+                e.preventDefault();
+                setGuestModalOpen(true);
               }
             };
 
@@ -485,17 +520,31 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
           <LanguageSwitcher isCollapsed={isCollapsedMode} />
         </div>
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className={`flex items-center justify-center transition-all bg-white/60 hover:bg-[#FDF0EC] border border-[#E8927C]/30 text-[#D46B55] hover:text-[#B94E38] cursor-pointer shadow-xs ${
-            isCollapsedMode ? 'w-10 h-10 rounded-xl mx-auto p-0' : 'w-full gap-2 py-2.5 px-3 rounded-xl text-xs font-black'
-          }`}
-          title={t.dashboard.logoutBtn}
-        >
-          <LogOut className="w-4 h-4" />
-          {!isCollapsedMode && <span>{t.dashboard.logoutBtn}</span>}
-        </button>
+        {/* Logout or Login Button */}
+        {isGuest ? (
+          <Link href="/auth/login" className="block w-full">
+            <button
+              className={`flex items-center justify-center transition-all bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 cursor-pointer shadow-xs ${
+                isCollapsedMode ? 'w-10 h-10 rounded-xl mx-auto p-0' : 'w-full gap-2 py-2.5 px-3 rounded-xl text-xs font-black'
+              }`}
+              title={dir === 'rtl' ? 'تسجيل الدخول' : 'Connexion'}
+            >
+              <LogIn className="w-4 h-4 text-emerald-600" />
+              {!isCollapsedMode && <span>{dir === 'rtl' ? 'تسجيل الدخول' : 'Connexion'}</span>}
+            </button>
+          </Link>
+        ) : (
+          <button
+            onClick={handleLogout}
+            className={`flex items-center justify-center transition-all bg-white/60 hover:bg-[#FDF0EC] border border-[#E8927C]/30 text-[#D46B55] hover:text-[#B94E38] cursor-pointer shadow-xs ${
+              isCollapsedMode ? 'w-10 h-10 rounded-xl mx-auto p-0' : 'w-full gap-2 py-2.5 px-3 rounded-xl text-xs font-black'
+            }`}
+            title={t.dashboard.logoutBtn}
+          >
+            <LogOut className="w-4 h-4" />
+            {!isCollapsedMode && <span>{t.dashboard.logoutBtn}</span>}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -647,6 +696,12 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Guest Signup Modal */}
+      <GuestSignupModal
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+      />
+
       {/* Premium Upgrade Modal */}
       <PremiumUpgradeModal
         isOpen={premiumModalOpen}
