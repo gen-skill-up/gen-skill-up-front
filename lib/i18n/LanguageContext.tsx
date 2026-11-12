@@ -22,19 +22,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>('ar');
 
   useEffect(() => {
-    const savedLang = localStorage.getItem('lang') as Lang;
+    const savedLang = typeof window !== 'undefined' ? (localStorage.getItem('lang') as Lang) : null;
     if (savedLang && (savedLang === 'ar' || savedLang === 'en' || savedLang === 'fr')) {
       setLangState(savedLang);
     } else {
-      // Try browser language detection
-      const browserLang = navigator.language.split('-')[0];
-      if (browserLang === 'fr') {
-        setLangState('fr');
-      } else if (browserLang === 'en') {
-        setLangState('en');
-      } else {
-        setLangState('ar');
-      }
+      // Default to Arabic as the primary platform curriculum language
+      setLangState('ar');
     }
   }, []);
 

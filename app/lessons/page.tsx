@@ -128,12 +128,19 @@ const AVAILABLE_SUBJECTS = new Set([
 
 // ─── 3D Chibi Avatar Mascot Cheering on the Active Node ──────────────────────
 function ChibiMascotCheer({ speechText }: { speechText?: string }) {
-  const { dir } = useLanguage();
+  const { lang } = useLanguage();
+  const defaultSpeech =
+    lang === 'ar'
+      ? 'أنت هنا! هيا ننطلق 🚀'
+      : lang === 'fr'
+      ? "Tu es ici ! C'est parti 🚀"
+      : "You're here! Let's go 🚀";
+
   return (
     <motion.div
       className="absolute z-30 pointer-events-none flex flex-col items-center"
-      style={{ top: '-86px', left: '50%', transform: 'translateX(-50%)' }}
-      animate={{ y: [0, -6, 0] }}
+      style={{ top: '-74px', left: '50%', transform: 'translateX(-50%)' }}
+      animate={{ y: [0, -5, 0] }}
       transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
     >
       {/* Speech Bubble */}
@@ -143,17 +150,17 @@ function ChibiMascotCheer({ speechText }: { speechText?: string }) {
         className="bg-white/95 backdrop-blur-sm text-[#3D364A] text-xs font-black px-3.5 py-1.5 rounded-2xl shadow-lg border-2 border-[#F2DDD0] whitespace-nowrap mb-1 flex items-center gap-1.5 relative"
       >
         <span className="text-amber-500">✨</span>
-        <span>{speechText || (dir === 'rtl' ? 'أنت هنا! هيا ننطلق 🚀' : 'Tu es ici ! C\'est parti 🚀')}</span>
+        <span>{speechText || defaultSpeech}</span>
         <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-white" />
       </motion.div>
 
       {/* 3D Chibi Mascot Illustration */}
-      <div className="relative w-18 h-18 filter drop-shadow-md">
+      <div className="relative w-16 h-16 filter drop-shadow-md">
         <Image
           src="/images/avatar-mascot.png"
           alt="Mascot"
-          width={72}
-          height={72}
+          width={64}
+          height={64}
           className="w-full h-full object-contain"
           priority
         />
@@ -618,11 +625,11 @@ function LessonsContent() {
   const activeLessonIndex = pathNodes.findIndex((n) => n.type === 'LESSON' && n.unlocked && !n.completed);
   const mascotNodeIndex = activeLessonIndex !== -1 ? activeLessonIndex : pathNodes.findIndex((n) => n.type === 'LESSON' && n.unlocked);
 
-  const NODE_SPACING = 135;
+  const NODE_SPACING = 145;
   const BRANCH_EXTRA = 75;
 
   const lessonYPositions: number[] = [];
-  let cumulativeY = 130; // initial top margin for start flag / milestone
+  let cumulativeY = 175; // initial top margin for start flag / milestone
   for (let i = 0; i < pathNodes.length; i++) {
     lessonYPositions.push(cumulativeY);
     const node = pathNodes[i];
@@ -747,8 +754,18 @@ function LessonsContent() {
               <button
                 onClick={() => {
                   setGuestModalReason({
-                    title: lang === 'ar' ? 'افتح كامل المنهج مجاناً!' : 'Débloque tout le programme !',
-                    subtitle: lang === 'ar' ? 'أنشئ حسابك في ثوانٍ لمتابعة جميع الدروس وحفظ نقاطك' : 'Crée ton compte pour accéder à toutes les leçons',
+                    title:
+                      lang === 'ar'
+                        ? 'افتح كامل المنهج مجاناً!'
+                        : lang === 'fr'
+                        ? 'Débloque tout le programme !'
+                        : 'Unlock the full curriculum for free!',
+                    subtitle:
+                      lang === 'ar'
+                        ? 'أنشئ حسابك في ثوانٍ لمتابعة جميع الدروس وحفظ نقاطك'
+                        : lang === 'fr'
+                        ? 'Crée ton compte pour accéder à toutes les leçons'
+                        : 'Sign up in seconds to unlock all lessons and save your points',
                   });
                   setGuestModalOpen(true);
                 }}
@@ -905,7 +922,11 @@ function LessonsContent() {
                           {getSubjectLabel(selectedSubject)} • {(t.lessons.grades as any)[`g${selectedGrade}`]}
                         </h3>
                         <p className="text-xs text-[#6E637C] font-bold">
-                          {completedLessonsCount} من {totalLessonsCount} درساً مكتمل ({completionPercentage}%)
+                          {lang === 'ar'
+                            ? `${completedLessonsCount} من ${totalLessonsCount} درساً مكتمل (${completionPercentage}%)`
+                            : lang === 'fr'
+                            ? `${completedLessonsCount} sur ${totalLessonsCount} leçons terminées (${completionPercentage}%)`
+                            : `${completedLessonsCount} of ${totalLessonsCount} lessons completed (${completionPercentage}%)`}
                         </p>
                       </div>
                     </div>
@@ -930,7 +951,13 @@ function LessonsContent() {
                 <div className="relative z-10 flex justify-center pt-2">
                   <div className="bg-white/95 backdrop-blur-xs text-[#3D364A] text-xs font-black px-4 py-1.5 rounded-full shadow-md border-2 border-[#E8927C]/30 flex items-center gap-1.5 animate-pulse">
                     <Flag className="w-4 h-4 text-[#E8927C] fill-[#E8927C]" />
-                    <span>🏁 انطلاقة رحلة التعلم • البداية</span>
+                    <span>
+                      {lang === 'ar'
+                        ? '🏁 انطلاقة رحلة التعلم • البداية'
+                        : lang === 'fr'
+                        ? '🏁 Début du Parcours • Départ'
+                        : '🏁 Learning Journey • Start'}
+                    </span>
                   </div>
                 </div>
 
@@ -1068,14 +1095,6 @@ function LessonsContent() {
                     })}
                   </svg>
 
-                  {/* Midpoint Wooden Bridge Crossing */}
-                  {pathNodes.length >= 4 && (
-                    <WoodenBridgeOverlay
-                      x={(getX(1) + getX(2)) / 2}
-                      y={(lessonYPositions[1] + lessonYPositions[2]) / 2}
-                    />
-                  )}
-
                   {/* ════════════════════════════════════════════════════════════
                       Nodes Rendering (Pedestals, Chibi Mascot, Stars & Popovers)
                      ════════════════════════════════════════════════════════════ */}
@@ -1165,16 +1184,16 @@ function LessonsContent() {
 
                           {/* Visible Lesson Title Badge below button */}
                           <div
-                            className="absolute -bottom-9 left-1/2 -translate-x-1/2 w-48 text-center pointer-events-none select-none z-10 flex flex-col items-center gap-0.5"
+                            className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-52 text-center pointer-events-none select-none z-10 flex flex-col items-center gap-1"
                           >
                             {!childId && lesson.guestAccessible && (
-                              <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
-                                {lang === 'ar' ? 'تجربة مجانية ✨' : 'Essai Gratuit ✨'}
+                              <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                                {lang === 'ar' ? 'تجربة مجانية ✨' : lang === 'fr' ? 'Essai Gratuit ✨' : 'Free Trial ✨'}
                               </span>
                             )}
                             {!childId && lesson.requiresLogin && (
-                              <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
-                                {lang === 'ar' ? '🔒 سجّل للمتابعة' : '🔒 Compte Requis'}
+                              <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
+                                {lang === 'ar' ? '🔒 سجّل للمتابعة' : lang === 'fr' ? '🔒 Compte Requis' : '🔒 Login Required'}
                               </span>
                             )}
                             <span
@@ -1220,20 +1239,42 @@ function LessonsContent() {
                                     <div className="space-y-2.5 text-center">
                                       <div className="bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5">
                                         <Lock className="w-4 h-4 text-amber-600 shrink-0" />
-                                        <span>{lang === 'ar' ? 'يتطلب حساباً مجانياً للمتابعة' : 'Compte gratuit requis'}</span>
+                                        <span>
+                                          {lang === 'ar'
+                                            ? 'يتطلب حساباً مجانياً للمتابعة'
+                                            : lang === 'fr'
+                                            ? 'Compte gratuit requis'
+                                            : 'Free account required'}
+                                        </span>
                                       </div>
                                       <button
                                         onClick={() => {
                                           setActiveLessonPopover(null);
                                           setGuestModalReason({
-                                            title: lang === 'ar' ? `فتح درس: ${lesson.title}` : `Débloquer la leçon : ${lesson.title}`,
-                                            subtitle: lang === 'ar' ? 'سجّل حسابك مجاناً لمتابعة هذا الدرس وجميع دروس المنهج!' : 'Inscris-toi gratuitement pour accéder à toutes les leçons !',
+                                            title:
+                                              lang === 'ar'
+                                                ? `فتح درس: ${lesson.title}`
+                                                : lang === 'fr'
+                                                ? `Débloquer la leçon : ${lesson.title}`
+                                                : `Unlock lesson: ${lesson.title}`,
+                                            subtitle:
+                                              lang === 'ar'
+                                                ? 'سجّل حسابك مجاناً لمتابعة هذا الدرس وجميع دروس المنهج!'
+                                                : lang === 'fr'
+                                                ? 'Inscris-toi gratuitement pour accéder à toutes les leçons !'
+                                                : 'Sign up free to access all lessons!',
                                           });
                                           setGuestModalOpen(true);
                                         }}
                                         className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-black py-2.5 rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
                                       >
-                                        <span>{lang === 'ar' ? 'سجّل مجاناً لفتح الدرس 🚀' : 'Créer un compte pour continuer 🚀'}</span>
+                                        <span>
+                                          {lang === 'ar'
+                                            ? 'سجّل مجاناً لفتح الدرس 🚀'
+                                            : lang === 'fr'
+                                            ? 'Créer un compte pour continuer 🚀'
+                                            : 'Sign up free to continue 🚀'}
+                                        </span>
                                       </button>
                                     </div>
                                   ) : (
@@ -1257,9 +1298,9 @@ function LessonsContent() {
                                     <Link href={childId ? `/lessons/${lesson.id}?childId=${childId}` : `/lessons/${lesson.id}`}>
                                       <button className="w-full bg-[#E8927C] hover:bg-[#D97D67] text-white text-sm font-black py-2.5 rounded-2xl shadow-md border-b-2 border-[#C9725C] cursor-pointer block transition-all active:translate-y-0.5">
                                         {state === 'completed'
-                                          ? '🔄 مراجعة الدرس'
+                                          ? (lang === 'ar' ? '🔄 مراجعة الدرس' : lang === 'fr' ? '🔄 Réviser la leçon' : '🔄 Review Lesson')
                                           : !childId && lesson.guestAccessible
-                                            ? (lang === 'ar' ? '🚀 بدء الدرس (تجربة مجانية)' : '🚀 Commencer (Essai Gratuit)')
+                                            ? (lang === 'ar' ? '🚀 بدء الدرس (تجربة مجانية)' : lang === 'fr' ? '🚀 Commencer (Essai Gratuit)' : '🚀 Start Lesson (Free Trial)')
                                             : t.lessons.startLessonBtn}
                                       </button>
                                     </Link>
@@ -1406,228 +1447,267 @@ function LessonsContent() {
       {/* Right Column: Student Level Card and Social Leaderboard */}
       <div className="lg:col-span-1 space-y-6 flex flex-col">
 
-        {/* Student Level Card */}
-        {child && (
-          <div className="bg-gradient-to-br from-[#E8927C] to-[#E58066] rounded-[2rem] p-6 border border-[#F2B5C8]/40 relative overflow-hidden flex flex-col gap-4 shadow-lg text-white">
-            <div className="absolute -right-6 -bottom-6 w-28 h-28 rounded-full opacity-20 bg-white blur-lg pointer-events-none" />
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-xs text-white/80 font-black uppercase tracking-wider">
-                  {dir === 'rtl' ? 'مستواك الحالي' : 'TON NIVEAU'}
+        {/* If Guest Mode: Display Guest Welcome Card & Benefits instead of Leaderboard */}
+        {!childId ? (
+          <div className="bg-white rounded-[2rem] p-6 border-2 border-[#E8927C]/30 shadow-md flex flex-col gap-4 relative overflow-hidden">
+            <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-[#E8927C] via-[#FFD166] to-[#95C5B2]" />
+
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#FDF0EB] text-2xl flex items-center justify-center shrink-0 border border-[#F2DDD0]">
+                🌟
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#E8927C] bg-[#FDF0EB] px-2.5 py-0.5 rounded-full border border-[#F2DDD0]/60">
+                  {lang === 'ar' ? 'وضع الاستكشاف التجريبي' : lang === 'fr' ? 'Mode Découverte' : 'Free Preview Mode'}
                 </span>
-                <span className="text-base font-black text-white flex items-center gap-1.5 mt-0.5">
-                  <Star className="w-5 h-5 text-amber-300 fill-amber-300" />
-                  Niveau {Math.floor(child.points / 1000) + 1}
-                </span>
-              </div>
-              <div className="w-14 h-14 shrink-0 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30 shadow-inner">
-                <Logo size={40} />
+                <h3 className="text-base font-black text-[#3D364A] mt-1">
+                  {lang === 'ar' ? 'جرّب الدروس مجاناً!' : lang === 'fr' ? 'Essayez gratuitement !' : 'Try Lessons For Free!'}
+                </h3>
               </div>
             </div>
 
-            <div className="space-y-1.5 bg-black/10 rounded-2xl p-3.5 border border-white/10">
-              <div className="flex justify-between text-xs font-black text-white/90">
-                <span>{child.points % 1000} / 1000 XP</span>
-                <span className="text-amber-200 flex items-center gap-1">
-                  <Trophy className="w-3.5 h-3.5" />
-                  {child.points} XP
-                </span>
+            <p className="text-xs text-[#6E637C] leading-relaxed font-bold">
+              {lang === 'ar'
+                ? 'استمتع بأول درسين مع تمارينهما التفاعلية لكل مادة بدون تسجيل. لحفظ النقاط والتنافس مع الأصدقاء، أنشئ حسابك مجاناً!'
+                : lang === 'fr'
+                ? 'Profitez des 2 premières leçons avec leurs exercices interactifs. Pour sauvegarder vos points et défier vos amis, créez un compte gratuit !'
+                : 'Enjoy the first 2 lessons and interactive exercises for free. Sign up to save your stars and challenge friends!'}
+            </p>
+
+            <div className="space-y-2.5 bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#F2DDD0]">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#3D364A]">
+                <span className="text-emerald-500 font-black">✓</span>
+                <span>{lang === 'ar' ? 'تصفح مسار الدروس التفاعلي' : lang === 'fr' ? 'Parcours d\'apprentissage ludique' : 'Interactive learning path'}</span>
               </div>
-              <div className="w-full h-3 bg-black/20 rounded-full overflow-hidden mt-1.5">
-                <div
-                  className="h-full bg-gradient-to-r from-amber-300 to-white rounded-full transition-all duration-500 shadow-xs"
-                  style={{ width: `${Math.min((child.points % 1000) / 10, 100)}%` }}
-                />
+              <div className="flex items-center gap-2 text-xs font-bold text-[#3D364A]">
+                <span className="text-emerald-500 font-black">✓</span>
+                <span>{lang === 'ar' ? 'حل التمارين والألعاب التجريبية' : lang === 'fr' ? 'Exercices et jeux interactifs' : 'Interactive exercises & games'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-bold text-[#6E637C]">
+                <span className="text-amber-500 font-black">🔒</span>
+                <span>{lang === 'ar' ? 'لوحة المتصدرين والأصدقاء (تتطلب حساباً)' : lang === 'fr' ? 'Classement & amis (compte requis)' : 'Leaderboard & friends (requires account)'}</span>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Leaderboard Card */}
-        <div className="bg-white rounded-[2rem] p-6 border border-[#F2DDD0] shadow-sm flex flex-col gap-4">
-          <div className="flex items-center gap-2.5">
-            <Trophy className="w-6 h-6 text-amber-500" />
-            <h3 className="font-black text-[#3D364A] text-base">
-              {dir === 'rtl' ? 'لوحة المتصدرين' : 'Leaderboard'}
-            </h3>
-          </div>
-
-          {socialSuccess && (
-            <div className="bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-2xl p-3 text-xs font-bold text-center">
-              {socialSuccess}
-            </div>
-          )}
-          {socialError && (
-            <div className="bg-rose-50 text-rose-700 border border-rose-200 rounded-2xl p-3 text-xs font-bold text-center">
-              {socialError}
-            </div>
-          )}
-
-          {/* Tab Selector */}
-          <div className="flex bg-[#F9F5F0] p-1.5 rounded-2xl border border-[#F2DDD0]">
             <button
               onClick={() => {
-                setLeaderboardTab('friends');
-                setSocialError(null);
-                setSocialSuccess(null);
+                setGuestModalReason({
+                  title:
+                    lang === 'ar'
+                      ? 'افتح مسار التعلم الكامل مجاناً! 🚀'
+                      : lang === 'fr'
+                      ? 'Débloquez tout le parcours gratuitement ! 🚀'
+                      : 'Unlock the full learning path free! 🚀',
+                  subtitle:
+                    lang === 'ar'
+                      ? 'سجّل حساب ولي أمر وتلميذ في 30 ثانية لحفظ تقدمك ومشاركة الإنجازات!'
+                      : lang === 'fr'
+                      ? 'Créez un compte en 30 secondes pour sauvegarder vos points !'
+                      : 'Sign up in 30 seconds to save your points and compete!',
+                });
+                setGuestModalOpen(true);
               }}
-              className={`flex-1 text-center py-2 rounded-xl text-xs font-black cursor-pointer transition-all ${
-                leaderboardTab === 'friends' ? 'bg-[#E8927C] text-white shadow-xs' : 'text-[#6E637C] hover:text-[#3D364A]'
-              }`}
+              className="w-full bg-[#E8927C] hover:bg-[#D97D67] text-white font-black text-xs py-3 px-4 rounded-2xl shadow-sm border-b-2 border-[#C9725C] transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
             >
-              {dir === 'rtl' ? 'الأصدقاء' : 'Friends'}
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              <span>{lang === 'ar' ? 'إنشاء حساب مجاني (30 ثانية)' : lang === 'fr' ? 'Créer un compte gratuit' : 'Sign Up Free (30s)'}</span>
             </button>
-            <button
-              onClick={() => {
-                setLeaderboardTab('group');
-                setSocialError(null);
-                setSocialSuccess(null);
-              }}
-              className={`flex-1 text-center py-2 rounded-xl text-xs font-black cursor-pointer transition-all ${
-                leaderboardTab === 'group' ? 'bg-[#E8927C] text-white shadow-xs' : 'text-[#6E637C] hover:text-[#3D364A]'
-              }`}
-            >
-              {dir === 'rtl' ? 'المجموعة' : 'Group'}
-            </button>
-          </div>
 
-          {/* Rankings List */}
-          <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
-            {leaderboardTab === 'friends' ? (
-              leaderboard?.friendsLeaderboard && leaderboard.friendsLeaderboard.length > 0 ? (
-                leaderboard.friendsLeaderboard.map((member: any, mIdx: number) => (
-                  <div
-                    key={member.id}
-                    className={`flex items-center justify-between p-2.5 rounded-2xl border transition-all ${
-                      member.isSelf ? 'bg-[#FDF0EB] border-[#E8927C]/40 shadow-2xs' : 'bg-[#FAF8F5] border-[#F2DDD0]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-xs font-black text-[#A49AA7] w-5 text-center">#{mIdx + 1}</span>
-                      <div className="w-9 h-9 rounded-full bg-white border border-[#F2DDD0] flex items-center justify-center font-bold text-xs uppercase overflow-hidden text-[#3D364A] shadow-2xs">
-                        {member.avatarUrl ? <span className="text-base">👤</span> : member.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-xs font-black text-[#3D364A] leading-tight">
-                          {member.name}{' '}
-                          {member.isSelf && <span className="text-[#E8927C] font-extrabold">({dir === 'rtl' ? 'أنت' : 'you'})</span>}
-                        </p>
-                        <p className="text-[10px] font-bold text-[#A49AA7] mt-0.5">Lv. {Math.floor(member.points / 1000) + 1}</p>
-                      </div>
-                    </div>
-                    <span className="text-xs font-black text-[#E8927C] bg-[#FDF0EB] border border-[#F2DDD0] px-2.5 py-1 rounded-full">
-                      {member.points} XP
+            <Link
+              href="/auth/login"
+              className="w-full text-center text-xs font-black text-[#6E637C] hover:text-[#E8927C] transition-colors py-1"
+            >
+              {lang === 'ar' ? 'لديك حساب بالفعل؟ تسجيل الدخول' : lang === 'fr' ? 'Déjà un compte ? Se connecter' : 'Already have an account? Log In'}
+            </Link>
+          </div>
+        ) : (
+          <>
+            {/* Student Level Card */}
+            {child && (
+              <div className="bg-gradient-to-br from-[#E8927C] to-[#E58066] rounded-[2rem] p-6 border border-[#F2B5C8]/40 relative overflow-hidden flex flex-col gap-4 shadow-lg text-white">
+                <div className="absolute -right-6 -bottom-6 w-28 h-28 rounded-full opacity-20 bg-white blur-lg pointer-events-none" />
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-white/80 font-black uppercase tracking-wider">
+                      {lang === 'ar' ? 'مستواك الحالي' : lang === 'fr' ? 'TON NIVEAU' : 'YOUR LEVEL'}
+                    </span>
+                    <span className="text-base font-black text-white flex items-center gap-1.5 mt-0.5">
+                      <Star className="w-5 h-5 text-amber-300 fill-amber-300" />
+                      {lang === 'ar' ? 'المستوى' : lang === 'fr' ? 'Niveau' : 'Level'} {Math.floor(child.points / 1000) + 1}
                     </span>
                   </div>
-                ))
-              ) : (
-                <p className="text-xs text-[#A49AA7] text-center font-bold py-5">
-                  {dir === 'rtl' ? 'لا يوجد أصدقاء بعد. أضف صديقاً بكود الصديق!' : 'No friends yet. Add a friend using their code!'}
-                </p>
-              )
-            ) : leaderboard?.groupLeaderboard && leaderboard.groupLeaderboard.length > 0 ? (
-              leaderboard.groupLeaderboard.map((member: any, mIdx: number) => (
-                <div
-                  key={member.id}
-                  className={`flex items-center justify-between p-2.5 rounded-2xl border transition-all ${
-                    member.isSelf ? 'bg-[#FDF0EB] border-[#E8927C]/40 shadow-2xs' : 'bg-[#FAF8F5] border-[#F2DDD0]'
+                  <div className="w-14 h-14 shrink-0 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30 shadow-inner">
+                    <Logo size={40} />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 bg-black/10 rounded-2xl p-3.5 border border-white/10">
+                  <div className="flex justify-between text-xs font-black text-white/90">
+                    <span>{child.points % 1000} / 1000 XP</span>
+                    <span className="text-amber-200 flex items-center gap-1">
+                      <Trophy className="w-3.5 h-3.5" />
+                      {child.points} XP
+                    </span>
+                  </div>
+                  <div className="w-full h-3 bg-black/20 rounded-full overflow-hidden mt-1.5">
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-300 to-white rounded-full transition-all duration-500 shadow-xs"
+                      style={{ width: `${Math.min((child.points % 1000) / 10, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Leaderboard Card */}
+            <div className="bg-white rounded-[2rem] p-6 border border-[#F2DDD0] shadow-sm flex flex-col gap-4">
+              <div className="flex items-center gap-2.5">
+                <Trophy className="w-6 h-6 text-amber-500" />
+                <h3 className="font-black text-[#3D364A] text-base">
+                  {lang === 'ar' ? 'لوحة المتصدرين' : lang === 'fr' ? 'Classement' : 'Leaderboard'}
+                </h3>
+              </div>
+
+              {socialSuccess && (
+                <div className="bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-2xl p-3 text-xs font-bold text-center">
+                  {socialSuccess}
+                </div>
+              )}
+              {socialError && (
+                <div className="bg-rose-50 text-rose-700 border border-rose-200 rounded-2xl p-3 text-xs font-bold text-center">
+                  {socialError}
+                </div>
+              )}
+
+              {/* Tab Selector */}
+              <div className="flex bg-[#F9F5F0] p-1.5 rounded-2xl border border-[#F2DDD0]">
+                <button
+                  onClick={() => {
+                    setLeaderboardTab('friends');
+                    setSocialError(null);
+                    setSocialSuccess(null);
+                  }}
+                  className={`flex-1 text-center py-2 rounded-xl text-xs font-black cursor-pointer transition-all ${
+                    leaderboardTab === 'friends' ? 'bg-[#E8927C] text-white shadow-xs' : 'text-[#6E637C] hover:text-[#3D364A]'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-black text-[#A49AA7] w-5 text-center">#{mIdx + 1}</span>
-                    <div className="w-9 h-9 rounded-full bg-white border border-[#F2DDD0] flex items-center justify-center font-bold text-xs uppercase overflow-hidden text-[#3D364A] shadow-2xs">
-                      {member.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="text-xs font-black text-[#3D364A] leading-tight">
-                        {member.name}{' '}
-                        {member.isSelf && <span className="text-[#E8927C] font-extrabold">({dir === 'rtl' ? 'أنت' : 'you'})</span>}
-                      </p>
-                      <p className="text-[10px] font-bold text-[#A49AA7] mt-0.5">Lv. {Math.floor(member.points / 1000) + 1}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black text-[#E8927C] bg-[#FDF0EB] border border-[#F2DDD0] px-2.5 py-1 rounded-full">
-                    {member.points} XP
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="text-xs text-[#A49AA7] text-center font-bold py-5">
-                {dir === 'rtl' ? 'أنت لست في مجموعة حالياً. انضم أو أنشئ مجموعة!' : 'You are not in a group yet. Join or create one!'}
-              </p>
-            )}
-          </div>
-
-          {/* Social Action Panels */}
-          <div className="border-t border-[#F2DDD0] pt-4 flex flex-col gap-3">
-            {leaderboardTab === 'friends' ? (
-              <div className="space-y-2.5">
-                {leaderboard?.child?.shareCode && (
-                  <div className="flex justify-between items-center bg-[#FAF8F5] border border-[#F2DDD0] rounded-2xl p-2.5 text-xs">
-                    <span className="font-bold text-[#6E637C]">{dir === 'rtl' ? 'كود الصديق الخاص بك:' : 'Your friend code:'}</span>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(leaderboard.child.shareCode);
-                        alert(dir === 'rtl' ? 'تم نسخ كود الصديق!' : 'Copied friend code!');
-                      }}
-                      className="font-black text-[#E8927C] bg-white border border-[#F2DDD0] px-3 py-1.5 rounded-xl hover:bg-[#FDF0EB] cursor-pointer shadow-2xs text-xs"
-                    >
-                      {leaderboard.child.shareCode} 📋
-                    </button>
-                  </div>
-                )}
-                <form onSubmit={handleAddFriend} className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder={dir === 'rtl' ? 'كود الصديق الجديد' : 'Friend Code'}
-                    value={friendCodeInput}
-                    onChange={(e) => setFriendCodeInput(e.target.value)}
-                    className="flex-1 bg-[#FAF8F5] border border-[#F2DDD0] text-xs font-bold p-2.5 rounded-2xl outline-none focus:border-[#E8927C] uppercase text-[#3D364A]"
-                    maxLength={6}
-                  />
-                  <button
-                    type="submit"
-                    disabled={socialLoading}
-                    className="bg-[#E8927C] hover:bg-[#D97D67] text-white font-black text-xs px-4 py-2 rounded-2xl border-b-2 border-[#C9725C] cursor-pointer disabled:opacity-50"
-                  >
-                    {dir === 'rtl' ? 'إضافة' : 'Add'}
-                  </button>
-                </form>
+                  {lang === 'ar' ? 'الأصدقاء' : lang === 'fr' ? 'Amis' : 'Friends'}
+                </button>
+                <button
+                  onClick={() => {
+                    setLeaderboardTab('group');
+                    setSocialError(null);
+                    setSocialSuccess(null);
+                  }}
+                  className={`flex-1 text-center py-2 rounded-xl text-xs font-black cursor-pointer transition-all ${
+                    leaderboardTab === 'group' ? 'bg-[#E8927C] text-white shadow-xs' : 'text-[#6E637C] hover:text-[#3D364A]'
+                  }`}
+                >
+                  {lang === 'ar' ? 'المجموعة' : lang === 'fr' ? 'Groupe' : 'Group'}
+                </button>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {leaderboard?.group ? (
-                  <div className="space-y-2.5">
-                    <div className="flex justify-between items-center bg-[#FAF8F5] border border-[#F2DDD0] rounded-2xl p-2.5 text-xs">
-                      <span className="font-bold text-[#6E637C] truncate max-w-[130px]">
-                        {dir === 'rtl' ? 'المجموعة:' : 'Group:'} <strong className="text-[#3D364A]">{leaderboard.group.name}</strong>
-                      </span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(leaderboard.group.code);
-                          alert(dir === 'rtl' ? 'تم نسخ كود المجموعة!' : 'Copied group code!');
-                        }}
-                        className="font-black text-[#E8927C] bg-white border border-[#F2DDD0] px-3 py-1.5 rounded-xl hover:bg-[#FDF0EB] cursor-pointer shadow-2xs text-xs"
+
+              {/* Rankings List */}
+              <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                {leaderboardTab === 'friends' ? (
+                  leaderboard?.friendsLeaderboard && leaderboard.friendsLeaderboard.length > 0 ? (
+                    leaderboard.friendsLeaderboard.map((member: any, mIdx: number) => (
+                      <div
+                        key={member.id}
+                        className={`flex items-center justify-between p-2.5 rounded-2xl border transition-all ${
+                          member.isSelf ? 'bg-[#FDF0EB] border-[#E8927C]/40 shadow-2xs' : 'bg-[#FAF8F5] border-[#F2DDD0]'
+                        }`}
                       >
-                        {leaderboard.group.code} 📋
-                      </button>
-                    </div>
-                    <button
-                      onClick={handleLeaveGroup}
-                      disabled={socialLoading}
-                      className="w-full bg-[#E57373] hover:bg-[#D32F2F] text-white font-black text-xs py-2.5 rounded-2xl border-b-2 border-[#B71C1C] cursor-pointer disabled:opacity-50"
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-xs font-black text-[#A49AA7] w-5 text-center">#{mIdx + 1}</span>
+                          <div className="w-9 h-9 rounded-full bg-white border border-[#F2DDD0] flex items-center justify-center font-bold text-xs uppercase overflow-hidden text-[#3D364A] shadow-2xs">
+                            {member.avatarUrl ? <span className="text-base">👤</span> : member.name.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="text-xs font-black text-[#3D364A] leading-tight">
+                              {member.name}{' '}
+                              {member.isSelf && <span className="text-[#E8927C] font-extrabold">({lang === 'ar' ? 'أنت' : lang === 'fr' ? 'toi' : 'you'})</span>}
+                            </p>
+                            <p className="text-[10px] font-bold text-[#A49AA7] mt-0.5">Lv. {Math.floor(member.points / 1000) + 1}</p>
+                          </div>
+                        </div>
+                        <span className="text-xs font-black text-[#E8927C] bg-[#FDF0EB] border border-[#F2DDD0] px-2.5 py-1 rounded-full">
+                          {member.points} XP
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-[#A49AA7] text-center font-bold py-5">
+                      {lang === 'ar'
+                        ? 'لا يوجد أصدقاء بعد. أضف صديقاً بكود الصديق!'
+                        : lang === 'fr'
+                        ? 'Aucun ami pour le moment. Ajoute un ami avec son code !'
+                        : 'No friends yet. Add a friend using their code!'}
+                    </p>
+                  )
+                ) : leaderboard?.groupLeaderboard && leaderboard.groupLeaderboard.length > 0 ? (
+                  leaderboard.groupLeaderboard.map((member: any, mIdx: number) => (
+                    <div
+                      key={member.id}
+                      className={`flex items-center justify-between p-2.5 rounded-2xl border transition-all ${
+                        member.isSelf ? 'bg-[#FDF0EB] border-[#E8927C]/40 shadow-2xs' : 'bg-[#FAF8F5] border-[#F2DDD0]'
+                      }`}
                     >
-                      {dir === 'rtl' ? 'مغادرة المجموعة' : 'Leave Group'}
-                    </button>
-                  </div>
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xs font-black text-[#A49AA7] w-5 text-center">#{mIdx + 1}</span>
+                        <div className="w-9 h-9 rounded-full bg-white border border-[#F2DDD0] flex items-center justify-center font-bold text-xs uppercase overflow-hidden text-[#3D364A] shadow-2xs">
+                          {member.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="text-xs font-black text-[#3D364A] leading-tight">
+                            {member.name}{' '}
+                            {member.isSelf && <span className="text-[#E8927C] font-extrabold">({lang === 'ar' ? 'أنت' : lang === 'fr' ? 'toi' : 'you'})</span>}
+                          </p>
+                          <p className="text-[10px] font-bold text-[#A49AA7] mt-0.5">Lv. {Math.floor(member.points / 1000) + 1}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-black text-[#E8927C] bg-[#FDF0EB] border border-[#F2DDD0] px-2.5 py-1 rounded-full">
+                        {member.points} XP
+                      </span>
+                    </div>
+                  ))
                 ) : (
-                  <div className="space-y-3">
-                    <form onSubmit={handleJoinGroup} className="flex gap-2">
+                  <p className="text-xs text-[#A49AA7] text-center font-bold py-5">
+                    {lang === 'ar'
+                      ? 'أنت لست في مجموعة حالياً. انضم أو أنشئ مجموعة!'
+                      : lang === 'fr'
+                      ? "Vous n'êtes pas encore dans un groupe. Rejoignez ou créez un groupe !"
+                      : 'You are not in a group yet. Join or create one!'}
+                  </p>
+                )}
+              </div>
+
+              {/* Social Action Panels */}
+              <div className="border-t border-[#F2DDD0] pt-4 flex flex-col gap-3">
+                {leaderboardTab === 'friends' ? (
+                  <div className="space-y-2.5">
+                    {leaderboard?.child?.shareCode && (
+                      <div className="flex justify-between items-center bg-[#FAF8F5] border border-[#F2DDD0] rounded-2xl p-2.5 text-xs">
+                        <span className="font-bold text-[#6E637C]">
+                          {lang === 'ar' ? 'كود الصديق الخاص بك:' : lang === 'fr' ? 'Votre code ami :' : 'Your friend code:'}
+                        </span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(leaderboard.child.shareCode);
+                            alert(lang === 'ar' ? 'تم نسخ كود الصديق!' : lang === 'fr' ? 'Code ami copié !' : 'Copied friend code!');
+                          }}
+                          className="font-black text-[#E8927C] bg-white border border-[#F2DDD0] px-3 py-1.5 rounded-xl hover:bg-[#FDF0EB] cursor-pointer shadow-2xs text-xs"
+                        >
+                          {leaderboard.child.shareCode} 📋
+                        </button>
+                      </div>
+                    )}
+                    <form onSubmit={handleAddFriend} className="flex gap-2">
                       <input
                         type="text"
-                        placeholder={dir === 'rtl' ? 'كود المجموعة للانضمام' : 'Group Code'}
-                        value={groupCodeInput}
-                        onChange={(e) => setGroupCodeInput(e.target.value)}
+                        placeholder={lang === 'ar' ? 'كود الصديق الجديد' : lang === 'fr' ? 'Code ami' : 'Friend Code'}
+                        value={friendCodeInput}
+                        onChange={(e) => setFriendCodeInput(e.target.value)}
                         className="flex-1 bg-[#FAF8F5] border border-[#F2DDD0] text-xs font-bold p-2.5 rounded-2xl outline-none focus:border-[#E8927C] uppercase text-[#3D364A]"
                         maxLength={6}
                       />
@@ -1636,31 +1716,79 @@ function LessonsContent() {
                         disabled={socialLoading}
                         className="bg-[#E8927C] hover:bg-[#D97D67] text-white font-black text-xs px-4 py-2 rounded-2xl border-b-2 border-[#C9725C] cursor-pointer disabled:opacity-50"
                       >
-                        {dir === 'rtl' ? 'انضمام' : 'Join'}
-                      </button>
-                    </form>
-                    <form onSubmit={handleCreateGroup} className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder={dir === 'rtl' ? 'اسم مجموعة جديدة' : 'New Group Name'}
-                        value={groupNameInput}
-                        onChange={(e) => setGroupNameInput(e.target.value)}
-                        className="flex-1 bg-[#FAF8F5] border border-[#F2DDD0] text-xs font-bold p-2.5 rounded-2xl outline-none focus:border-[#95C5B2] text-[#3D364A]"
-                      />
-                      <button
-                        type="submit"
-                        disabled={socialLoading}
-                        className="bg-[#95C5B2] hover:bg-[#7EB39E] text-white font-black text-xs px-4 py-2 rounded-2xl border-b-2 border-[#6A9C8B] cursor-pointer disabled:opacity-50"
-                      >
-                        {dir === 'rtl' ? 'إنشاء' : 'Create'}
+                        {lang === 'ar' ? 'إضافة' : lang === 'fr' ? 'Ajouter' : 'Add'}
                       </button>
                     </form>
                   </div>
+                ) : (
+                  <div className="space-y-3">
+                    {leaderboard?.group ? (
+                      <div className="space-y-2.5">
+                        <div className="flex justify-between items-center bg-[#FAF8F5] border border-[#F2DDD0] rounded-2xl p-2.5 text-xs">
+                          <span className="font-bold text-[#6E637C] truncate max-w-[130px]">
+                            {lang === 'ar' ? 'المجموعة:' : lang === 'fr' ? 'Groupe :' : 'Group:'} <strong className="text-[#3D364A]">{leaderboard.group.name}</strong>
+                          </span>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(leaderboard.group.code);
+                              alert(lang === 'ar' ? 'تم نسخ كود المجموعة!' : lang === 'fr' ? 'Code groupe copié !' : 'Copied group code!');
+                            }}
+                            className="font-black text-[#E8927C] bg-white border border-[#F2DDD0] px-3 py-1.5 rounded-xl hover:bg-[#FDF0EB] cursor-pointer shadow-2xs text-xs"
+                          >
+                            {leaderboard.group.code} 📋
+                          </button>
+                        </div>
+                        <button
+                          onClick={handleLeaveGroup}
+                          disabled={socialLoading}
+                          className="w-full bg-[#E57373] hover:bg-[#D32F2F] text-white font-black text-xs py-2.5 rounded-2xl border-b-2 border-[#B71C1C] cursor-pointer disabled:opacity-50"
+                        >
+                          {lang === 'ar' ? 'مغادرة المجموعة' : lang === 'fr' ? 'Quitter le groupe' : 'Leave Group'}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <form onSubmit={handleJoinGroup} className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder={lang === 'ar' ? 'كود المجموعة للانضمام' : lang === 'fr' ? 'Code de groupe' : 'Group Code'}
+                            value={groupCodeInput}
+                            onChange={(e) => setGroupCodeInput(e.target.value)}
+                            className="flex-1 bg-[#FAF8F5] border border-[#F2DDD0] text-xs font-bold p-2.5 rounded-2xl outline-none focus:border-[#E8927C] uppercase text-[#3D364A]"
+                            maxLength={6}
+                          />
+                          <button
+                            type="submit"
+                            disabled={socialLoading}
+                            className="bg-[#E8927C] hover:bg-[#D97D67] text-white font-black text-xs px-4 py-2 rounded-2xl border-b-2 border-[#C9725C] cursor-pointer disabled:opacity-50"
+                          >
+                            {lang === 'ar' ? 'انضمام' : lang === 'fr' ? 'Rejoindre' : 'Join'}
+                          </button>
+                        </form>
+                        <form onSubmit={handleCreateGroup} className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder={lang === 'ar' ? 'اسم مجموعة جديدة' : lang === 'fr' ? 'Nom du groupe' : 'New Group Name'}
+                            value={groupNameInput}
+                            onChange={(e) => setGroupNameInput(e.target.value)}
+                            className="flex-1 bg-[#FAF8F5] border border-[#F2DDD0] text-xs font-bold p-2.5 rounded-2xl outline-none focus:border-[#95C5B2] text-[#3D364A]"
+                          />
+                          <button
+                            type="submit"
+                            disabled={socialLoading}
+                            className="bg-[#95C5B2] hover:bg-[#7EB39E] text-white font-black text-xs px-4 py-2 rounded-2xl border-b-2 border-[#6A9C8B] cursor-pointer disabled:opacity-50"
+                          >
+                            {lang === 'ar' ? 'إنشاء' : lang === 'fr' ? 'Créer' : 'Create'}
+                          </button>
+                        </form>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
 
       </div>
 

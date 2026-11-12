@@ -78,7 +78,7 @@ interface SidebarProps {
 export default function Sidebar({ activeTab }: SidebarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false); // Mobile drawer state
   const [comingSoonTab, setComingSoonTab] = useState<string | null>(null);
   const [children, setChildren] = useState<Child[]>([]);
@@ -331,10 +331,10 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
             </div>
             <div className="flex-1 min-w-0 text-start">
               <h4 className="font-black text-xs text-slate-800 truncate">
-                {dir === 'rtl' ? 'وضع الزائر 🚀' : 'Mode Visiteur 🚀'}
+                {lang === 'ar' ? 'وضع الزائر 🚀' : lang === 'fr' ? 'Mode Visiteur 🚀' : 'Guest Mode 🚀'}
               </h4>
               <p className="text-[10px] font-bold text-emerald-700 truncate">
-                {dir === 'rtl' ? 'تصفح مجاني للدروس والتمارين' : 'Cours gratuits sans connexion'}
+                {lang === 'ar' ? 'تصفح مجاني للدروس والتمارين' : lang === 'fr' ? 'Cours gratuits sans connexion' : 'Free access to sample lessons'}
               </p>
             </div>
           </div>
@@ -481,10 +481,10 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
                 <Crown className="w-5 h-5 text-amber-500 fill-amber-400" />
               </div>
               <h5 className="font-black text-xs text-amber-900 flex items-center justify-center gap-1">
-                <span>{dir === 'rtl' ? 'عضوية Premium VIP 👑' : 'Membre Premium VIP 👑'}</span>
+                <span>{lang === 'ar' ? 'عضوية Premium VIP 👑' : lang === 'fr' ? 'Membre Premium VIP 👑' : 'Premium VIP Member 👑'}</span>
               </h5>
               <p className="text-[11px] font-bold text-amber-800/80 mt-0.5">
-                {dir === 'rtl' ? 'وصول كامل وغير محدود لكافة التمارين والـ AI' : 'Accès illimité aux exercices et à l\'IA'}
+                {lang === 'ar' ? 'وصول كامل وغير محدود لكافة التمارين والـ AI' : lang === 'fr' ? 'Accès illimité aux exercices et à l\'IA' : 'Unlimited access to all exercises and AI'}
               </p>
             </div>
           ) : (
@@ -499,17 +499,17 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
                 <Crown className="w-5 h-5 text-[#E8927C] fill-[#E8927C]" />
               </div>
               <h5 className="font-black text-xs text-[#4A3830]">
-                {dir === 'rtl' ? 'الترقية إلى Premium 👑' : 'Passez à Premium 👑'}
+                {lang === 'ar' ? 'الترقية إلى Premium 👑' : lang === 'fr' ? 'Passez à Premium 👑' : 'Upgrade to Premium 👑'}
               </h5>
               <p className="text-[11px] font-bold text-[#7E655C] mt-0.5 mb-2.5">
-                {dir === 'rtl' ? 'افتح جميع التمارين التحديّة والذكاء الاصطناعي بلا سقف!' : 'Débloquez tous les exercices et l\'IA illimitée !'}
+                {lang === 'ar' ? 'افتح جميع التمارين التحديّة والذكاء الاصطناعي بلا سقف!' : lang === 'fr' ? 'Débloquez tous les exercices et l\'IA illimitée !' : 'Unlock all challenging exercises & unlimited AI!'}
               </p>
               <button 
                 onClick={() => setPremiumModalOpen(true)}
                 className="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 text-xs font-black shadow-sm transition-all cursor-pointer flex items-center justify-center gap-1"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{dir === 'rtl' ? 'ترقية الحساب الآن ✨' : 'Passer à Premium ✨'}</span>
+                <span>{lang === 'ar' ? 'ترقية الحساب الآن ✨' : lang === 'fr' ? 'Passer à Premium ✨' : 'Upgrade Now ✨'}</span>
               </button>
             </div>
           )
@@ -527,10 +527,10 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
               className={`flex items-center justify-center transition-all bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 cursor-pointer shadow-xs ${
                 isCollapsedMode ? 'w-10 h-10 rounded-xl mx-auto p-0' : 'w-full gap-2 py-2.5 px-3 rounded-xl text-xs font-black'
               }`}
-              title={dir === 'rtl' ? 'تسجيل الدخول' : 'Connexion'}
+              title={lang === 'ar' ? 'تسجيل الدخول' : lang === 'fr' ? 'Connexion' : 'Log In'}
             >
               <LogIn className="w-4 h-4 text-emerald-600" />
-              {!isCollapsedMode && <span>{dir === 'rtl' ? 'تسجيل الدخول' : 'Connexion'}</span>}
+              {!isCollapsedMode && <span>{lang === 'ar' ? 'تسجيل الدخول' : lang === 'fr' ? 'Connexion' : 'Log In'}</span>}
             </button>
           </Link>
         ) : (
@@ -682,15 +682,17 @@ export default function Sidebar({ activeTab }: SidebarProps = {}) {
                 {comingSoonTab}
               </h3>
               <p className="text-[#6E647D] text-xs font-bold mb-6">
-                {dir === 'rtl' 
+                {lang === 'ar' 
                   ? 'هذا القسم قيد التطوير والبرمجة حالياً وسيكون متاحاً قريباً جداً! انتظرونا 🎉' 
-                  : 'Ce module est en cours de développement et sera disponible très bientôt ! 🎉'}
+                  : lang === 'fr'
+                  ? 'Ce module est en cours de développement et sera disponible très bientôt ! 🎉'
+                  : 'This feature is currently under development and will be available very soon! 🎉'}
               </p>
               <button
                 onClick={() => setComingSoonTab(null)}
                 className="w-full bg-[#E8927C] hover:bg-[#D4785F] text-white text-xs font-black py-3 rounded-2xl shadow-md cursor-pointer transition-all"
               >
-                {dir === 'rtl' ? 'حسناً 👍' : 'D\'accord 👍'}
+                {lang === 'ar' ? 'حسناً 👍' : lang === 'fr' ? 'D\'accord 👍' : 'Got it 👍'}
               </button>
             </motion.div>
           </motion.div>
